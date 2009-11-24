@@ -1,0 +1,15 @@
+%h1 Class Periods
+%p= "Found #{pluralize(@periods.length, 'class period')}."
+%p= url_button 'Edit Periods', edit_periods_path
+%table.tiny
+  %thead
+    %tr
+      %th.period Period
+      %th.time Start
+      %th.time End
+  %tbody
+    - @periods.each do |period|
+      %tr
+        %td.period= period.period
+        %td.time= period.start
+        %td.time= period.end

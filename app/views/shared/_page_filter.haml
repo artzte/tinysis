@@ -1,0 +1,12 @@
+- if @page_items
+  - filter_url = "/#{filter_controller}"
+  - filter_url += "/#{filter_action}" unless filter_action=="index"
+  .filter
+    - form_tag({:controller => filter_controller, :action => filter_action}, :method=>:get, :id=>'filter') do 
+      %table
+        %thead
+          %tr
+            %td
+              = link_to_prev_page('<<')
+              = select_pages
+              = link_to_next_page('>>')

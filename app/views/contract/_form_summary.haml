@@ -1,0 +1,27 @@
+- contract= form_summary
+%p
+  This contract is 
+  - unless @contract.new_record?
+    = "#{Contract::STATUS_NAMES[@contract.contract_status]}." 
+    - if @contract.contract_status == Contract::STATUS_PROPOSED
+      = select_tag('activate', options_for_select([['Leave as proposed'],['Activate', 1]]))
+  - else
+    New.
+
+= contract.text_field 'name', :size => TEXTFIELD_WIDTH
+= contract.select 'category_id', Category.find(:all, :order => "sequence, name").collect {|c| [ c.name, c.id ] }
+
+- unless @contract.new_record?
+  = contract.select 'facilitator_id', User.staff_users.collect {|p| [ p.full_name, p.id ] }
+
+= contract.select 'term_id', Term.active.collect{|p| [ p.long_name, p.id] }
+  
+%ul.tiny{:style=>"width: 500px"}
+  %li.th Schedule
+  - @contract.timeslots.each do |t| 
+    - next if t.empty?
+    - timeslot = ClassPeriod.from_timeslot_hash(t)
+    = render :partial => "timeslot_line", :object => timeslot
+  %li#add_timeslot= render :partial => "timeslot_link"
+
+= contract.text_field "location", :size => TEXTFIELD_WIDTH

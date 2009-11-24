@@ -1,0 +1,41 @@
+Nova
+	index
+	catalog
+	about
+Account
+	x login
+	x logout
+	x reset
+Status
+	index
+	contract
+	coor
+Contracts
+	index
+	syllabus
+	enrollment
+	attendance
+	roll
+	assignments
+	turnins
+	setup
+	ealrs
+Students
+	index
+	status
+	lp
+	credits
+Admin
+	x index
+	attendance
+	accounts
+	enrollments
+	credits
+Settings
+	index
+	terms
+	periods
+	categories
+	lp
+	ealrs
+	credits

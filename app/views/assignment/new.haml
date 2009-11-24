@@ -1,0 +1,7 @@
+%h1 Create a new assignment
+.section
+  - tiny_form_for :assignment, @assignment, :url => create_assignment_path(@contract), :html => {:class=>'tiny shaded'} do |form|
+    .right
+      = submit_button 'Add'
+      = cancel_button assignments_path(@contract)
+    = render :partial => 'form', :object => form

@@ -1,0 +1,6 @@
+- if @privs[:edit]
+  .right= link_to "<span>Edit EALRs</span>", edit_contract_path(:section => 'ealrs'), :class=>'btn_small edit'
+- if @contract.ealrs.blank?
+  %p No learning requirements specified for this contract.
+- else
+  = render :partial => 'ealrs_table', :locals => {:form => false}

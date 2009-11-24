@@ -1,0 +1,8 @@
+<form onsubmit="return Credit.save(<%= @credit.id %>, 'User');" id="credit_form">
+	<%= render :partial => 'credit/credit_form_fields', :locals => { :worksheet_version => true }%>
+	<%= submit_and_cancel_buttons %>
+</form>
+<div class="scrollbox">
+<label><strong>Notes</strong></label>
+<%= notes_for(@credit) %>
+</div>

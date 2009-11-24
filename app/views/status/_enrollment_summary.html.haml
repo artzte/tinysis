@@ -1,0 +1,23 @@
+- enrollment = enrollment_summary
+- assignments = enrollment.turnins.stats
+- attendance = enrollment.meeting_participants.stats
+%table.clear.padded.horizontal
+  %tr
+    %th Status
+    %td= enrollment.status_text
+  %tr
+    %th Credits
+    %td=enrollment.credit_strings.join('; ')
+  - unless assignments.empty?
+    %tr
+      %th Assignments
+      %td
+        = number_to_percentage(assignments[:current_percent_complete], :precision => 0)
+        complete;
+        =link_to 'view details', student_assignments_path(:contract_id => enrollment.contract_id, :id => @enrollment.id)
+  - unless attendance.empty?
+    %tr
+      %th Attendance
+      %td
+        = attendance_status_text(attendance).join('; ')
+=notes_for enrollment, :editable => false

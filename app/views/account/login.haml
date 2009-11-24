@@ -1,0 +1,8 @@
+%p Please log in
+- tiny_form_for(:user, @user, :url => login_path, :html => {:class=>'tiny'}) do |form|
+  = form.text_field :login
+  = form.password_field :password
+  %p= submit_button 'Log in'
+%p
+  Forgot your login?&nbsp;&nbsp;
+  = link_to 'Click here', reset_login_path

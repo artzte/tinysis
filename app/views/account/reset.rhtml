@@ -1,0 +1,17 @@
+<p>Please type the email address recorded with your account. Your login name and a new
+password will be sent to your email. If you can't recall your email address, please
+contact the office and they can reset your password for you.</p>
+
+<div id='resetform'>
+<p>
+    <label for="user_login">Email:</label><br />
+    <%= text_field("user", "email", :size=>50) %>
+</p>
+
+<p style='margin-top: 1em'>
+    <%= tiny_link_to_remote 'Submit', { :url => {:action => 'reset'}, :update => 'loginform', :submit => 'resetform'}, :class => 'abutton' %>
+</p>
+</div>
+
+<%= content_tag 'p', link_to("Return to login", login_path), :style => 'margin-top: 1em'  %>
+

@@ -1,0 +1,6 @@
+%h1 Edit EALR
+- tiny_form_for :ealr, @ealr, :url => update_ealr_path(@ealr), :html => {:class=>'tiny shaded'} do |form|
+  %p
+    = submit_button 'Update'
+    = url_button 'Cancel', ealrs_path
+  = render :partial => 'form', :object => form
