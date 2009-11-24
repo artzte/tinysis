@@ -1,0 +1,11 @@
+- if @privs[:edit]
+  .right= link_to "<span>Edit Details</span>", edit_contract_path(:section => 'details'), :class=>'btn_small edit'
+- details = false
+- [:learning_objectives, :competencies, :evaluation_methods, :instructional_materials].each do |a|
+  - next if @contract.send(a).blank?
+  - details = true
+  %h3= a.to_s.titleize
+  =textilize @contract.send(a)
+- unless details
+  %p No details specified for this contract.
+%br.clear

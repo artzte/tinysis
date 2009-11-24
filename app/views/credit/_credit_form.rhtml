@@ -1,0 +1,16 @@
+<% if @add -%>
+<form onsubmit="return Credit.add('<%= @parent_class %>', <%= @parent_id %>);" id="credit_form">
+<% else -%>
+<form onsubmit="return Credit.save(<%= @credit.id %>, '<%= @credit.creditable_type %>', <%= @credit.creditable_id %>);" id="credit_form">
+<% end -%>
+<%= render :partial => 'credit/credit_form_fields' %>
+<% if @add -%>
+<%= render :partial => 'credit/note_field' %>
+<% end -%>
+	<%= submit_and_cancel_buttons %>
+</form>
+<% unless @add %>
+<div class="scrollbox">
+<%= notes_for(@credit) %>
+</div>
+<% end -%>

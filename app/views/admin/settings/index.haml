@@ -1,0 +1,23 @@
+%h1 School Year Settings
+%p These settings determine the default year and starting month for learning plans and terms. Change these settings with care. 
+#settings
+  %p#edit= url_button 'Change Settings', edit_settings_path
+  %table.tiny.fixed.padded
+    %thead
+      %tr
+        %th.setting Setting
+        %th.value Value
+        %th.explanation Explanation
+    %tbody
+      %tr
+        %th School Year
+        %td= @current_year
+        %td This is the year in which the Fall term begins. By default, screens show terms for the current year only.
+      %tr
+        %th Starting month
+        %td= Date.new(@current_year, @base_month).strftime('%B')
+        %td COOR status reporting begins at the starting month.
+      %tr
+        %th Ending month
+        %td= Date.new(@current_year, @end_month).strftime('%B')
+        %td COOR status reporting ends at the ending month.

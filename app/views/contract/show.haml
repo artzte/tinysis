@@ -1,0 +1,22 @@
+%h1= @contract.name
+
+.section.editable#summary
+  = render :partial => 'show_summary'
+- unless hide_details?
+  %div{:class=>print_details_class}
+    %h2 Details
+    .section.editable#details
+      = render :partial => 'show_details'
+- unless hide_ealrs?
+  %div{:class=>print_ealrs_class}
+    %h2 Learning Requirements
+    .section.editable#ealrs
+      = render :partial => 'show_ealrs'
+- unless @assignments.empty?
+  %h2 Assignments
+  - @assignments.each do |assignment|
+    %h4
+      = d(assignment.due_date)
+      = assignment.name
+    .section
+      = textilize(assignment.description)

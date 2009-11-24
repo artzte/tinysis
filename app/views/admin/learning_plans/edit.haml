@@ -1,0 +1,10 @@
+%h1 Edit Learning Plan Goal
+
+- if (count = @learning_plan_goal.learning_plans.count) > 0
+  %p.caution= "Caution: this change will affect #{pluralize(count, 'learning plans')}."
+
+- tiny_form_for :learning_plan_goal, @learning_plan_goal, :url => update_learning_plan_goal_path(@learning_plan_goal), :html => {:class=>'tiny shaded'} do |form|
+  %p
+    = submit_button 'Update'
+    = url_button 'Cancel', learning_plan_goals_path
+  = render :partial => 'form', :object => form

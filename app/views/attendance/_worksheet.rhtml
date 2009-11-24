@@ -1,0 +1,19 @@
+<p>
+	<label>Mark all enrollees:</label>
+	<%= select_tag('update_all', options_for_select(MeetingParticipant::PARTICIPATION_STATUSES.collect{|p| [p[:name], p[:value]]}, MeetingParticipant::PRESENT), :style=>'width: 10em') %>
+	<%= link_to_function("<span>Update all</all>", "Attendance.update_all(#{@meeting.id})", :class=>'btn_small')%>
+</p>
+<table class='tiny attendance padded' width="100%" style="margin-top: 1em">
+<thead>
+<tr class='th'>
+	<th class="name">Participant</th>
+<% MeetingParticipant::PARTICIPATION_STATUSES.collect do |s| %>
+	<th class="status"><%= s[:name] %></th>
+<% end -%>
+	<th class="notes">Notes</th>
+</tr>
+</thead>
+<tbody>
+<%= render :partial => 'attendance/worksheet_item', :collection => @meeting_participants %>
+</tbody>
+</table>

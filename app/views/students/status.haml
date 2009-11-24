@@ -1,0 +1,12 @@
+%h1.left
+  = @student.name
+  &ndash; Status for
+  = @year_filter
+  %smaller
+    as of 
+    = D(Date.today)
+.filter
+  - form_tag student_status_path(@student), :reset=>true, :class=>'behavior year_filter' do
+    = select_tag ('sy', options_for_select(@year_options, @year_filter))
+%br.clear
+= render :partial => 'status/student_report'

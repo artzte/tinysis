@@ -1,0 +1,12 @@
+<% 
+	status = status_item
+	stat = status_text(status)
+	if status.statusable_type == "User"
+		stat += " (#{status.fte_hours.to_s} hours)"
+	end
+-%>
+<%= content_tag('li', [
+			content_tag('div',notes_for(status),:class=>'right'),
+			dm(status.month), ": #{stat}",
+			tag('br', :clear=>'all')
+		], :class=>cycle_stripes)  %>

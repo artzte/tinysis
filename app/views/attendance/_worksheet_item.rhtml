@@ -1,0 +1,18 @@
+<%
+  p = worksheet_item
+-%>
+<tr class="<%= cycle_stripes %>">
+<td class="name">
+<%= p.participant_name %>
+</td>
+<% MeetingParticipant::PARTICIPATION_STATUSES.each do |st| -%>
+<td class="status">
+<%=
+	link_to_function(st[:name][0..0], "Attendance.update(#{p.id}, #{st[:value]})", :class=>p.participation==st[:value] ? 'sel' : nil, :id => "p_#{p.id}_#{st[:value]}")
+%>
+</td>
+<% end -%>
+<td class="notes">
+<%= notes_for(p, :notes_hash => @participant_notes) %>
+</td>
+</tr>

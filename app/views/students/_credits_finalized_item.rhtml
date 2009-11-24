@@ -1,0 +1,45 @@
+<%
+  ca = credits_finalized_item
+
+	if ca.parent_credit_assignment
+		district = ''
+	else
+		if ca.child_credit_assignments.empty?
+			rowspan = nil
+		else
+			rowspan = ca.child_credit_assignments.length+1
+		end
+		
+		if ca.transmitted?
+			district_indicator = image_tag('check.gif')
+		else
+			district_indicator = '-'
+		end
+	end
+	
+	if ca.district_finalize_approved?
+		approved = [d(ca.district_finalize_approved_on, true),tag('br'),ca.district_finalize_approved_by.sub(/(, \w).+$/,'\1')]
+	else
+		approved = '-'
+	end
+-%>
+<tr class="<%= cycle_stripes %>">
+	<td class="select">
+		<%= district_indicator %>
+	</td>
+	<td>
+		<%= render(:partial => 'credit/credits', :object => ca, :locals => {:expanded=>true, :closed=>true}) %>
+	</td>
+	<td class="term">
+		<%= ca.contract_term.name %>
+	</td>
+	<td class="hours">
+		<%= ca.credit_hours_string %>
+	</td>
+	<td class="date">
+		<%= d(ca.enrollment_finalized_on, true) %>
+	</td>
+	<td class="approve">
+		<%= approved%>
+	</td>
+</tr>

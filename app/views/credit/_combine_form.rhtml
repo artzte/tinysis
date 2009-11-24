@@ -1,0 +1,10 @@
+<form onsubmit="return Credit.combine(<%= @student.id %>)" action="<%= combine_credit_assignments_path(@student) %>" id="credit_form">
+<ul class="combine">
+<% @credit_assignments.each do |c| -%>
+  <%= content_tag('li', ["#{c.credit.credit_string} (#{c.credit_hours}) #{c.contract_facilitator_name} - #{d(c.enrollment_finalized_on)}", hidden_field_tag("c[]", c.id)]) %>
+<% end -%>
+</ul>
+<%= render :partial => 'credit/credit_form_fields', :locals => {:worksheet_version=>true} %>
+<%= render :partial => 'credit/note_field' %>
+<%= submit_and_cancel_buttons %>
+</form>

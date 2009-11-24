@@ -1,0 +1,27 @@
+- unless @requirement.parent_requirement
+  %h1 
+    Edit Graduation Requirement: 
+    = @requirement.name
+- else
+  %h1 
+    Edit Graduation Sub-Requirement for 
+    = @parent_requirement.name
+    \:
+    = @requirement.name
+- tiny_form_for :requirement, @requirement, :url => update_plan_requirement_path(@requirement, :parent_id => @parent_requirement), :html => {:class=>'tiny shaded'} do |form|
+  %p
+    = submit_button "Update"
+    - unless @requirement.parent_requirement
+      = url_button 'Cancel', plan_requirements_path
+    - else
+      = url_button 'Cancel', edit_plan_requirement_path(@requirement.parent_requirement)
+  = render :partial => 'form', :object => form
+  - unless @requirement.parent_requirement
+    %h3 Sub-Requirements
+    %p= url_button 'Add sub-requirement', new_plan_requirement_path(:id => @requirement, :type => 'credit'), :id=>'add_sub', :small => true
+    %ul#subs
+      - @requirement.child_requirements.each do |child|
+        %li
+          = link_to child.name, edit_plan_requirement_path(child)
+          - unless child.notes.blank?
+            = textilize(child.notes)
