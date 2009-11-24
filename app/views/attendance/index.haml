@@ -1,0 +1,41 @@
+%h1= @contract.name
+= render :partial => 'shared/page_filter', :locals => {:filter_controller => 'contract', :filter_action => 'attendance'}
+- if @privs[:edit]
+  %p
+    = link_to_function('<span>Take attendance</span>', "Attendance.pick_roll(#{@contract.id})", :class=>'btn')
+- if @meetings.empty?
+  %p No meetings defined yet.
+- else
+  %p
+    Found 
+    = @meetings.length 
+    meetings / 
+    = @stats.length
+    participants.
+  %table.tiny#attendance_summary
+    %thead
+      %tr
+        %th.name Participant
+        %th Present
+        %th Absent  
+        %th Tardy
+        - @page_items.each do |m|
+          %th= link_to_if(@privs[:view_students], m.meeting_date.strftime("%m/%d"), roll_path(:id => @contract, :year => m.meeting_date.year, :month => m.meeting_date.month, :day => m.meeting_date.day))
+    %tbody
+      - if @stats.empty?
+        %tr{:style=>"text-align: center"}
+          %td{:colspan=>"#{@meetings.length+4}"}
+            No participants are enrolled in this contract.    
+      - else
+        - @stats.each do |p|
+          %tr{:class=>cycle_stripes}
+            %td.name= p[:name]
+            %td= p[:present_count]
+            %td= p[:absence_count]
+            %td= p[:tardy_count]
+            - @page_items.each do |m|
+              %td
+                - if @meeting_participants[p[:id]] && @meeting_participants[p[:id]][m.id]
+                  = MeetingParticipant::PARTICIPATION_STRINGS[@meeting_participants[p[:id]][m.id][0].participation]
+                - else
+                  = "-"

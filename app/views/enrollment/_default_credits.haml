@@ -1,0 +1,7 @@
+%h3.left Default Credits
+.right
+  - if @privs[:edit]
+    = url_button 'Change defaults', set_contract_credits_path(@contract), :small => true
+    = url_button 'Assign to active enrollments', reset_credits_path(@contract), :small => true, :id => 'reset_credits'
+%br.clear
+.default_credits= @contract.credit_assignments.collect{|c| c.credit_string}.join('; ')

@@ -1,0 +1,26 @@
+<%
+	if @meeting
+		@month ||= @meeting.meeting_date.month
+		@year ||= @meeting.meeting_date.year
+		meeting_id = @meeting.id
+	else
+		now = Time.now
+		@month ||= now.month
+		@year ||= now.year
+		meeting_id = nil
+	end
+%>
+<%= 
+	calendar({:month => @month, :year => @year, :abbrev=>(0..0), :pager=>{:function=>'Attendance.page_calendar', :classes=>['calendar_prev', 'calendar_next'], :data => [@contract.id, meeting_id]}}) do |d|
+		if @meeting && d==@meeting.meeting_date
+		  m = @meeting
+		  klass = 'calendar_selected'
+		elsif m = @meetings.detect{|m| m.meeting_date == d}
+			klass = 'calendar_found'
+		else
+		  m = Meeting.new :meeting_date => d
+		  klass = nil
+		end
+		link_to d.day, roll_path(:id => @contract, :year => m.meeting_date.year, :month => m.meeting_date.month, :day => m.meeting_date.day), :class=>klass 
+	end	
+%>

@@ -1,0 +1,3 @@
+= form.text_field :name, :label => 'Category name'
+= form.select :statusable, [Category::STATUSABLE_NONE, Category::STATUSABLE_MONTHLY, Category::STATUSABLE_END].collect{|s| [Category::STATUSABLE_NAMES[s], s]}
+= form.check_box :public, :label => 'Publish contracts on the public-facing course catalog'

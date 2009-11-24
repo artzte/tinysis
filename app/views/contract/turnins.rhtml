@@ -1,0 +1,6 @@
+<%= content_tag "h1", @assignment.name %>
+<%= content_tag 'p', link_to("Return to assignments", :controller => 'contract', :action => 'assignments', :id => @contract) %>
+<%= render :partial => 'assignment/assignments_table' %>
+<h2>Record turn-ins</h2>
+<%= content_tag('p', 'No students enrolled') if @turnins.empty? %>
+<%= content_tag('ul', render(:partial => 'turnin/turnin_form_item', :collection => @turnins), :id=>"turnins_form", :class=>"tiny") %>

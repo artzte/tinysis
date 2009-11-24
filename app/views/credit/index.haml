@@ -1,0 +1,86 @@
+%h1
+  = @student.full_name
+  &ndash; Credits Worksheet
+%p
+  District ID:
+  = @student.district_id
+
+%h2 Credits to Approve
+- if @credit_assignments.empty?
+  %p There are no credits to approve.
+- elsif @privs[:edit]
+  %p
+    = link_to ('<span>Combine selected credits</span>', combine_credit_assignments_form_path(@student), :class=>'btn', :id => 'combine_link')
+    - if @user.admin?
+      = link_to('<span>Delete selected credits</span>', admin_destroy_credit_assignments_path(@student), :class=>'btn', :id => 'admin_destroy_link')
+  %table.tiny.worksheet.fixed
+    %thead
+      %tr
+        %th.select Select
+        %th.credit Credit
+        %th.date Earned On
+        %th.approve Approve
+    %tbody
+      - @credit_assignments.each do |ca|
+        %tr
+          %td.select
+            - if ca.parent_credit_assignment 
+              &nbsp;
+            - elsif ca.transmitted? 
+              = image_tag('check.gif')
+            -  elsif ca.credit_transmittal_batch_id? 
+              \-
+            -  elsif @privs[:edit] == false 
+              &nbsp;
+            - elsif ca.child_credit_assignments.empty?
+              = check_box_tag("ca_#{ca.id}", 1, false, :id => "ca_#{ca.id}", :class=>'select_credit')
+            - else
+              = link_to('split', split_credit_assignments_path(ca), :method => :post)
+          %td.credit= render :partial => 'credit/credits', :object => ca, :locals => {:expanded => true }
+          %td.date= d(ca.enrollment_finalized_on, true)
+          %td.approve
+            - if ca.batched_for_transmit?
+              = d(ca.district_finalize_approved_on, true)
+              %br
+              = ca.district_finalize_approved_by.sub(/(, \w).+$/,'\1')
+            - elsif @privs[:edit] and ca.parent_credit_assignment.nil?
+              = check_box_tag("approve[#{ca.id}]", 1, ca.district_finalize_approved, :id => "approve_#{ca.id}", :onclick=>"Credit.approve(#{ca.id})")
+
+%h2 Finalized Credits
+- if @finalized_credit_assignments.empty?
+  %p There are no finalized credits.
+- else
+  %table.tiny.list.fixed
+    %thead
+      %tr
+        %th.select Dist.
+        %th.credit Credit
+        %th.term Term
+        %th.hours Credits
+        %th.date Earned On
+        %th.approved Approved On / By
+    %tbody
+      - @finalized_credit_assignments.each do |ca|
+        - if ca.parent_credit_assignment
+          - district = ''
+        - else
+          - if ca.child_credit_assignments.empty?
+            - rowspan = nil
+          - else
+            - rowspan = ca.child_credit_assignments.length+1
+          - if ca.transmitted?
+            - district_indicator = image_tag('check.gif')
+          - else
+            - district_indicator = '-'
+
+        - if ca.district_finalize_approved?
+          - approved = [d(ca.district_finalize_approved_on, true),tag('br'),ca.district_finalize_approved_by.sub(/(, \w).+$/,'\1')]
+        - else
+          - approved = '-'
+        %tr
+          %td.select= district_indicator
+          %td.credits= render(:partial => 'credit/credits', :object => ca, :locals => {:expanded=>true, :closed=>true})
+          %td.term= ca.contract_term.name
+          %td.hours= ca.credit_hours_string
+          %td.date= d(ca.enrollment_finalized_on, true)
+          %td.approved= approved

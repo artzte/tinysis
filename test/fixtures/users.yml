@@ -1,0 +1,66 @@
+<%
+include TinyFixtures
+salt='abDVsxLO'
+hash='96f2e53c290bbd380a121715336a7cdf50adc2ed632a4d88e6bb45bd2842dd92'
+%>
+admin: 
+  coordinator_id: 
+  nickname: 
+  password_salt: <%= salt %>
+  date_active: "2006-09-01"
+  community_grade: 
+  district_id: 
+  district_grade: 
+  password_hash: <%= hash %>
+  first_name: Admin
+  login_status: 2
+  last_name: User
+  login: admin
+  LearningPlanGoal: 
+  status: 1
+  privilege: 3
+  email: admin@you.com
+<%
+CLANS.keys.each do |c|
+%>
+<%= c.to_s %>: 
+  coordinator_id: 
+  nickname: 
+  password_salt: <%= salt %>
+  date_active: "2006-09-01"
+  community_grade: 
+  district_id: 
+  district_grade: 
+  password_hash: <%= hash %>
+  first_name: <%= CLANS[c][:first_name] %>
+  login_status: 2
+  last_name: <%= c.to_s.capitalize %>
+  login: <%= c.to_s %> 
+  LearningPlanGoal: 
+  status: 1
+  privilege: 2
+  email: <%= c.to_s %>_<%= CLANS[c][:first_name].downcase %>@<%= c.to_s %>.com
+<%
+  CLANS[c][:offspring].each do |u|
+%>
+<%= c.to_s %>_<%= u %>:
+  coordinator: <%= c.to_s %> 
+  nickname: <%= u.capitalize %>
+  password_salt: <%= salt %>
+  date_active: "2006-09-01"
+  community_grade: 
+  district_id: 
+  district_grade: 
+  password_hash: <%= hash %>
+  first_name: <%= u.capitalize %>
+  login_status: 2
+  last_name: <%= c.to_s.capitalize %>
+  login: <%= c.to_s %>_<%= u %>
+  LearningPlanGoal: 
+  status: 1
+  privilege: 1
+  email: <%= u %>_<%= c.to_s %>@<%= c.to_s %>.com
+<%
+  end
+end
+%>

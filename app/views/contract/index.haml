@@ -1,0 +1,31 @@
+%h1 Contracts
+%p= link_to("<span>New contract</span>", new_contract_path, :class=>'btn')
+%p.left= "Found #{pluralize(@contracts.length, 'contract')}."
+= render :partial => 'shared/contract_filter', :locals => {:filter_controller => 'contract', :filter_action => 'index'}
+.clear
+- unless @contracts.empty?
+  %table.tiny{:width=>'100%'}
+    %thead
+      %tr
+        %th.contract Contract
+        %th.number Enrollees
+        %th Category
+        %th Facilitator
+        %th.term Term 
+        %th Status
+        %th &nbsp;
+    %tbody
+      - @page_items.each do |c|
+        - privs = c.privileges(@user)
+        %tr{:class=>cycle_stripes}
+          %td.contract= link_to_if(privs[:browse], truncate(c.name, :length=>50), contract_path(c))
+          %td.number= c.active_enrollments
+          %td= c.category_name
+          %td= c.facilitator_name
+          %td.term= c.term_name
+          %td= Contract::STATUS_NAMES[c.contract_status]
+          %td.actions
+            - if @user.staff?
+              = link_to_function 'Copy', "Contract.show_copy(#{c.id})", :title => 'Copy'
+            - if privs[:edit]
+              = link_to 'Delete', destroy_contract_path(c), :title => 'Delete', :class=>'destroy'

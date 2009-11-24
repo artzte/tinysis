@@ -1,0 +1,31 @@
+%h1 Learning Plan Goals
+%p= "Found #{pluralize(@learning_plan_goals.length, 'learning plan goal')}."
+%p= url_button 'Add Learning Plan Goal', new_learning_plan_goal_path
+%table.tiny.fixed.padded
+  %thead
+    %tr
+      %th.handle &nbsp;
+      %th.goal Goal
+      %th.required Required?
+      %th.active Active?
+      %th.plans Plans
+  %tbody#goals
+    - @learning_plan_goals.each do |goal|
+      %tr{:class=>cycle_stripes, :id => "lp_#{goal.id}"}
+        %td.handle &nbsp;
+        %td.goal.clink=link_to goal.description, edit_learning_plan_goal_path(goal)
+        %td.required
+          - if goal.required?
+            Required
+          - else
+            \-
+        %td.active
+          - if goal.active?
+            Y
+          - else
+            \-
+        %td.plans
+          = goal.plans_count
+          - if goal.plans_count=="0"
+            = link_to 'delete?', destroy_learning_plan_goal_path(goal), :class=>'destroy'
+              

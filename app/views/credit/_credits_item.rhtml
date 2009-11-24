@@ -1,0 +1,31 @@
+<%
+  # rendering a CreditAssignment object. 
+  #
+  # course name, hours, course ID
+  # optional notes
+  
+  ca = credits_item
+	credit_string = ca.credit_string
+-%>
+<li class="cr">
+<% if @privs[:edit] and ca.credit_transmittal_batch_id.nil? and !closed %>
+	<% if ca.creditable_type == 'User' -%>
+	<%= link_to_function(credit_string, "Credit.worksheet_editor(#{ca.id})")  %>
+	<% else %>
+	<%= link_to_function(credit_string, "Credit.credit_editor(#{ca.id})")  %>
+  <% if placeholder -%>
+  	(<%= ca.contract_term.name %>)
+  <% end -%>
+	<%= link_to_function('X', "Credit.destroy(#{ca.id}, '#{ca.creditable_type}', #{ca.creditable_id})") %>
+	<% end %>
+	<%= hidden_field_tag("course_id_#{ca.id}", ca.credit.course_id) %>
+	<%= hidden_field_tag("course_credits_#{ca.id}", ca.credits) %>
+<% else -%>
+	<%= credit_string %>
+<% end -%>
+<% if expanded -%>
+	<br/>
+	<%= ca.contract_name %> (<%= ca.contract_term.name %>): <%= ca.contract_facilitator_name %>
+<% end -%>
+	<%= notes_for(ca, :editable=>false, :notes_hash => @credit_notes) %>
+</li>

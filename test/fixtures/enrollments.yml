@@ -1,0 +1,22 @@
+<%
+  include TinyFixtures
+  CLANS.keys.each do |clan|
+    CLANS[clan][:classes].each do |c|
+      CLANS[clan][:offspring].each do |u|
+        CLAN_TERMS.each do |t|
+%>
+enrollment_<%= u %>_<%= clan %>_<%= c %>_<%= t %>: 
+  participant: <%= clan %>_<%= u %>
+  completion_status: 0
+  role: 0
+  finalized_on: 
+  completion_date: 
+  enrollment_status: 1
+  contract: <%= clan %>_<%= c %>_<%= t %>
+  creator: <%= clan %>
+<%
+        end
+      end
+    end
+  end
+%>
