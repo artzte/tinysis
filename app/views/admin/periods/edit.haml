@@ -1,0 +1,14 @@
+%h1 Edit Periods
+%p Enter the periods as a simple list, with each entry using the following format and using 24-hour time:
+%pre
+  %code 
+    period: start - end
+%p For example, the following entry defines period 5, 2:30pm-4:00pm:
+%pre
+  %code 
+    5: 14:30-16:00
+- form_tag update_periods_path, :class=>'tiny shaded', :id => 'periods_form' do
+  = submit_button "Save"
+  = url_button "Cancel", periods_path
+  %p
+    %textarea#periods= @periods.collect{|p| "#{p.period}: #{p.start} - #{p.end}"}.join("\n")

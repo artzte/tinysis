@@ -1,0 +1,47 @@
+%h1
+  Finalize Enrollments for Term:
+  = @term.name
+
+/ Are you sure you want to finalize contracts and credits for this term?
+- form_for :term, @term, :url => finalize_enrollments_update_path(@term) do |form|
+  %p
+    = submit_button 'Finalize Now'
+    = url_button 'Cancel', finalize_enrollments_path
+
+%table.tiny.fixed
+  %thead
+    %tr
+      %th Total contracts
+      %th Open contracts
+      %th Closed contracts
+  %tbody
+    %tr
+      %td=@term.contracts.length
+      %td=@open_start
+      %td=@closed_start
+
+- [['Open contracts', @contracts[1]], ['Closed Contracts', @contracts[0]]].each do |title,contracts|
+  %h2= title
+  %p
+    There are
+    = contracts.length
+    = "#{title.downcase}."
+  %table.tiny.fixed
+    %thead
+      %tr
+        %th.facilitator Facilitator
+        %th.contract Contract
+        %th.status Status
+        %th.total Total
+        %th.active Active
+    %tbody
+      - contracts.each do |c|
+        %tr
+          %td.facilitator= c.facilitator.last_name_f
+          %td.contract= c.name
+          %td.status
+            %span{:id => "st_#{c.id}"}= contract_status_graphic(c)
+          %td.total
+            %span{:id => "to_#{c.id}"}= @enrollments[c.id][:total]
+          %td.active
+            %span{:id => "ac_#{c.id}"}= @enrollments[c.id][:active]

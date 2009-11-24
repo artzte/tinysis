@@ -1,0 +1,42 @@
+%h1
+  Term Closure Results for 
+  = @term.name
+%p
+  = link_to "Return to enrollments list", finalize_enrollments_path
+%h2 Open Contracts
+- if @open.length==0
+  %p There are no open contracts.
+- else
+  %p="This term still has #{pluralize(@open.length,'open contract')}."
+  %table.tiny.open.fixed
+    %thead
+      %tr
+        %th.facilitator Facilitator
+        %th.contract Contract
+        %th.count Active Count
+        %th.enrollments Active Participants
+    %tbody
+      - @open.each do |c|
+        - active = c.enrollments.find(:all, :conditions => 'finalized_on is null', :include => [:participant], :order => 'users.last_name, users.first_name')
+        %tr
+          %td.facilitator= c.facilitator.last_name_f
+          %td.name= c.name
+          %td.count= active.length
+          %td.facilitator
+            - active.each do |e|
+              %div= e.participant.last_name_f
+%h2 Closed Contracts
+- if @closed.length==0
+  %p There are no closed contracts.
+- else
+  %p="The term has #{pluralize(@closed.length,'closed contract')}."
+  %table.tiny.closed.fixed
+    %thead
+      %tr
+        %th.facilitator Facilitator
+        %th.contract Contract
+    %tbody
+      - @closed.each do |c|
+        %tr
+          %td=c.facilitator.last_name_f
+          %td=c.name

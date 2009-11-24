@@ -1,0 +1,5 @@
+- tiny_form_for :mapping, @mapping, :url => update_graduation_mapping_path(@student, @mapping), :html => {:class=>'tiny shaded'} do |form|
+  .right
+    = submit_button('Update')
+    = cancel_button show_graduation_mapping_path(@student, @mapping)
+  = render :partial => 'form', :object => form

@@ -1,0 +1,40 @@
+%h2 Graduation Plan Requirements
+%p Add/edit requirements, or use the blue diamonds to sort.
+%p
+  = url_button 'Add Credit Requirement', new_plan_requirement_path(:type => :credit), :small => true
+  = url_button 'Add General Requirement', new_plan_requirement_path(:type => :general), :small => true
+  = url_button 'Add Service Requirement', new_plan_requirement_path(:type => :service), :small => true
+- unless @credit_requirements.empty?
+  %h2 Credit Requirements
+  %ul.plans#credit
+    - @credit_requirements.each do |requirement|
+      %li.main{:id => "req_#{requirement.id}"}
+        .handle &nbsp;
+        = link_to requirement.name, edit_plan_requirement_path(requirement)
+        - unless requirement.notes.blank?
+          .grad_notes= textilize(requirement.notes)
+        - if requirement.child_requirements
+          %ul
+            - requirement.child_requirements.each do |child|
+              %li.child
+                .title= child.name
+                - unless child.notes.blank?
+                  = textilize(child.notes)
+- unless @general_requirements.empty?
+  %h2 General Requirements
+  %ul.plans#general
+    - @general_requirements.each do |requirement|
+      %li.main{:id => "req_#{requirement.id}"}
+        .handle &nbsp;
+        = link_to requirement.name, edit_plan_requirement_path(requirement)
+        - unless requirement.notes.blank?
+          .grad_notes= textilize(requirement.notes)
+- unless @service_requirements.empty?
+  %h2 Service Requirements
+  %ul.plans#service
+    - @service_requirements.each do |requirement|
+      %li.main{:id => "req_#{requirement.id}"}
+        .handle &nbsp;
+        = link_to requirement.name, edit_plan_requirement_path(requirement)
+        - unless requirement.notes.blank?
+          .grad_notes= textilize(requirement.notes)

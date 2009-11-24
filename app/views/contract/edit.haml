@@ -1,0 +1,5 @@
+- tiny_form_for :contract, @contract, :url => update_contract_path(@contract, @section), :html => {:id => "form_contract_#{@section}", :class=>'tiny shaded'} do |contract|
+  .right
+    = submit_button('Update')
+    = cancel_button cancel_edit_contract_path(@contract, @section)
+  = render :partial => "form_#{@section}", :object => contract

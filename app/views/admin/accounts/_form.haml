@@ -1,0 +1,26 @@
+- if @user.staff?
+  = form.text_field :first_name, :disabled => @user.privilege < User::PRIVILEGE_STAFF
+  = form.text_field :last_name, :disabled => @user.privilege < User::PRIVILEGE_STAFF
+- else
+  %h3= @account.full_name
+= form.text_field :login
+= form.text_field :nickname
+= form.text_field :email
+= form.password_field :password
+= form.password_field :password_confirmation
+- if @user.admin?
+  %fieldset
+    - @school_year = Setting.current_year
+    %h3 Account Privileges and Status
+    = form.select :privilege, privilege_options, :label => 'User type'
+    = form.select :login_status, login_options, :ua => "Can the user log in?"
+    = form.text_field :date_active, :label => 'Date first enrolled here', :ua => 'Enter date as yyyy-mm-dd'
+    = form.select :status, status_options, :ua => "Whether currently active for status reporting, enrollment, etc."
+    = form.text_field :date_inactive, :label => 'Date enrollment ended', :ua => 'Enter date as yyyy-mm-dd', :disabled => !@account.active?
+
+  %fieldset
+    %h3 Student Settings
+    = form.select :coordinator_id, [["None assigned", 0]]+User.staff_users.collect{|u| [u.last_name_f, u.id]}, :disabled => @user.privilege < User::PRIVILEGE_ADMIN
+    = form.text_field :district_id, :label => 'District ID'
+    = form.text_field :district_grade, :ua => 'Official grade as recorded in District systems'
+    = form.text_field :community_grade, :ua => 'Community grade level'

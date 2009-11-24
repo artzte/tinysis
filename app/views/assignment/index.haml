@@ -1,0 +1,52 @@
+%h1{:style=>'float: left'}= @contract.name
+.right
+  = url_button 'View printable report', assignment_report_path(:contract_id => @contract)
+  - if @privs[:edit]
+    = url_button 'Add assignment', new_assignment_path(:contract_id => @contract)
+%br.clear
+- if @assignments.empty?
+  No assignments defined. Click the button above to add an assignment.
+- else
+  .gradesheet{'data-contract-id'=>@contract.id, :class=>classif(!@privs[:edit], 'readonly')}
+    .at_nw
+      <table class="tiny"><thead><tr><th class="s">Student</th></tr></thead></table>
+    .at_ne
+      %table.tiny
+        %thead
+          %tr
+            - @assignments.each do |a|
+              %th.a{'data-assignment-id'=>a.id}
+                %a{:href=>edit_assignment_path(@contract, a), :title => 'Edit'}
+                  = assignment_header_image(a)
+    .at_sw
+      %table.tiny
+        <thead><tr><th><div>&nbsp;</div></th></tr></thead>
+        %tbody
+          - if @enrollments.empty?
+            %tr
+              %th No students
+          - else
+            - @enrollments.each do |e|
+              %tr
+                %th.s{'data-enrollment-id' => e.id}= link_to e.participant.full_name, student_assignments_path(@contract, e)
+    .at_se
+      %table.tiny
+        %thead
+          // put a spacer row with fixed size columns (sized by the enclosing div)
+          %tr
+            - @assignments.length.times do 
+              <th><div>&nbsp;</div></th>
+        %tbody
+          - if @enrollments.empty?
+            = "<tr><td style='width: 20em' colspan='#{@assignments.length}'>No students are enrolled.</td></tr>"
+          - else
+            - @enrollments.each do |enrollment|
+              - turnins = @turnins[enrollment.id]||[]
+              - turnins = turnins.collect{|t|[t.assignment_id, t]}.inject({}) { |m, e| m[e[0]] = e[1]; m }
+              %tr{'data-enrollment-id'=>enrollment.id}
+                - @assignments.each do |a|
+                  - t = turnins[a.id] || @turnin_missing
+                  - klass = 'a'
+                  - klass << ' note' if t.has_note?
+                  - val = (t.scode=='M')?'&nbsp;':t.scode
+                  = "<td data-turnin-id='#{t.id}' class='#{klass}'>#{val}</td>"

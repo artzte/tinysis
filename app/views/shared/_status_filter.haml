@@ -1,0 +1,17 @@
+-#
+  Call this partial with the following local variables:
+  
+  filter_controller => the controller to call
+  filter_action => the action to call
+  
+  Your controller action needs to populate an @contracts variable with a list of contracts, and 
+  populate the @page etc. items and @fp variable with the find parameters.
+
+- filter_url = "/#{filter_controller}"
+- filter_url += "/#{filter_action}" unless filter_action=="index"
+.filter
+  - form_tag({:controller => filter_controller, :action => filter_action}, :method=>:get, :id=>'filter') do 
+    %table
+      %thead
+        %tr
+          %td= select_tag ('sy', options_for_select(@year_options, @year_filter))

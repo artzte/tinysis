@@ -1,0 +1,10 @@
+%h1 Edit Credit Type
+
+- if (count = @credit.credit_assignments.count) > 0
+  %p.caution= "Caution: this change will affect #{pluralize(count, 'credit assignment')}."
+
+- tiny_form_for :credit, @credit, :url => update_credit_path(@credit), :html => {:class=>'tiny shaded'} do |form|
+  %p
+    = submit_button 'Update'
+    = url_button 'Cancel', credits_path
+  = render :partial => 'form', :object => form

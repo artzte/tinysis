@@ -1,0 +1,27 @@
+%h1
+  Edit Learning Plan for 
+  = @student.full_name
+- tiny_form_for :plan, @plan, :url => edit_learning_path(@student, :plan_id => @plan), :html => {:class=>'tiny shaded'} do |form|
+  = form.hidden_field :year, :label => false
+  .left
+    %h2
+      = @plan.year
+      Learning Plan
+  .right
+    = submit_button 'Save'
+    = cancel_button learning_path(@student)
+  %br.clear
+  = form.select :weekly_hours, (1..25).to_a, :label => "Weekly hours engaged in learning activity", :label_position => :after
+  %h3 Standardized Goals
+  %ul.goals
+    - LearningPlanGoal.required.each do |goal|
+      %li= goal.description
+  %h3 Optional Goals
+  - LearningPlanGoal.optional.each do |goal|
+    - name = "goal[#{goal.id}]"
+    - id = "goal_#{goal.id}"
+    %p.check_box
+      = check_box_tag(name, goal.id, @goals.include?(goal), :id => id)
+      %label{:for=> id}= goal.description
+  %h3 Personal Goals
+  = form.text_area :user_goals, :ua => textile_example
