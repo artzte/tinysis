@@ -184,11 +184,28 @@ $j(document).ready(function(){
     });
     
     
-    // BUGBUG note even sure if this is still supported in the markup
-    // popup notes on student form
+    // This popup code activates on the student report form
     $('a.notes').live('click', function() {
-      $(this).trigger('tiny_notes_popup');
+      var a = $(this);
+      var popup = a.next();
+      popup.trigger({type: 'tiny_notes_popup', anchor: a});
       return false;
+    });
+    
+    $('ul.notes.popup').live('tiny_notes_popup', function(event) {
+        var popup = $(this);
+        var a = event.anchor;
+        var offset;
+        
+        $('ul.notes.popup').hide();
+
+        popup.show();
+        
+        offset = popup.offset();
+
+        if(offset.left+popup.outerWidth() > 900) {
+          popup.css('left', 900-popup.outerWidth() + 'px');
+        }
     });
     
     $('ul.notes.popup').live('click', function() {
@@ -199,201 +216,3 @@ $j(document).ready(function(){
   })($j);
 });
 
-
-// var Note = {
-//   
-//   // Get the note ID given a container
-//   parse_container_id : new RegExp(/^notes_(\w+)_(\d+)$/),
-//   note_id_for : function(li) {
-//     if(li.tagName.toLowerCase()!='li')
-//       li = li.up('li');
-//       
-//     var reg = new RegExp(/^note_(\d+)$/);
-//     var match = reg.exec(li.id);
-//     
-//     return match[1];
-//   },
-// 
-//   // Set up event handlers on the form
-//   bind_form : function(li) {
-//     var tx = li.select('textarea').first();
-//     
-//     tx.observe('blur', function(event){Note.autosave(event.element());});
-//     tx.timedObserver = new Form.Element.Observer(tx, 4, Note.autosave);
-//     this.size_box(tx);
-//     Field.focus(tx);
-//   },
-// 
-//   // Add a new note
-//   add : function(link){
-//     link = $(link);
-//     
-//     var li = link.up('li');
-//     var ul = link.up('ul');
-//     var match = this.parse_container_id.exec(li.id);
-//     UI.show_progress();
-//     new Ajax.Request('/note/new/'+match[1]+'/'+match[2],{
-//       onFailure:Util.error,
-//       onSuccess:function(t){Note.show_add(ul, t);}
-//     });
-//     return false;
-//   },
-//   show_add : function(ul, t) {
-//     ul.select('li').first().insert({after:t.responseText});
-//     UI.hide_progress();
-//     
-//     var li = ul.select('li.edit').first();
-//     
-//     Note.bind_form(li);
-//   },
-//   
-//   // Edit a note
-//   edit : function(link) {
-//     link = $(link);
-// 
-//     var li = link.up('li');
-//     
-//     UI.show_progress();
-//     new Ajax.Request('/note/edit/'+this.note_id_for(li),{
-//       onFailure:Util.error,
-//       onSuccess:function(t){Note.show_edit(li, t);}
-//     });
-//   },
-//   show_edit : function(li, t) {
-//     var old = li;
-//     old.replace(t.responseText);
-//     li = $(old.id);
-//     
-//     Note.bind_form(li);
-// 
-//     UI.hide_progress();
-//   },
-//   
-//   // These get called on a periodic timer
-//   autosave : function(el) {
-//     Note.size_box(el);
-//     new Ajax.Request('/note/autosave/'+Note.note_id_for(el),{parameters:Note.encoded(el)});
-//   },
-//   
-//   // An encoded parameter string for the textarea value
-//   encoded : function(tx) {
-//     var obj = {note:tx.getValue()};
-//     return Object.toQueryString(obj);    
-//   },
-//   
-//   // Autosize the note box
-//   size_box : function(tx) {
-//     var height;
-// 
-//     if(tx.scrollHeight > tx.clientHeight && tx.clientHeight <= 250) {
-//       height = Math.ceil(tx.scrollHeight/50)*50;
-//       
-//       if(height>250)
-//         height=250;
-//       tx.style.height = ''+height+'px';
-//     }
-//   },
-//   
-//   // Kill a note
-//   destroy : function(link, msg) {
-//     link = $(link);
-//     
-//     var li = link.up('li');
-// 
-//     if(msg && !confirm(msg))
-//       return false;
-// 
-//     Note.cancel_observer(li);
-//     
-//     new Ajax.Request('/note/destroy/'+this.note_id_for(link),{
-//       onFailure:Util.error
-//     });
-//     
-//     li.remove();
-//   },
-//   
-//   // Revert back to the old value.
-//   revert : function(link) {
-//     link = $(link);
-//     var li = link.up('li');
-//     UI.show_progress();
-//     
-//     Note.cancel_observer(li);
-//     
-//     new Ajax.Request('/note/revert/'+this.note_id_for(li), {
-//       parameters:'revert='+li.select('input[type=hidden]').first().getValue(),
-//       onSuccess:function(t){Note.close(li, t).bind(this);},
-//       onFailure:Util.error
-//     });
-//   },
-//   
-//   // Cancel the timed observer on the textbox
-//   cancel_observer : function(li) {
-//     var tx = li.down('textarea');
-//     if(tx && tx.timedObserver) {
-//       tx.timedObserver.stop();
-//       tx.timedObserver = null;
-//     }  
-//   },
-//   
-//   // Save and close
-//   save : function(link) {
-//     link = $(link);
-//     var li = link.up('li');
-//     var tx = li.select('textarea').first();
-//     var value = tx.getValue();
-//     var erase = false;
-//     
-//     if(!Util.validate_nonblank(value)) {
-//       if(confirm('This blank note will be deleted when you close it. Do you want to delete the blank note?'))
-//         erase = true;
-//       else
-//         return false;
-//     }
-// 
-//     var success;
-// 
-//     Note.cancel_observer(li);
-// 
-//     if(erase)
-//       success = function(t){
-//           this.remove();
-//         }.bind(li);
-//     else
-//       success = function(t){
-//         Note.close(li, t).bind(this);
-//       };
-//     
-//     UI.show_progress();
-//     new Ajax.Request('/note/update/'+this.note_id_for(li),{
-//       parameters:Note.encoded(tx),
-//       onFailure:Util.error,
-//       onComplete:UI.hide_progress,
-//       onSuccess:success
-//     });
-//   },
-//   
-//   // Replace the form with the response text
-//   close : function(li,t) {
-//     li.replace(t.responseText);
-//     UI.hide_progress();
-//   },
-//   
-//   // Popup a note relative to its link
-//   pop : function(event) {
-//     var a = event.element();
-//     var div = event.element().next();
-//     
-//     div.toggle();
-// 
-//     if(div.offsetWidth+a.cumulativeOffset().left > 900) {
-//       div.setStyle({left: 900-div.offsetWidth + 'px'});
-//     }
-//     event.stop();
-//   }
-// };
-// 
-// 
-// 
-// 
-// 
