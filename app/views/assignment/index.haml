@@ -16,7 +16,7 @@
           %tr
             - @assignments.each do |a|
               %th.a{'data-assignment-id'=>a.id}
-                %a{:href=>edit_assignment_path(@contract, a), :title => 'Edit'}
+                %a{:href=>edit_assignment_path(@contract, a), :title => a.name}
                   = assignment_header_image(a)
     .at_sw
       %table.tiny
