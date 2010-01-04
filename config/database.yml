@@ -1,0 +1,28 @@
+development:
+  adapter: mysql
+  database: tinysis_development
+  username: root
+  password: 
+  host: localhost
+
+test:
+  adapter: mysql
+  database: tinysis_test
+  username: root
+  password: 
+  host: localhost
+
+staging:
+  adapter: mysql
+  database: nova_staging
+  username: nova
+  password: n0var0ck$
+  host: localhost
+  here: there
+  
+production:
+  adapter: mysql
+  database: nova_production
+  username: nova
+  password: n0var0ck$
+  host: localhost
