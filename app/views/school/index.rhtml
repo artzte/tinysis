@@ -1,5 +1,9 @@
 <h1>Welcome to tinySIS!</h1>
 
+<%- if RAILS_ENV=='staging' -%>
+<p>STAGING ENVIRONMENT</p>
+<%- end -%>
+
 <p>Thank you for using tinySIS, the system used by Nova to track classes, independent study contracts, and student progress. </p>
 
 <p>This system is in beta testing and is currently only for Nova staff use. The system supports Mozilla Firefox 1.5 and later versions (best), Internet Explorer 6 and later versions, and Safari 2.0 and later versions.</p>
