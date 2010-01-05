@@ -10,3 +10,9 @@ require 'rake/rdoctask'
 require 'tasks/rails'
 
 
+begin
+  require 'vlad'
+  Vlad.load(:app => :passenger, :scm => "git")
+rescue LoadError
+  abort "Failed to load vlad"
+end
