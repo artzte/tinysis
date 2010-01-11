@@ -15,7 +15,7 @@ src/*
 .svn/*
 public/assets/*
 public/stylesheets/*.css
-public/stylesheets/**
+!public/stylesheets/addins/*.css
 config/app_config/local.yml
 nohub.out
 nohup.out
