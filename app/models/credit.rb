@@ -13,7 +13,7 @@ class Credit < ActiveRecord::Base
 	validates_presence_of :course_name
 	has_many :credit_assignments
 	validates_uniqueness_of :course_name, :message => 'has already been used.'
-	validates_uniqueness_of :course_id, :if => Proc.new { |cr| cr.course_id and cr.course_id != 0 }, :message => 'ID has already been used.'
+	validates_uniqueness_of :course_id, :if => Proc.new { |cr| cr.course_id.present? and cr.course_id_changed? and cr.course_id != "0" }, :message => 'ID has already been used.'
   
 	def Credit.all
 		find_by_sql "SELECT credits.*, credit_assignments.count AS assignment_count
@@ -39,7 +39,7 @@ class Credit < ActiveRecord::Base
 	end
 	
 	def course_id_string
-	  return '-' unless self.course_id and self.course_id != 0
+	  return '-' unless self.course_id.present? and self.course_id != "0"
     Credit.format_course_id self.course_id
 	end
 	
@@ -48,6 +48,6 @@ class Credit < ActiveRecord::Base
 	end
 	
 	def self.transmittable_credits
-	  find(:all, :order => 'course_name', :conditions => 'course_id is not null and course_id <> 0')
+	  find(:all, :order => 'course_name', :conditions => "course_id IS NOT NULL AND NOT course_id IN ('', '0')")
 	end
 end
