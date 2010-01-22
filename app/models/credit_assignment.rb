@@ -56,8 +56,8 @@ class CreditAssignment < ActiveRecord::Base
 	
 	def credit_string
 	  str = credit.course_name
-	  if credit.course_id? and credit.course_id != 0
-	    str += " (#{sprintf('%04d', credit.course_id)})" 
+	  if credit.course_id.present? and credit.course_id != "0"
+	    str += " (#{sprintf('%04d', credit.course_id)})"
 	  end
 	  str += " / #{credit_hours_string}"
 	  str
