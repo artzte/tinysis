@@ -1,7 +1,4 @@
-unless ENV.include?("env")
-  raise "usage: rake env=(staging|production) vlad:command" 
-end
-set :environment, ENV["env"]
+set :environment, ENV["env"]||"development"
 
 set :application, "novatiny"
 set :domain,      "74.63.3.51"
