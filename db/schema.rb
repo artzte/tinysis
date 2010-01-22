@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 132) do
+ActiveRecord::Schema.define(:version => 20100122192738) do
 
   create_table "assignments", :force => true do |t|
     t.integer  "contract_id"
@@ -104,7 +104,7 @@ ActiveRecord::Schema.define(:version => 132) do
 
   create_table "credits", :force => true do |t|
     t.string  "course_name",    :default => "",  :null => false
-    t.integer "course_id",      :default => 0,   :null => false
+    t.string  "course_id",      :default => "0", :null => false
     t.integer "course_type",    :default => 0,   :null => false
     t.float   "required_hours", :default => 0.0, :null => false
   end
@@ -147,7 +147,7 @@ ActiveRecord::Schema.define(:version => 132) do
   add_index "graduation_plan_mappings", ["graduation_plan_requirement_id"], :name => "index_graduation_plan_mappings_on_graduation_plan_requirement_id"
 
   create_table "graduation_plan_requirements", :force => true do |t|
-    t.string  "name",                                                      :default => "",      :null => false
+    t.string  "name",                                                                           :null => false
     t.text    "notes"
     t.integer "position",                                                  :default => 0
     t.integer "parent_id"
