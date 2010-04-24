@@ -498,7 +498,7 @@ var Enrollment = {
         onSuccess:Enrollment.update_success.bind(event.findElement('div.status'))});
   },
   bind_links : function(container) {
-    container.select('a.approve','a.cancel','a.fulfill','a.role').invoke('observe', 'click', Enrollment.update);
+    container.select('a.approve','a.cancel_enrollment','a.fulfill','a.role').invoke('observe', 'click', Enrollment.update);
     container.select('a.drop').invoke('observe', 'click', Enrollment.drop);
     container.select('a.show').invoke('observe', 'click', Enrollment.show_updator);
     container.select('a.hide').invoke('observe', 'click', Enrollment.close_updator);
