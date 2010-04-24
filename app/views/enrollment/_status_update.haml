@@ -2,7 +2,7 @@
 - status_text = String.new(e.status_text)
 - status_text << " (#{Enrollment::ROLE_NAMES[e.role]})" if e.role==Enrollment::ROLE_INSTRUCTOR
 %div{:class=>e.status_text.downcase}
-  - unless !editable || e.finalized_on? || !@privs[:edit]
+  - unless !editable || e.fulfilled? || !@privs[:edit]
     %a.show{:href=>'#', :title => 'Update status'}=status_text
     %ul.status_updater.popup{:style=>'display:none'}
       - case e.enrollment_status 
@@ -21,14 +21,18 @@
         %li
           %a.fulfill{:href => update_enrollment_status_path(e, :fulfill)} Fulfill
         %li
-          %a.cancel{:href => update_enrollment_status_path(e, :cancel)} Cancel Enrollment
-      - case e.role
-      - when Enrollment::ROLE_STUDENT
-        %li
-          %a.role{:href => update_enrollment_status_path(e, :instructor)} Make instructor
-      - when Enrollment::ROLE_INSTRUCTOR
-        %li
-          %a.role{:href => update_enrollment_status_path(e, :student)} Make student
+          %a.cancel_enrollment{:href => update_enrollment_status_path(e, :cancel)} Cancel Enrollment
+        - case e.role
+        - when Enrollment::ROLE_STUDENT
+          %li
+            %a.role{:href => update_enrollment_status_path(e, :instructor)} Make instructor
+        - when Enrollment::ROLE_INSTRUCTOR
+          %li
+            %a.role{:href => update_enrollment_status_path(e, :student)} Make student
+      - when Enrollment::STATUS_FINALIZED
+        - if e.completion_status==Enrollment::COMPLETION_CANCELED
+          %li
+            %a.approve{:href => update_enrollment_status_path(e, :approve)} Reinstate
       %li
         %a.hide{:href => '#', :title => 'Keep the same'} X
   - else
