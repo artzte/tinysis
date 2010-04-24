@@ -106,7 +106,7 @@ class CreditController < ApplicationController
     
     # split and rejoin credit numbers just to validate
     ca = (params[:c]||'').split(',')
-    render :nothing and return if ca.length < 2
+    render :nothing => true and return if ca.length < 2
         
     @title = @student.last_name_f
     @term_options = Term.find(:all).collect{|t| [t.name, t.id]}
