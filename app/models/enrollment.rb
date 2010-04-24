@@ -151,6 +151,10 @@ public
 	  self.enrollment_status == STATUS_FINALIZED
 	end
 	
+	def fulfilled?
+	  finalized? && self.completion_status == COMPLETION_FULFILLED
+	end
+	
 	
 	def status_description
 	  if [STATUS_FINALIZED,STATUS_CLOSED].include? self.enrollment_status
@@ -163,8 +167,16 @@ public
 	# activates enrollment
 
 	def set_active(user)
+	  
+	  # to set active, user must have privileges, AND enrollment must be either proposed or closed, or, if finalized, must have been canceled, not
+	  # fulfilled.
+	  
 		privs = privileges(user)
-		unless [STATUS_PROPOSED, STATUS_CLOSED].include? self.enrollment_status and privs[:edit]
+		unless privs[:edit] && 
+		  (
+		    [STATUS_PROPOSED, STATUS_CLOSED].include?(self.enrollment_status) || 
+		    (self.enrollment_status==STATUS_FINALIZED && self.completion_status==COMPLETION_CANCELED)
+		  )
 			raise TinyException, TinyException::MESSAGES[TinyException::NOPRIVILEGES]
 		end
 		
