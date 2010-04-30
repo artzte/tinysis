@@ -51,9 +51,10 @@ class AttendanceController < ApplicationController
 		  
     set_meta :title => "#{@contract.name} - Attendance - #{@meeting.meeting_date.strftime(FORMAT_DATE)}", :tab1 => :contracts, :tab2 => :attendance
 
-		@meeting.create_participants
-		@meeting_participants = @meeting.roll
+		@enrollments = @contract.enrollments.statusable
+		@meeting_participants = @meeting.meeting_participants
 		@participant_notes = Note.notes_hash(@meeting_participants)
+		@meeting_participants_hash = @meeting_participants.index_by(&:enrollment_id)
 	end
 	
 
@@ -103,12 +104,13 @@ class AttendanceController < ApplicationController
 	# saves the attendance status
 	def update
 	  
-	  @participant = MeetingParticipant.find(params[:id], :include => [:meeting=>:contract])
-	  if @participant
-	    privs = @participant.meeting.contract.privileges(@user)
+	  @enrollment = Enrollment.find(params[:enrollment_id], :include => :contract)
+	  @meeting = Meeting.find(params[:meeting_id])
+	  if @enrollment
+	    privs = @enrollment.contract.privileges(@user)
 	    render :text => "You don't have privileges to do this.", :status=>500 and return unless privs[:edit]
 	    
-	    @participant.update_attribute(:participation, params[:participation])
+	    update_attendance_for_enrollment(@meeting, @enrollment, params[:participation])
 	  end
     
     render :nothing => true
@@ -122,13 +124,16 @@ class AttendanceController < ApplicationController
 	    privs = @meeting.contract.privileges(@user)
 	    render :text => "You don't have privileges to do this.", :status=>500 and return unless privs[:edit]
 	    
-	    @meeting.meeting_participants.update_all(["participation = ?", params[:participation]])
+	    @meeting.contract.enrollments.statusable.each do |enrollment|
+	      update_attendance_for_enrollment(@meeting, enrollment, params[:participation])
+	    end
 	  end
-    
-    @contract = @meeting.contract
-		@meeting_participants = @meeting.roll
-		@participant_notes = Note.notes_hash(@meeting_participants)
-    render :partial => 'attendance/worksheet'
+    render :nothing => true
 	end
-	
+
+protected
+  def update_attendance_for_enrollment(meeting, enrollment, participation)
+    participant = MeetingParticipant.find_or_create_by_enrollment_id_and_meeting_id(enrollment.id, meeting.id)
+    participant.update_attribute(:participation, participation)
+	end
 end

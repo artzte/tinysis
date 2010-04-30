@@ -22,5 +22,4 @@ desc "Full deployment cycle"
 task "vlad:deploy" => %w[
   vlad:update
   symlink
-  vlad:start
 ]
