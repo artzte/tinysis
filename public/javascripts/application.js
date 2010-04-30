@@ -11,11 +11,11 @@ var Status = {
       $('status_fte_hours').focus();
       return;
     }
-    new Ajax.Request('/status/update_status/'+status_id,{parameters:params})
+    new Ajax.Request('/status/update_status/'+status_id,{parameters:params});
   },
   bind : function() {
     // if this ID is availabel there is some kind of status form to bind to
-    if($('status_academic')==null)
+    if($('status_academic')===null)
       return;
       
     $('status_academic').observe('change', Status.update);
@@ -51,17 +51,17 @@ var Credit = {
     return false;      
   },
   credit_editor : function(credit_id) {
-    Modalbox.show('/credit/editor/'+credit_id,{title:'Update credit'})
+    Modalbox.show('/credit/editor/'+credit_id,{title:'Update credit'});
   },
   worksheet_editor : function(credit_id) {
-    Modalbox.show('/credit/editor/'+credit_id,{title:'Update credit'})
+    Modalbox.show('/credit/editor/'+credit_id,{title:'Update credit'});
   },
   combine_editor : function(event) {
     event.stop();
     var url = event.findElement('a').href;
     selected = Credit.selected_credits();
     if(selected.length < 2) {
-      alert("Please select at least two credits to combine.")
+      alert("Please select at least two credits to combine.");
       return;
     }
     Modalbox.show(url+'?c='+selected.join(','),{title:'Combine credits'});
@@ -79,7 +79,7 @@ var Credit = {
       override.select();
       return false;
     }
-    if($F('course') == null) {
+    if($F('course') === null) {
       alert('Please select a course for this credit.');
       return false;
     }
@@ -108,7 +108,7 @@ var Credit = {
   destroy : function(credit_id, parent_class, parent_id) {
     update_id = Credit.container_id(credit_id, parent_class, parent_id);
     if(confirm("Are you sure you want to delete this credit and any associated notes?"))
-      new Ajax.Updater(update_id, '/credit/destroy/'+credit_id,{onSuccess:Util.success,onFailure:Util.error})
+      new Ajax.Updater(update_id, '/credit/destroy/'+credit_id,{onSuccess:Util.success,onFailure:Util.error});
   },
   admin_destroy : function(event) {
     var selected = Credit.selected_credits();
@@ -128,20 +128,20 @@ var Credit = {
     form.submit();
   },
   approve : function(credit_id) {
-    course_id = $('course_id_'+credit_id).value
+    course_id = $('course_id_'+credit_id).value;
     if(course_id == "0") {
       alert('You can\'t approve a credit that has a generic course assigned to it. Please update the course assignment by clicking on the course link.');
       $('approve_'+credit_id).checked = false;
       return;
     }
-    credits = $('course_credits_'+credit_id).value
+    credits = $('course_credits_'+credit_id).value;
     val = $('approve_'+credit_id).checked ? 1 : 0;
     if(credits == "0" && val == 1 && !confirm("Are you sure you want to approve zero credits for this?")) {
       $('approve_'+credit_id).checked = false;
       return;
     }
     UI.show_progress();
-    new Ajax.Request('/credit/approve/'+credit_id, {asynchronous:true, evalScripts:true, onComplete:function(t){UI.hide_progress()}, parameters:'v=' + val})
+    new Ajax.Request('/credit/approve/'+credit_id, {asynchronous:true, evalScripts:true, onComplete:function(t){UI.hide_progress();}, parameters:'v=' + val});
   },
   selected_credits : function() {
     selected = new Array();
@@ -163,7 +163,7 @@ var Credit = {
   },
   split : function(credit_id) {
     UI.show_progress();
-    new Ajax.Updater('worksheet','/credit/split/'+credit_id, {onSuccess:Util.success,onFailure:Util.error})
+    new Ajax.Updater('worksheet','/credit/split/'+credit_id, {onSuccess:Util.success,onFailure:Util.error});
   }
 };
 
@@ -179,38 +179,55 @@ var Attendance = {
       month = 1;
       year++;
     }
-    if(month == 0) {
+    if(month === 0) {
       month = 12;
       year--;
     }
     url = '/attendance/show_calendar/'+contract_id+'/'+year+'/'+month;
     if(meeting_id) {
-      url += '/'+meeting_id
+      url += '/'+meeting_id;
     }
     new Ajax.Updater('att_calendar', url, {method:'get'});
   },
-  update : function(participant_id, participation) {
-    for(i = 0; i < 4; i++) {
-      $('p_'+participant_id+'_'+i).className = (participation == i ? 'sel' : '');
-    }
-    new Ajax.Request('/attendance/update/'+participant_id+'/'+participation,{onFailure:Attendance.update_failed});
-    return true;
-  },
   update_all : function(meeting_id) {
-    participation = $('update_all').value;
-    Element.show('progress')
-    new Ajax.Updater('worksheet','/attendance/update_all/'+meeting_id+'/'+participation,{onFailure:Attendance.update_failed,onSuccess:Attendance.update_all_success});
+    var sel = jQuery('#update_all');
+    
+    if(sel.is('.processing'))
+      return;
+      
+    participation = sel.val();
+    sel.addClass('processing');
+    
+    jQuery.post('/attendance/update_all/'+meeting_id+'/'+participation, {}, function() {
+      sel.removeClass('processing');
+    });
+    jQuery('a.behavior.attendance_update').removeClass('sel');
+    jQuery('a.behavior.attendance_update.'+participation).addClass('sel');
+    UI.fade_notice('Attendance updated.');
     return true;
   },
   update_failed : function(t) {
     Element.hide('progress');
     alert(t.responseText);
-  },
-  update_all_success : function() {
-    Element.hide('progress');
-    UI.fade_notice('Attendance updated.');
   }
 };
+
+jQuery('a.behavior.attendance_update').live('click', function(event) {
+  var el = jQuery(this);
+  
+  event.preventDefault();
+
+  if(el.is('.processing'))
+    return;
+
+  if(el.is('.sel'))
+    return;
+    
+  el.addClass('processing');
+  el.closest('tr').find('a.behavior.attendance_update').removeClass('sel');
+  el.addClass('sel');
+  jQuery.post(this.href, {}, function() {el.removeClass('processing');});
+});
 
 var ContractCategory = {
   show_add : function() {
@@ -218,7 +235,7 @@ var ContractCategory = {
     return false;    
   },
   show_edit : function(id) {
-    Modalbox.show('/admin/categories/'+id,{title:"Edit contract category",width:500,method:'get'})
+    Modalbox.show('/admin/categories/'+id,{title:"Edit contract category",width:500,method:'get'});
   },
   edit : function(id) {
     if(!Util.validate_nonblank($F('category_name'))) {
@@ -236,11 +253,11 @@ var ContractCategory = {
   },
   assign_to_group: function(item,group) {
     gr = /^gr_(\d+)$/.exec(group.id);
-    if(gr==null) {
+    if(gr===null) {
       return false;
     }
     cat = /^cat_(\d+)$/.exec(item.id);
-    if(cat==null) {
+    if(cat===null) {
       return false;
     }
     new Ajax.Request('/admin/categories/'+cat[1]+'/'+gr[1],{onSuccess:ContractCategory.update_success});
@@ -308,13 +325,13 @@ var Util = {
   },
   error : function(t) {
     UI.hide_progress();
-    if(t==null||t.responseText==null||t.responseText.blank())
+    if(!t===null||t.responseText===null||t.responseText.blank())
       alert('Update failed.');
     else
       alert("Update failed:\n\n"+t.responseText);
   },
   focus_first: function(input_type) {
-    if(input_type==null)
+    if(input_type===null)
       input_type = 'input[type="text"]';
     var input = $('content').down(input_type);
     if(input) {
@@ -327,7 +344,7 @@ var Util = {
     var input;
     if(div) {
       input = div.down('input');
-      if(input==null)
+      if(input===null)
         input = div.down('textarea');
       if(input) {
         input.focus();
@@ -375,7 +392,8 @@ var Period = {
     for(var i = 0; i < len; i++) {
       if(a[i].strip().blank())
         continue;
-      if(match = Period.reg.exec(a[i])) {
+      match = Period.reg.exec(a[i]);
+      if(match) {
         h1 = parseInt(match[2]);
         m1 = parseInt(match[3]);
         h2 = parseInt(match[4]);
@@ -405,13 +423,13 @@ var Period = {
   period_fields: new Template("<input type='hidden' name='start[#{period}]' value='#{start}'/><input type='hidden' name='end[#{period}]' value='#{end}'/>"),
   submit:function(event) {
     var periods = Period.parse($F('periods'));
-    if(periods==null) {
+    if(periods===null) {
       event.stop();
       return;
     }
     
     var form = event.element();
-    form.select('input[type="hidden"]').each(function(el){el.remove()});
+    form.select('input[type="hidden"]').each(function(el){el.remove();});
     
     var len = periods.length;
     for(var i = 0; i < len; i++) {
