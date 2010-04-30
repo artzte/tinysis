@@ -1,0 +1,10 @@
+- enrollment = worksheet_item
+- participant = @meeting_participants_hash[enrollment.id]
+- p = participant||@dummy
+%tr{:class=>cycle_stripes}
+  %td.name= enrollment.participant.last_name_first
+  - MeetingParticipant::PARTICIPATION_STATUSES.each do |st|
+    - classes = [st[:value]]
+    - classes << 'sel' if p.participation==st[:value]
+    %td.status
+      %a.behavior.attendance_update{:href => update_attendance_path(@meeting.id, enrollment.id, st[:value]), :class => classes.join(' ')}= st[:name][0..0]
