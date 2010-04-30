@@ -1,5 +1,34 @@
 namespace :dog_ate do
   
+  desc "Fix the foobared attendance records"
+  
+  task :fix_attendance => :environment do
+    # Basically, am killing all "optional" records since they don't get reported anyway
+    MeetingParticipant.delete_all("participation = 0")
+    
+    # Now, find all the duped meeting participant records
+    duped = MeetingParticipant.find_by_sql(%Q{
+      select me.id, meeting_id, enrollment_id, participation, count(me.id) as count from meeting_participants me
+      group by me.enrollment_id,me.meeting_id
+      having count > 1
+    })
+    
+    duped.each do |dupe|
+      dupes = MeetingParticipant.find_all_by_meeting_id_and_enrollment_id(dupe.meeting_id, dupe.enrollment_id)
+      participation = dupes.collect(&:participation).uniq
+      other_values = participation - [dupe.participation]
+      if participation.length > 1
+        enrollment = Enrollment.find(dupe.enrollment_id, :include => :participant)
+        contract = Contract.find(enrollment.contract_id, :include => [:facilitator, :term])
+        meeting = Meeting.find(dupe.meeting_id)
+        puts "#{enrollment.contract.term.name}\t#{enrollment.contract.name}\t#{enrollment.contract.facilitator.last_name}\t#{enrollment.participant.last_name}\t#{enrollment.participant.first_name}\t#{meeting.meeting_date.strftime("%Y-%m-%d")}\t#{MeetingParticipant::PARTICIPATION_NAMES[dupe.participation]}\tOthers: #{other_values.collect{|v|MeetingParticipant::PARTICIPATION_NAMES[v]}.join(',')}"
+      end
+      dupes.each do |d|
+        d.destroy unless d.id == dupe.id
+      end
+    end
+  end
+  
   desc 'Extract contract data for a given range of contract IDs'
 
   task :extract_contracts => :environment do
