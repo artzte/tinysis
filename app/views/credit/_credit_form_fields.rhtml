@@ -24,7 +24,7 @@
 	-%>
 	<td>
 		<label for="course">Term:</label>
-		<%= select_tag("term", options_for_select(Term.find(:all).collect{|t| [t.name, t.id]}, @credit.contract_term_id)) %>
+		<%= select_tag("term", options_for_select(Term.find(:all).collect{|t| [t.name, t.id]}, @default_term_id)) %>
 	</td>
 	<% end -%>
 </tr>
