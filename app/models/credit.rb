@@ -44,7 +44,7 @@ class Credit < ActiveRecord::Base
 	end
 	
 	def self.format_course_id course_id
-	  sprintf("%04d", course_id.to_i)
+	  course_id
 	end
 	
 	def self.transmittable_credits
