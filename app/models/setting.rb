@@ -82,5 +82,22 @@ class Setting < ActiveRecord::Base
 	  return 0 if setting.nil?
 	  setting.value.to_i
 	end
+	
+	def Setting.new_contract_term_default=(term_id)
+	  term = Term.find(term_id.to_i)
+	  raise ArgumentError, "Bad term id" unless 
+	  set_integer("new_contract_term_default", term_id.to_i)
+	  term
+	end
+	
+	def Setting.new_contract_term_default
+	  setting = Setting.find_by_name("new_contract_term_default")
+	  term = Term.find(setting.value.to_i) if setting
+	  unless term
+	    return Term.find(:first, :conditions => 'name LIKE "%semester%"', :order => 'school_year DESC, credit_date ASC')
+	  else
+	    return term
+	  end
+	end
 
 end
