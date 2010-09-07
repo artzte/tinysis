@@ -21,6 +21,8 @@ public
     Setting.reporting_base_month = params[:date][:start_month]
     Setting.reporting_end_month = params[:date][:end_month]
     
+    Setting.new_contract_term_default = params[:new_contract_term_default]
+    
     flash[:notice] = 'Thank you for updating the school year settings.'
     redirect_to settings_path
   end
