@@ -109,7 +109,6 @@ class CreditController < ApplicationController
     render :nothing => true and return if ca.length < 2
         
     @title = @student.last_name_f
-    @term_options = Term.find(:all).collect{|t| [t.name, t.id]}
 
     @credit_assignments = @student.credit_assignments.find(:all, :conditions => ["credit_assignments.id in (?)", ca], :include => :contract_term, :order => 'terms.credit_date DESC')
     hours = 0
@@ -120,8 +119,6 @@ class CreditController < ApplicationController
     @credit_options = Credit.transmittable_credits.collect{|c| [c.credit_string, c.id]}
 	  @credit = CreditAssignment.new(:credit_hours => hours)
 	  
-	  @default_term_id = @credit_assignments.first ? @credit_assignments.first.contract_term_id : nil
-
 	  render :partial => 'combine_form', :layout => false
   end
   
