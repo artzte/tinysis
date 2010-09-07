@@ -85,7 +85,8 @@ public
 			return
 		end
 
-		@contract = Contract.new
+    # find the first "semester" term with nearest credit date as default term
+		@contract = Contract.new :term => Setting.new_contract_term_default
 
   end
   
