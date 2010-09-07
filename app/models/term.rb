@@ -81,7 +81,7 @@ class Term < ActiveRecord::Base
 	end
 	
 	def self.active
-	  find_all_by_active(true, :order => 'school_year, credit_date')
+	  find_all_by_active(true, :order => 'school_year DESC, credit_date ASC')
 	end
 	
 	def self.enrollments_report
