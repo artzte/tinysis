@@ -1,4 +1,5 @@
 .svn
+config/database.yml
 .DS_Store
 log/*
 tmp/*
