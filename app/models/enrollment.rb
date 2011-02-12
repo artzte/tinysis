@@ -91,7 +91,9 @@ class Enrollment < ActiveRecord::Base
 	  
 	end
 	
-  has_many :credit_assignments, :as => :creditable, :dependent => :destroy
+  has_many :legacy_credit_assignments, :as => :creditable, :dependent => :destroy
+
+  has_many :credit_assignments, :dependent => :destroy
   
   # so contract timeslots can be set on enrollment report queries
   attr_accessor :timeslots

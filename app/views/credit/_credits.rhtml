@@ -9,7 +9,7 @@
 	expanded ||= false
 	placeholder ||= false
 %>
-<ul id="<%= credit_container_id(credits) %>" class="credits">
+<ul class="credits">
 <% if(credits.is_a?(CreditAssignment)) -%>
 	<%= render :partial => 'credit/credits_item', :object => credits, :locals => {:expanded => expanded, :closed => closed, :placeholder => placeholder} %>
 	<% unless credits.child_credit_assignments.empty? %>

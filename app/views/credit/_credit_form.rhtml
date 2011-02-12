@@ -1,7 +1,7 @@
 <% if @add -%>
 <form onsubmit="return Credit.add('<%= @parent_class %>', <%= @parent_id %>);" id="credit_form">
 <% else -%>
-<form onsubmit="return Credit.save(<%= @credit.id %>, '<%= @credit.creditable_type %>', <%= @credit.creditable_id %>);" id="credit_form">
+<form onsubmit="return Credit.save(<%= @credit.id %>);" id="credit_form">
 <% end -%>
 <%= render :partial => 'credit/credit_form_fields' %>
 <% if @add -%>

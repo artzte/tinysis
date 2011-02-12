@@ -42,7 +42,7 @@ class Contract < ActiveRecord::Base
 	belongs_to :term
 	belongs_to :creator, :foreign_key => 'creator_id', :class_name => 'User'
 	
-  has_many :credit_assignments, :as => :creditable, :dependent => :destroy
+  has_many :credit_assignments
   
 	serialize :timeslots, Array
 	
@@ -248,7 +248,7 @@ class Contract < ActiveRecord::Base
     q << "INNER JOIN terms ON contracts.term_id = terms.id AND contracts.contract_status = #{Contract::STATUS_ACTIVE}"
     q << "INNER JOIN users ON contracts.facilitator_id = users.id"
     q << "INNER JOIN categories ON contracts.category_id = categories.id AND categories.public = 1"
-    q << "LEFT JOIN credit_assignments ON credit_assignments.creditable_type = 'Contract' AND credit_assignments.creditable_id = contracts.id"
+    q << "LEFT JOIN credit_assignments ON credit_assignments.contract_id = contracts.id"
     q << "LEFT JOIN credits ON credits.id = credit_assignments.credit_id"
     q << "WHERE 1"
     q << "AND (terms.id = #{options[:term_id]})" if options[:term_id]
