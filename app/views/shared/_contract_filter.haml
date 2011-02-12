@@ -21,7 +21,6 @@
           %td.check_box
             = check_box_tag('c', 1, @closed==1)
             = label_for('c', 'Include closed')
-            = hidden_field_tag 'c', 0
           - if @page_items
             %td
               %div.pager
