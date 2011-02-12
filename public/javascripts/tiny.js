@@ -411,11 +411,14 @@ var AdminGraduationRequirement = {
 // Functions for editing credits
 var AdminCredit = {
   destroy : function(event) {
-    event.stop();
-    if(!confirm("Are you sure you want to delete this credit type?"))
+    var el = jQuery(this);
+    
+    event.preventDefault();
+    
+    if( !confirm("Are you sure you want to delete " + el.closest('tr').find('td:first').text() + "?") )
       return false;
       
-    Util.post_through_form(event.findElement('td'), event.element().href);
+    Util.post_through_form(el.closest('td').get(0), this.href);
   }
 };
 
@@ -655,7 +658,7 @@ var actions_table = {
     a_update: function() { $('periods_form').observe('submit', Period.submit);}
   },
   c_admin_credits: {
-    a_index: function() { $$('a.destroy').invoke('observe', 'click', AdminCredit.destroy); },
+    a_index: function() { jQuery('a.destroy').live('click', AdminCredit.destroy); },
     a_edit: Util.focus_first,
     a_create: Util.focus_error,
     a_update: Util.focus_error,
