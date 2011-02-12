@@ -4,7 +4,7 @@ class GraduationPlan < ActiveRecord::Base
   
   has_many :graduation_plan_mappings
   belongs_to :user
-  has_many :credit_assignments, :as => :creditable
+  has_many :legacy_credit_assignments, :as => :creditable
   
   validates_format_of :class_of, :with => /2\d\d\d/, :if => Proc.new{|gp| !gp.class_of.nil?}, :message => 'must be a valid 4-digit year'
 
@@ -54,9 +54,9 @@ class GraduationPlan < ActiveRecord::Base
     return gpm
   end
   
-  
+  #SWEEP
   def map_credit_assignment(requirement, ca)
-    raise ArgumentError, "Some kind of information leak" unless (ca.creditable == self.user) || (ca.creditable == self)
+    raise ArgumentError, "Some kind of information leak" unless (ca.user == self.user) || (ca.primary_parent == self)
     
     ca.graduation_plan_mapping.destroy if ca.graduation_plan_mapping
     mapping = self.graduation_plan_mappings.create(:credit_assignment => ca, :graduation_plan_requirement => requirement)

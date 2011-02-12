@@ -15,6 +15,7 @@ class GraduationPlanMapping < ActiveRecord::Base
   end
   
   def placeholder?
-    self.credit_assignment && self.credit_assignment.attributes['creditable_type'] == 'GraduationPlan'
+    false
+    # self.credit_assignment && self.credit_assignment.attributes['creditable_type'] == 'GraduationPlan'
   end
 end

@@ -18,7 +18,7 @@ class StudentReporting
   def active_students
     %Q{
       SELECT last_name, first_name, id, COALESCE(district_grade, '') AS district_grade, date_active,date_inactive, COALESCE(credits.total,0) AS credits FROM users
-      LEFT JOIN (SELECT creditable_id, ROUND(SUM(credit_hours), 2) AS total FROM credit_assignments  WHERE creditable_type = 'User' AND parent_credit_assignment_id IS NULL GROUP BY creditable_id) AS credits ON credits.creditable_id = users.id
+      LEFT JOIN (SELECT user_id, ROUND(SUM(credit_hours), 2) AS total FROM credit_assignments  WHERE user_id IS NOT NULL AND parent_credit_assignment_id IS NULL GROUP BY user_id) AS credits ON credits.user_id = users.id
       WHERE status = 1 AND privilege =1,       ORDER BY last_name, first_name
     }
   end
@@ -80,7 +80,11 @@ class StudentReporting
       %Q{
         (
           SELECT users.id, terms.school_year, round(sum(ca.credit_hours), 3) as credits, count(enrollments.id) as enrollments from users
-          INNER JOIN enrollments on enrollments.participant_id = users.id and enrollments.role = 0 AND enrollments.enrollment_status >= 2 AND enrollments.completion_status =2,           INNER JOIN contracts on enrollments.contract_id = contracts.id AND contracts.category_id =6,           INNER JOIN credit_assignments ca on enrollments.id = ca.creditable_id AND ca.creditable_type = 'Enrollment' AND ca.credit_hours >0,           INNER JOIN terms on contracts.term_id = terms.id AND terms.school_year = #{school_year}
+          INNER JOIN enrollments on enrollments.participant_id = users.id and enrollments.role = 0 AND enrollments.enrollment_status >= 2 AND enrollments.completion_status =2,           
+          INNER JOIN contracts on enrollments.contract_id = contracts.id AND contracts.category_id =6,           
+          INNER JOIN credit_assignments ca on enrollments.id = ca.enrollment_id AND ca.credit_hours >0,           
+          INNER JOIN terms on contracts.term_id = terms.id AND terms.school_year = #{school_year}
+          WHERE credit_assignments.enrollment_id IS NOT NULL
           GROUP BY users.id, terms.school_year
         )
       }
@@ -139,6 +143,8 @@ class StudentReporting
     end
     
     def credits_earned_in_subject(students, subject)
+      
+      raise "requires creditable_type update"
 
       start_06 = year_start(2006)
       end_06 = year_end(2006)
@@ -161,6 +167,7 @@ class StudentReporting
 
     def credits_earned(students)
 
+      raise "requires creditable_type update"
       start_06 = year_start(2006)
       end_06 = year_end(2006)
       start_07 = year_start(2007)
@@ -181,6 +188,7 @@ class StudentReporting
     end
     
     def end_of_term_credits_report(start_date, end_date, active_term_ids)
+      raise "requires creditable_type update"
       %Q{
         SELECT 
           users.last_name, users.first_name, 

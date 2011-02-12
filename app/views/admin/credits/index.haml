@@ -7,17 +7,15 @@
       %th.credit Credit
       %th.course_id Course ID
       %th.type Type
-      %th.count Credit Assignments
+      %th.count Currently Enrolled
+      %th.count Finalized
+      %th.count &nbsp;
   %tbody
     - @credits.each do |credit|
       %tr{:class=>cycle_stripes}
         %td.credit.clink=link_to credit.course_name, edit_credit_path(credit)
         %td.course_id=credit.course_id
         %td.type=Credit::TYPE_NAMES[credit.course_type]
-        %td.count
-          - if credit.assignment_count
-            = credit.assignment_count
-          - else
-            0
-            = link_to 'delete?', destroy_credit_path(credit), :class=>'destroy'
-              
+        %td.count= credit.enrolled_count
+        %td.count= credit.finalized_count
+        %td.count= link_to 'delete?', destroy_credit_path(credit), :class=>'destroy' if credit.enrolled_count == "0"
