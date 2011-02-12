@@ -28,7 +28,7 @@ class CreditController < ApplicationController
   	  @add = true
 	  else
 	    @credit = CreditAssignment.find(params[:id])
-	    @parent = @credit.creditable
+	    @parent = @credit.primary_parent
 	  end
 	  
 	  @privs = @parent.privileges(@user)
@@ -80,7 +80,6 @@ class CreditController < ApplicationController
 	def update
 	  @credit = CreditAssignment.find(params[:id])
 
-	  @parent = @credit.creditable
 	  @privs = @credit.privileges(@user)
     return redir_error(TinyException::SECURITYHACK, @user) unless @privs[:edit]
 
@@ -92,10 +91,14 @@ class CreditController < ApplicationController
 	  
 	  @credit.contract_term = Term.find(params[:term]) if params[:term]
 	  @credit.credit = Credit.find(params[:course])
-	  @credit.contract_name = @credit.credit.course_name if @parent.is_a? GraduationPlan
+	  
+	  raise "not yet implemented" if @parent.is_a? GraduationPlan
+	  
+	  # @credit.contract_name = @credit.credit.course_name if @parent.is_a? GraduationPlan
+	  
 	  @credit.save!
 	  
-	  if @parent.is_a?(User)
+	  if @credit.user?
 	    render :partial => 'credit/credits', :object => @credit, :locals => {:expanded => true, :closed=>false}
 	  else
 	    render :partial => 'credit/credits', :object => @parent
@@ -138,7 +141,7 @@ class CreditController < ApplicationController
 	
 	def destroy
 	  @credit = CreditAssignment.find(params[:id])
-	  @parent = @credit.creditable
+	  @parent = @credit.primary_parent
 	  
 	  @privs = @credit.privileges(@user)
 	  return redir_error(TinyException::SECURITYHACK, @user) unless @privs[:edit]
@@ -169,7 +172,7 @@ class CreditController < ApplicationController
   def split
     
     @credit_assignment = CreditAssignment.find(params[:id])
-    @student = @credit_assignment.creditable
+    @student = @credit_assignment.user
     @privs = @student.privileges(@user)
     
     return redir_error(TinyException::SECURITYHACK, @user) unless @student.is_a? User and @privs[:edit]

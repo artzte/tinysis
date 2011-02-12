@@ -1,8 +1,12 @@
 class CreditAssignment < ActiveRecord::Base
   
   belongs_to :credit
-  belongs_to :creditable, :polymorphic => true
+  belongs_to :legacy_creditable, :polymorphic => true
+  
   belongs_to :enrollment
+  belongs_to :user
+  belongs_to :contract
+  
   belongs_to :credit_transmittal_batch
   belongs_to :contract_term, :class_name => 'Term', :foreign_key => :contract_term_id
   belongs_to :contract_facilitator, :class_name => 'User', :foreign_key => :contract_facilitator_id
@@ -16,11 +20,11 @@ class CreditAssignment < ActiveRecord::Base
 	has_one :graduation_plan_mapping, :dependent => :destroy
 	
   def privileges(user)
-    creditable.privileges(user)
+    primary_parent.privileges(user)
   end
   
   def placeholder?
-    self.creditable_type == 'GraduationPlan'
+    false #self.creditable_type == 'GraduationPlan'
   end
 
 	def enrollment_finalize(user, date)
@@ -54,13 +58,34 @@ class CreditAssignment < ActiveRecord::Base
 	  self.district_transmitted_on?
 	end
 	
-	def credit_string
-	  str = credit.course_name
-	  if credit.course_id.present? and credit.course_id != "0"
-	    str += " (#{credit.course_id})"
+	# safely retrieve the course ID
+	def credit_course_id
+	  if self.attributes["credit_course_id"].present?
+	    return self.attributes["credit_course_id"]
+	  elsif self.credit_id?
+	    return self.credit.course_id
+	  else
+	    raise "No course ID available"
 	  end
-	  str += " / #{credit_hours_string}"
-	  str
+	end
+	
+	# safely retrieve the course name
+	def credit_course_name
+	  if self.attributes["credit_course_name"].present?
+	    return self.attributes["credit_course_name"]
+	  elsif self.credit_id?
+	    return self.credit.course_name
+	  else
+	    raise "No course name available"
+	  end
+	  
+	end
+	
+	# credit_course_name
+	# credit_course_id
+	# 
+	def credit_string
+	  "#{credit_course_name} (#{credit_course_id}) / #{credit_hours_string}"
 	end
 
 	def credit_hours_string
@@ -77,7 +102,7 @@ class CreditAssignment < ActiveRecord::Base
 	
 	def self.approved_for_transmittal
 	  
-	  self.find(:all, :include => [:credit], :conditions => "credit_transmittal_batch_id is null and creditable_type = 'User' and district_finalize_approved = true")
+	  self.find(:all, :include => [:credit], :conditions => "(credit_transmittal_batch_id IS NULL) AND (user_id IS NOT NULL) AND (district_finalize_approved = true)")
 	  
 	end
 	
@@ -119,6 +144,26 @@ class CreditAssignment < ActiveRecord::Base
     end
     destroy
 	end
+	
+	def user?
+	  self.user_id?
+	end
+	
+	def primary_parent
+	  if user? 
+	    return self.user
+	  elsif self.contract_id?
+	    return self.contract
+	  elsif self.enrollment_id?
+	    return self.enrollment
+	  else
+	    raise "Unknown primary parent"
+	  end
+	end
+	  
+	
+	def primary_parent_classname
+  end
 	
 end
 

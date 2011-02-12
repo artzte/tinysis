@@ -66,7 +66,7 @@ class User < ActiveRecord::Base
 	has_many :learning_plans
 	
 	# there is one graduation plan
-	has_one :_graduation_plan, :class_name => 'GraduationPlan', :foreign_key => 'user_id'
+	has_one :graduation_plan, :class_name => 'GraduationPlan', :foreign_key => 'user_id'
 	
 	# has a coordinator
 	belongs_to :coordinator, :class_name=>'User', :foreign_key=>'coordinator_id'
@@ -76,7 +76,8 @@ class User < ActiveRecord::Base
 	validates_presence_of :date_inactive, :if => Proc.new{|user| user.status == User::STATUS_INACTIVE}, :message => 'required if status is INACTIVE'
   validates_presence_of :coordinator, :if => Proc.new{|user| user.privilege == PRIVILEGE_STUDENT}, :message => 'student accounts must have an assigned coordinator.'
   
-  has_many :credit_assignments, :as => :creditable, :dependent => :destroy, :conditions => 'credit_assignments.parent_credit_assignment_id is null'
+  has_many :legacy_credit_assignments, :as => :creditable, :dependent => :destroy, :conditions => 'credit_assignments.parent_credit_assignment_id IS NULL'
+  has_many :credit_assignments, :conditions => 'credit_assignments.parent_credit_assignment_id IS NULL'
   has_many :facilitated_credit_assignments, :class_name => 'CreditAssignment', :foreign_key => :contract_facilitator_id
 
 #########################################################
@@ -289,7 +290,7 @@ END
     end
     q << "INNER JOIN users AS facilitator ON contracts.facilitator_id = facilitator.id"
     q << "LEFT JOIN (SELECT COUNT(id) AS assignments_count, contract_id FROM assignments WHERE active = true GROUP BY contract_id) AS assignments ON assignments.contract_id = contracts.id"
-    q << "LEFT JOIN credit_assignments ON credit_assignments.creditable_id = enrollments.id AND credit_assignments.creditable_type = 'Enrollment'"
+    q << "LEFT JOIN credit_assignments ON credit_assignments.enrollment_id = enrollment.id"
     q << "LEFT JOIN credits ON credit_assignments.credit_id = credits.id"
     q << "WHERE enrollments.participant_id = #{self.id}"
     case options[:fulfilled]
