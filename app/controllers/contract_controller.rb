@@ -5,7 +5,8 @@ class ContractController < ApplicationController
 
   PUBLIC_METHODS = [:index, :new, :create, :show, :roll, :participant]
 
-  before_filter :login_required, :get_contract_filter
+  before_filter :login_required
+  before_filter :get_contract_filter, :except => [:new]
   before_filter :contract_meta, :only => PUBLIC_METHODS
   before_filter :require_contract, :only => [:show, :roll, :participant]
   
