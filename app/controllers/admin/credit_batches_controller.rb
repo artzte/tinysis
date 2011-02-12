@@ -57,7 +57,7 @@ public
 
 protected
   def get_associated_students
-    user_ids = @credit_assignments.collect{|c| c.creditable_id}.uniq.join(',')
+    user_ids = @credit_assignments.collect{|c| c.user_id}.uniq.join(',')
 
     case params[:o]
     when nil
@@ -71,7 +71,7 @@ protected
 
     @students = User.find(:all, :conditions => "id in (#{user_ids})", :order => order)
     @credit_assignments_count = @credit_assignments.length
-    @credit_assignments = @credit_assignments.group_by(&:creditable_id)
+    @credit_assignments = @credit_assignments.group_by(&:user_id)
   end
   
 end
