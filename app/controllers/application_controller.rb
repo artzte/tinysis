@@ -87,15 +87,10 @@ protected
 		id = the_id || params[:contract_id] || params[:id] || session[:contract_id]
 		return false if id.nil?
 		
-		@contract = Contract.find(id)
+		@contract = Contract.find_by_id(id)
+		return false unless @contract
 		 
-		if @contract
-		  @privs = @contract.privileges(@user)
-		else
-		  @privs = Contract.privileges(@user)
-		end
-		
-		return false if @contract.nil?
+		@privs = @contract.privileges(@user)
 		
 		session[:contract_id] = @contract.id
 		return true
