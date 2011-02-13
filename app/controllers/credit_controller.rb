@@ -72,9 +72,7 @@ class CreditController < ApplicationController
 	    credit.notes << Note.new(:note => params[:notes].strip, :author => @user)
 	  end
 	  
-	  render :update do |page|
-	    page.replace credit_container_id(@parent), :partial => 'credit/credits', :object => @parent	    
-	  end
+	  render :partial => 'credit/credits', :object => @parent	    
 	end
 	
 	def update
@@ -92,12 +90,14 @@ class CreditController < ApplicationController
 	  @credit.contract_term = Term.find(params[:term]) if params[:term]
 	  @credit.credit = Credit.find(params[:course])
 	  
+	  @parent = @credit.primary_parent
+	  
 	  raise "not yet implemented" if @parent.is_a? GraduationPlan
 	  
 	  # @credit.contract_name = @credit.credit.course_name if @parent.is_a? GraduationPlan
 	  
 	  @credit.save!
-	  
+
 	  if @credit.user?
 	    render :partial => 'credit/credits', :object => @credit, :locals => {:expanded => true, :closed=>false}
 	  else
@@ -148,7 +148,7 @@ class CreditController < ApplicationController
     
 	  @credit.destroy
 	  
-	  render :partial => 'credit/credits', :object => @parent	    
+	  render :nothing => true
 	end
 
   # Deletes one or more finalized credits from the worksheet
