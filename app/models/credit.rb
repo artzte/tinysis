@@ -46,7 +46,7 @@ class Credit < ActiveRecord::Base
     if transmittable
       credits = Credit.transmittable_credits
     else
-      credits = Credit.all
+      credits = Credit.find(:all, :order => "course_type, course_name")
     end
     credits.map{|c| [c.credit_string, c.id]}
   end
