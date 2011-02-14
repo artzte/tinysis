@@ -8,12 +8,12 @@
 %li.cr
   - if @privs[:edit] and ca.credit_transmittal_batch_id.nil? and !closed
     - if ca.primary_parent.is_a?(User)
-      = link_to_function(credit_string, "Credit.worksheet_editor(#{ca.id})")
+      = link_to_function(credit_string, "Credit.worksheet_editor(#{ca.id}, this)")
     - else
-      = link_to_function(credit_string, "Credit.credit_editor(#{ca.id})")
+      = link_to_function(credit_string, "Credit.credit_editor(#{ca.id}, this)")
     - if placeholder
       == (#{ca.contract_term.name})
-    = link_to_function('X', "Credit.destroy(#{ca.id}, '#{ca.primary_parent.class.class_name}', #{ca.primary_parent.id})")
+    = link_to('X', destroy_credit_assignment_path(ca), :class => 'destroy')
     = hidden_field_tag("course_id_#{ca.id}", ca.credit_course_id)
     = hidden_field_tag("course_credits_#{ca.id}", ca.credits)
   - else
