@@ -20,7 +20,7 @@
 	</li>
 	<% end -%>
 <% else -%>
-<%= content_tag('li', link_to_function('Add credit', "Credit.show_add('#{credits.class}', #{credits.id})"), :class=>'add') if @privs[:edit] and !closed %>
+<%= content_tag('li', link_to_function('Add credit', "Credit.show_add('#{credits.class}', #{credits.id}, this)"), :class=>'add') if @privs[:edit] and !closed %>
 	<%= render :partial => 'credit/credits_item', :collection => credits.credit_assignments, :locals => {:expanded => expanded, :closed => closed, :placeholder => placeholder} %>
 <% end -%>
 </ul>
