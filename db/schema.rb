@@ -9,7 +9,9 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20100122192738) do
+ActiveRecord::Schema.define(:version => 20110131225749) do
+
+  disable_foreign_key_checks
 
   create_table "assignments", :force => true do |t|
     t.integer  "contract_id"
@@ -66,9 +68,7 @@ ActiveRecord::Schema.define(:version => 20100122192738) do
   add_index "contracts", ["term_id"], :name => "index_contracts_on_term_id"
 
   create_table "credit_assignments", :force => true do |t|
-    t.integer "creditable_id",                 :default => 0,   :null => false
-    t.string  "creditable_type",               :default => "",  :null => false
-    t.integer "credit_id",                     :default => 0,   :null => false
+    t.integer "credit_id",                     :default => 0
     t.float   "credit_hours",                  :default => 0.5, :null => false
     t.date    "enrollment_finalized_on"
     t.integer "enrollment_id"
@@ -84,15 +84,20 @@ ActiveRecord::Schema.define(:version => 20100122192738) do
     t.date    "district_transmitted_on"
     t.float   "override_hours"
     t.string  "override_by"
+    t.integer "user_id"
+    t.integer "contract_id"
+    t.string  "credit_course_name"
+    t.string  "credit_course_id"
   end
 
   add_index "credit_assignments", ["contract_facilitator_id"], :name => "index_credit_assignments_on_contract_facilitator_id"
+  add_index "credit_assignments", ["contract_id"], :name => "index_credit_assignments_on_contract_id"
   add_index "credit_assignments", ["contract_term_id"], :name => "index_credit_assignments_on_contract_term_id"
   add_index "credit_assignments", ["credit_id"], :name => "index_credit_assignments_on_credit_id"
   add_index "credit_assignments", ["credit_transmittal_batch_id"], :name => "index_credit_assignments_on_credit_transmittal_batch_id"
-  add_index "credit_assignments", ["creditable_type", "creditable_id"], :name => "index_credit_assignments_on_creditable"
   add_index "credit_assignments", ["enrollment_id"], :name => "index_credit_assignments_on_enrollment_id"
   add_index "credit_assignments", ["parent_credit_assignment_id"], :name => "index_credit_assignments_on_parent_credit_assignment_id"
+  add_index "credit_assignments", ["user_id"], :name => "index_credit_assignments_on_user_id"
 
   create_table "credit_transmittal_batches", :force => true do |t|
     t.date   "finalized_on"
@@ -293,5 +298,12 @@ ActiveRecord::Schema.define(:version => 20100122192738) do
   add_index "users", ["date_inactive"], :name => "index_users_on_date_inactive"
   add_index "users", ["privilege"], :name => "index_users_on_privilege"
   add_index "users", ["status"], :name => "index_users_on_user_status"
+
+  add_foreign_key_constraint "credit_assignments", "contract_id", "contracts", "id", :name => "credit_assignments_ibfk_contract_id", :on_update => nil, :on_delete => :set_null
+  add_foreign_key_constraint "credit_assignments", "credit_id", "credits", "id", :name => "credit_assignments_ibfk_credit_id", :on_update => nil, :on_delete => :set_null
+  add_foreign_key_constraint "credit_assignments", "enrollment_id", "enrollments", "id", :name => "credit_assignments_ibfk_enrollment_id", :on_update => nil, :on_delete => :cascade
+  add_foreign_key_constraint "credit_assignments", "user_id", "users", "id", :name => "credit_assignments_ibfk_user_id", :on_update => nil, :on_delete => nil
+
+  enable_foreign_key_checks
 
 end
