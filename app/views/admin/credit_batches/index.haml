@@ -1,7 +1,7 @@
 %h1 Credit Transmittal Reports
 %p
   - if @approved.length > 0
-    - form_tag :url => create_credit_batch_path, :html => {:onsubmit => "return confirm('Are you sure you want to finalize all approved credits at this time?'))"} do |form|
+    - form_tag create_credit_batch_path, :method => 'POST', :id => 'create_credit_batch' do |form|
       = submit_button "Finalize the #{number_with_delimiter(@approved.length)} approved credits currently available"
 %p
   Found 

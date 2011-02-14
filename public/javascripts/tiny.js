@@ -664,6 +664,13 @@ var actions_table = {
     a_update: Util.focus_error,
     a_new: Util.focus_first
   },
+  c_admin_credit_batches: {
+    a_index: function(){
+      $j('#create_credit_batch').submit(function(event) {
+        return confirm("Are you sure you want to finalize credits at this time?");
+      });
+    }
+  },
   c_admin_learning_plans: {
     a_index: function() { 
       $$('a.destroy').invoke('observe', 'click', LearningPlanGoal.destroy);
