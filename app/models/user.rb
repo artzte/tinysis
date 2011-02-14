@@ -290,7 +290,7 @@ END
     end
     q << "INNER JOIN users AS facilitator ON contracts.facilitator_id = facilitator.id"
     q << "LEFT JOIN (SELECT COUNT(id) AS assignments_count, contract_id FROM assignments WHERE active = true GROUP BY contract_id) AS assignments ON assignments.contract_id = contracts.id"
-    q << "LEFT JOIN credit_assignments ON credit_assignments.enrollment_id = enrollment.id"
+    q << "LEFT JOIN credit_assignments ON credit_assignments.enrollment_id = enrollments.id"
     q << "LEFT JOIN credits ON credit_assignments.credit_id = credits.id"
     q << "WHERE enrollments.participant_id = #{self.id}"
     case options[:fulfilled]
