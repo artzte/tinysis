@@ -27,18 +27,37 @@ class CreditAssignment < ActiveRecord::Base
     false #self.creditable_type == 'GraduationPlan'
   end
 
-	def enrollment_finalize(user, date)
-	  update_attribute(:enrollment_finalized_on, date)
+	def enrollment_finalize(participant, date)
+    # set finalized_on date and move contract details over
+	  update_attributes(
+	    :enrollment_finalized_on => date, 
+	    :contract_name => contract.name, 
+	    :contract_facilitator_name => contract.facilitator.last_name_first, 
+	    :contract_facilitator_id => self.contract.facilitator_id, 
+	    :contract_term_id => contract.term.id,
+	    :user_id => participant.id
+	  )
   end
   
+  # facilitator has approved the credit for transmittal to the district. move the credit course names over and record who approved
+  # the credit for transmittal to district
 	def district_approve(user, date)
-    update_attributes(:district_finalize_approved => true, :district_finalize_approved_by => user.last_name_first, :district_finalize_approved_on => date)
+	  raise "Can't approve this, as it has already been approved for recording at the district" if self.credit_transmittal_batch_id
+    update_attributes(
+      :district_finalize_approved => true, 
+      :district_finalize_approved_by => user.last_name_first, 
+      :district_finalize_approved_on => date, 
+      :credit_course_name => credit.course_name, 
+      :credit_course_id => credit.course_id )
 	end
 	
 	def district_unapprove
-	  self.district_finalize_approved = false
-	  self.district_finalize_approved_by = nil
-	  self.district_finalize_approved_on = nil
+	  raise "Can't unapprove this, as it has already been approved for recording at the district" if self.credit_transmittal_batch_id
+    self.district_finalize_approved = false
+    self.district_finalize_approved_by = nil
+    self.district_finalize_approved_on = nil
+    self.credit_course_name = nil
+    self.credit_course_id = nil
 	  save!
 	end
 	
