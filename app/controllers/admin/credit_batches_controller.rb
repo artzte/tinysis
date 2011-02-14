@@ -38,7 +38,7 @@ public
     @credit_assignments = CreditAssignment.approved_for_transmittal
     if @credit_assignments.empty?
       flash[:notice] = "There were no credits to finalize at this time."
-      redirect_to :action => 'credits'
+      redirect_to :action => 'index'
       return
     end
 
