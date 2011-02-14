@@ -11,6 +11,7 @@ ActionController::Routing::Routes.draw do |map|
     credit.connect '/credit/editor/:id', :action => 'editor'
     credit.combine_credit_assignments_form '/credit/combiner/:id', :action => 'combiner'
     credit.with_options :conditions => {:method => :post} do |pc|
+      pc.destroy_credit_assignment '/credit/destroy/:id', :action => 'destroy'
       pc.connect '/credit/add/:parent_type/:parent_id', :action => 'add'
       pc.connect '/credit/update/:id', :action => 'update'
       pc.admin_destroy_credit_assignments '/credit/admin_destroy/:id', :action => 'admin_destroy'
