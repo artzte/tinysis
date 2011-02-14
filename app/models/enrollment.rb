@@ -247,15 +247,10 @@ public
 		end
 		update_attributes(:enrollment_status => STATUS_FINALIZED, :finalized_on => date)
 
-    # if the enrollment was completed fulfilled, move the credits over.
+    # if the enrollment was completed fulfilled, link the credit to the student
 	  if self.completion_status == COMPLETION_FULFILLED
-
 	    credit_assignments.each do |ca|
-  	    ca.enrollment_finalize(user, date)
-  	    
-  	    credit = CreditAssignment.create(:enrollment => self, :enrollment_finalized_on => date, :contract_name => contract.name, :contract_facilitator_name => contract.facilitator.last_name_first, :contract_facilitator_id => self.contract.facilitator_id, :contract_term_id => contract.term.id, :credit => ca.credit, :credit_hours => ca.credit_hours)
-        credit.notes << ca.notes
-  	    participant.credit_assignments << credit
+  	    ca.enrollment_finalize(participant, date)
   	  end 
     end
     
