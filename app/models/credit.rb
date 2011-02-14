@@ -22,12 +22,12 @@ class Credit < ActiveRecord::Base
 
       LEFT OUTER JOIN (
         SELECT credit_id, COALESCE(COUNT(id), 0) AS count FROM credit_assignments ca 
-          WHERE ca.parent_credit_assignment_id IS NULL AND ca.user_id IS NULL AND ca.enrollment_id IS NOT NULL 
+          WHERE ca.parent_credit_assignment_id IS NULL AND ca.user_id IS NULL AND ca.enrollment_id IS NOT NULL AND ca.enrollment_finalized_on IS NULL
           GROUP BY credit_id) AS ca_enrolled ON ca_enrolled.credit_id = credits.id
 
       LEFT OUTER JOIN (
         SELECT credit_id, COALESCE(COUNT(id), 0) AS count FROM credit_assignments ca 
-          WHERE ca.parent_credit_assignment_id IS NULL AND ca.user_id IS NOT NULL AND ca.enrollment_id IS NOT NULL 
+          WHERE ca.parent_credit_assignment_id IS NULL AND ca.user_id IS NOT NULL
           GROUP BY credit_id) AS ca_finalized ON ca_finalized.credit_id = credits.id
 
       ORDER BY course_type, course_name 
