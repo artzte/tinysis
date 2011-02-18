@@ -27,14 +27,14 @@ class CreditAssignment < ActiveRecord::Base
     false #self.creditable_type == 'GraduationPlan'
   end
 
-	def enrollment_finalize(participant, date)
+	def enrollment_finalize(participant, contract, date)
     # set finalized_on date and move contract details over
 	  update_attributes(
 	    :enrollment_finalized_on => date, 
 	    :contract_name => contract.name, 
 	    :contract_facilitator_name => contract.facilitator.last_name_first, 
-	    :contract_facilitator_id => self.contract.facilitator_id, 
-	    :contract_term_id => contract.term.id,
+	    :contract_facilitator_id => contract.facilitator_id, 
+	    :contract_term_id => contract.term_id,
 	    :user_id => participant.id
 	  )
   end
