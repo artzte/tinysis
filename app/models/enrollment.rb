@@ -250,7 +250,7 @@ public
     # if the enrollment was completed fulfilled, link the credit to the student
 	  if self.completion_status == COMPLETION_FULFILLED
 	    credit_assignments.each do |ca|
-  	    ca.enrollment_finalize(participant, date)
+  	    ca.enrollment_finalize(participant, contract, date)
   	  end 
     end
     
