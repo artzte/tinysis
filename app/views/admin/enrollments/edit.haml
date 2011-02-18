@@ -33,15 +33,25 @@
         %th.contract Contract
         %th.status Status
         %th.total Total
-        %th.active Active
+        %th.active Enrolled
+        %th.active Finalized
+        %th.active Closed (ready to finalize)
     %tbody
       - contracts.each do |c|
         %tr
           %td.facilitator= c.facilitator.last_name_f
-          %td.contract= c.name
+          %td.contract= link_to c.name, enrollments_path(c)
           %td.status
-            %span{:id => "st_#{c.id}"}= contract_status_graphic(c)
+            %span= contract_status_graphic(c)
           %td.total
-            %span{:id => "to_#{c.id}"}= @enrollments[c.id][:total]
+            %span= @enrollments[c.id][:total]
           %td.active
-            %span{:id => "ac_#{c.id}"}= @enrollments[c.id][:active]
+            %span= @enrollments[c.id][:enrolled]
+          %td.active
+            %span= @enrollments[c.id][:finalized]
+          %td.active
+            %span
+              - unless @enrollments[c.id][:closed] == 0
+                = @enrollments[c.id][:closed]
+              - else
+                &nbsp;

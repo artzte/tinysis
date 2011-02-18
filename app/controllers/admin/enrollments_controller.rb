@@ -26,14 +26,20 @@ public
     @open_start = Contract.count_by_sql("select count(*) from contracts where (term_id = #{@term.id}) and contract_status <> #{Contract::STATUS_CLOSED}")
     @closed_start = @contracts.length - @open_start
 
-    enrollments = Enrollment.find(:all, :conditions => "contract_id in (#{@contracts.collect{|c| c.id}.join(',')})", :select => 'contract_id, finalized_on')
+    enrollments = Enrollment.find(:all, :conditions => "contract_id in (#{@contracts.collect{|c| c.id}.join(',')})", :select => 'contract_id, enrollment_status, completion_status, finalized_on')
+
+    # make a placeholder hash for the enrollments
     @enrollments = {}
-    @contracts.each{|c| @enrollments[c.id] = {:total => 0, :active => 0}}
+
+    # make a placeholder hash for each contract
+    @contracts.each{|c| @enrollments[c.id] = {:total => 0, :enrolled => 0, :finalized => 0, :closed => 0}}
+
+    # spin through each enrollment updating the counts
     enrollments.each do |e|
       @enrollments[e.contract_id][:total] += 1
-      unless e.finalized_on?
-        @enrollments[e.contract_id][:active] += 1
-      end
+      @enrollments[e.contract_id][:enrolled] += 1 if e.enrolled?
+      @enrollments[e.contract_id][:finalized] += 1 if e.finalized?
+      @enrollments[e.contract_id][:closed] += 1 if e.closed?
     end
     @contracts = @contracts.group_by{|c| c.contract_status == Contract::STATUS_CLOSED ? 0 : 1}
     @contracts[0] ||= []
