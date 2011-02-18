@@ -15,7 +15,7 @@
       %th Enrollment Notes
   %tbody
     - @enrollments.each do |e|
-      - editable = !e.fulfilled? and @privs[:edit]
+      - editable = (!e.finalized_fulfilled?) and @privs[:edit]
       %tr
         %td
           .enrollment
