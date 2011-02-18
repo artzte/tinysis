@@ -2,7 +2,7 @@
 - status_text = String.new(e.status_text)
 - status_text << " (#{Enrollment::ROLE_NAMES[e.role]})" if e.role==Enrollment::ROLE_INSTRUCTOR
 %div{:class=>e.status_text.downcase}
-  - unless !editable || e.fulfilled? || !@privs[:edit]
+  - unless !editable || e.finalized_fulfilled? || !@privs[:edit]
     %a.show{:href=>'#', :title => 'Update status'}=status_text
     %ul.status_updater.popup{:style=>'display:none'}
       - case e.enrollment_status 
