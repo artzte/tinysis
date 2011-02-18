@@ -145,15 +145,27 @@ public
 		
 	# status methods
 	
-	def canceled?
-	  [STATUS_CLOSED, STATUS_FINALIZED].include?(self.enrollment_status) && self.completion_status == COMPLETION_CANCELED
+	def enrolled?
+	  self.enrollment_status == STATUS_ENROLLED
 	end
 	
 	def finalized?
 	  self.enrollment_status == STATUS_FINALIZED
 	end
 	
+	def closed?
+	  self.enrollment_status == STATUS_CLOSED
+	end
+	
+	def canceled?
+	  (closed? || finalized?) && self.completion_status == COMPLETION_CANCELED
+	end
+	
 	def fulfilled?
+	  (finalized?) && self.completion_status == COMPLETION_FULFILLED
+	end
+	
+	def finalized_fulfilled?
 	  finalized? && self.completion_status == COMPLETION_FULFILLED
 	end
 	
