@@ -33,7 +33,7 @@ class LearningPlanController < ApplicationController
 
   def edit
     @year = year_from_params
-    @plan = @student.learning_plan(@year) || @student.learning_plans.create(:year => @year, :weekly_hours => FTE_HOURS)
+    @plan = @student.learning_plan(@year) || @student.learning_plans.create(:year => @year, :weekly_hours => AppConfig.fte_hours)
 		@goals = @plan.learning_plan_goals
   end
 
