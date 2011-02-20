@@ -2,17 +2,17 @@ class UserMailer < ActionMailer::Base
 
   def password_reset(user, password)
 		# Email header info MUST be added here
-    @subject    = APP_DOMAIN + ' Password Reset'
+    @subject    = AppConfig.app_domain + ' Password Reset'
     @recipients = user.email
-    @from       = APP_ACCOUNT_EMAIL
+    @from       = AppConfig.app_accounts_email
 		
 		# Email body substitutions go here
 		@body["name"] = user.first_name
 		@body["login"] = user.login
 		@body["password"] = password
 		@body["id"] = user.id
-		@body["org"] = APP_ORGANIZATION
-		@body["domain"] = APP_DOMAIN
+		@body["org"] = AppConfig.app_organization
+		@body["domain"] = AppConfig.app_domain
 		@body["name"] = user.first_name
 		
 		# Email body substitutions go here
