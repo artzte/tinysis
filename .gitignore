@@ -25,3 +25,6 @@ config/local.environment.rb
 .idea/**
 *.swp
 export/
+config/environments/development.yml
+config/environments/production.yml
+config/environments/test.yml
