@@ -83,6 +83,12 @@ public
 	  render :text => 'coming soon', :layout => true
 	end
 	
+  before_filter :set_no_admin, :only => [:edit, :update]
+  def set_no_admin 
+    @noadmin = true
+  end
+  hide_action :set_no_admin
+  
 	def edit
 	  if @user.student?
 	    set_meta :tab1 => :my, :tab2 => :account, :title => "#{@user.full_name} Settings"
