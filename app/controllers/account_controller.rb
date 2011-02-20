@@ -64,7 +64,7 @@ public
 		
 		u = User.authorized_email(email)
 		if u.nil?
-		  flash[:notice] = "We could not find an active account with that email address. Please contact the office if you need assistance."
+		  flash[:notice] = "Could not find an active account with that email address."
 			return				
 		end
 		

@@ -11,12 +11,12 @@ class TinyException < Exception
 
 	MESSAGES = {
 		NOPRIVILEGES => "You don't have privileges for that action.",
-		SECURITYHACK => "#{APP_NAME} encountered an unexpected error.",
+		SECURITYHACK => "#{AppConfig.app_name} encountered an unexpected error.",
 		ENROLL_INVALIDFACILITATOR => "That user can't be assigned as a contract facilitator.",
 		ENROLL_UNAVAILABLE => "This contract is not marked as enrollable.",
 		ENROLL_DUPLICATE => "The person is already enrolled in the contract.",
-		CONTRACTUPDATEFAILED => "#{APP_NAME} wasn't able to update the contract.",
-		NOCONTRACT => "#{APP_NAME} encountered an unexpected error."
+		CONTRACTUPDATEFAILED => "#{AppConfig.app_name} wasn't able to update the contract.",
+		NOCONTRACT => "#{AppConfig.app_name} encountered an unexpected error."
 	}
 	
 	attr_accessor :error_code
