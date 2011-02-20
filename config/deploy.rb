@@ -17,6 +17,7 @@ remote_task :symlink do
   run "if [[ ! -d \"#{release_path}/public/assets\" ]]; then mkdir -p \"#{release_path}/public/assets\"; fi"
   run "ln -s #{shared_path}/assets/gradesheet #{release_path}/public/assets/gradesheet"
   run "ln -s #{shared_path}/config/database.yml #{release_path}/config/database.yml"
+  run "ln -s #{shared_path}/config/environments/production.yml #{release_path}/config/environments/production.yml"
 end
 
 desc "Full deployment cycle"
