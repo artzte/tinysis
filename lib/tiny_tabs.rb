@@ -12,7 +12,7 @@ module TinyTabs
       
       :school => {
         :path => '/',
-        :title => APP_ORGANIZATION_SHORTNAME,
+        :title => AppConfig.app_organization_shortname,
         :tabs => {
           :index => {:title => 'Welcome', :path => "/"},
           :catalog => {:title => 'Course Catalog', :path => "/catalog"},
@@ -26,7 +26,7 @@ module TinyTabs
         :tabs => {
           :index => {:title => 'My Status', :path => "/status"},
           :contract => {:title => 'Contract Status', :path => "/status/contract"},
-          :coor => {:title => "#{APP_ORGANIZATION_HOMEROOM_NAME} Status", :path => "/status/coor"},
+          :coor => {:title => "#{AppConfig.app_organization_homeroom_name} Status", :path => "/status/coor"},
           :account => { :title => 'My Account', :path => "/my/account" },
           },
         :order => [:index, :contract, :coor, :account]
