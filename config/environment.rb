@@ -75,25 +75,11 @@ Rails::Initializer.run do |config|
 
 
   config.action_mailer.perform_deliveries = true
-  config.action_mailer.delivery_method = :smtp
   config.action_mailer.default_charset = "utf-8"
-  config.action_mailer.smtp_settings = {
-    :address => "smtp.gmail.com",
-    :port => 587,
-    :authentication => :plain,
-    :user_name => "admin@nova.tinysis.org",
-    :password => "thenovabomb332"
-  }
 end
 
-
-require 'smtp_tls'
 require 'monkey_patches'
 
-
-ExceptionNotifier.exception_recipients = [APP_EXCEPTION_EMAIL]
-ExceptionNotifier.sender_address = "\"#{APP_DOMAIN} Exception Mailer\" <#{APP_ACCOUNT_EMAIL}>"
-ExceptionNotifier.email_prefix = "[TinySIS glitch] "
 ActionMailer::Base.raise_delivery_errors = true
 
 class Date

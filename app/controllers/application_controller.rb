@@ -4,7 +4,7 @@
 
 class ApplicationController < ActionController::Base
   include SearchHelper
-	include ExceptionNotifiable
+  include ExceptionNotification::Notifiable
 	include LoginSystem
 	
 	layout "tiny"

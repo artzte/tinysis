@@ -1,0 +1,19 @@
+# override in environment-specific config files
+
+app_name: "TinySIS"
+app_domain: "your.domain.name"
+app_organization_shortname: "short name of your school"
+app_organization: "full name of your school"
+app_admin_email: your_admin_email@yourdomain.com
+app_accounts_email: your_accounts_email@yourdomain.com
+app_exception_email_recipient: bug_mailer_recipient@yourdomain.com
+app_organization_homeroom_name: Homeroom
+
+smtp_tls_config:
+  address: smtp.gmail.com
+  port: 587
+  domain: nova.tinysis.org
+  user_name: admin@nova.tinysis.org
+  password: stink@rootery
+
+fte_hours: 25
