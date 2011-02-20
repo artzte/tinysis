@@ -8,7 +8,7 @@
 = form.text_field :email
 = form.password_field :password
 = form.password_field :password_confirmation
-- if @user.admin?
+- if !@noadmin && @user.admin?
   %fieldset
     - @school_year = Setting.current_year
     %h3 Account Privileges and Status
