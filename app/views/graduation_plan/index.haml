@@ -8,7 +8,7 @@
       - if @privs[:edit]
         = url_button "Return to worksheet", graduation_path(@student), :small => true
     - else
-      = url_button "Manage placeholder credits", placeholder_credits_path(@student), :small => true
+      / = url_button "Manage placeholder credits", placeholder_credits_path(@student), :small => true
       = url_button "View print version", graduation_report_path(@student), :small => true
 
   #unassigned
