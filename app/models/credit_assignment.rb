@@ -39,16 +39,19 @@ class CreditAssignment < ActiveRecord::Base
 	  )
   end
   
-  # facilitator has approved the credit for transmittal to the district. move the credit course names over and record who approved
-  # the credit for transmittal to district
+  # facilitator has approved the credit for transmittal to the district. 
+  # move the credit course names over and record who approved the credit for transmittal to district
 	def district_approve(user, date)
 	  raise "Can't approve this, as it has already been approved for recording at the district" if self.credit_transmittal_batch_id
-    update_attributes(
-      :district_finalize_approved => true, 
+    update_attributes :district_finalize_approved => true, 
       :district_finalize_approved_by => user.last_name_first, 
       :district_finalize_approved_on => date, 
       :credit_course_name => credit.course_name, 
-      :credit_course_id => credit.course_id )
+      :credit_course_id => credit.course_id
+      
+    child_credit_assignments.each do |child|
+      child.update_attributes :credit_course_name => child.credit.course_name, :credit_course_id => child.credit.course_id
+    end
 	end
 	
 	def district_unapprove
@@ -59,6 +62,12 @@ class CreditAssignment < ActiveRecord::Base
     self.credit_course_name = nil
     self.credit_course_id = nil
 	  save!
+	  
+	  child_credit_assignments.each do |child|
+      child.credit_course_name = nil
+      child.credit_course_id = nil
+      child.save!
+    end
 	end
 	
 	def facilitator_approved?
