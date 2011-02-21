@@ -101,7 +101,8 @@ protected
   end
   
   def my_unassigned
-    (@student.unassigned_credits + @graduation_plan.unassigned_credits).sort{|x,y| x.credit.course_name<=>y.credit.course_name}
+    # (@student.unassigned_credits + @graduation_plan.unassigned_credits).sort{|x,y| x.credit.course_name<=>y.credit.course_name}
+    (@student.unassigned_credits).sort{|x,y| x.credit.course_name<=>y.credit.course_name}
   end
 
 end
