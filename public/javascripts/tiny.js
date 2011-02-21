@@ -658,7 +658,15 @@ var actions_table = {
     a_update: function() { $('periods_form').observe('submit', Period.submit);}
   },
   c_admin_credits: {
-    a_index: function() { jQuery('a.destroy').live('click', AdminCredit.destroy); },
+    a_index: function() { 
+      jQuery('a.destroy').live('click', AdminCredit.destroy);
+      jQuery('a.behavior.show_deletable').click(function() {
+        var table = $j("#credits_list");
+        table.find('tbody tr').not('.deletable').toggle();
+        table.stripe_table();
+        return false;
+      });
+    },
     a_edit: Util.focus_first,
     a_create: Util.focus_error,
     a_update: Util.focus_error,
