@@ -660,9 +660,9 @@ var actions_table = {
   c_admin_credits: {
     a_index: function() { 
       jQuery('a.destroy').live('click', AdminCredit.destroy);
-      jQuery('a.behavior.show_deletable').click(function() {
+      jQuery('a.behavior.show_can_delete').click(function() {
         var table = $j("#credits_list");
-        table.find('tbody tr').not('.deletable').toggle();
+        table.find('tbody tr').not('.can_delete').toggle();
         table.stripe_table();
         return false;
       });
