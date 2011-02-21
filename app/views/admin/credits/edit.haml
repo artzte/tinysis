@@ -1,10 +1,46 @@
-%h1 Edit Credit Type
-
-- if (count = @credit.credit_assignments.count) > 0
-  %p.caution= "Caution: this change will affect #{pluralize(count, 'credit assignment')}."
+%h1 Edit Credit
 
 - tiny_form_for :credit, @credit, :url => update_credit_path(@credit), :html => {:class=>'tiny shaded'} do |form|
   %p
     = submit_button 'Update'
     = url_button 'Cancel', credits_path
   = render :partial => 'form', :object => form
+  
+%h3 Students enrolled for this credit
+%p These enrollments are currently active.
+%table.tiny.striped
+  %thead
+    %tr
+      %th Student
+      %th Coordinator
+      %th Course
+      %th Term
+      %th Course Facilitator
+      %th Credit Hours
+  %tbody
+    - @credit.active_enrolled_users_report.each do |student|
+      - contract = Contract.find(student["enrollment_contract_id"], :include => [:term, :facilitator])
+      %tr
+        %td= student.last_name_first
+        %td= student.coordinator_last_name
+        %td= link_to contract.name, enrollments_path(contract)
+        %td= contract.term.name
+        %td= contract.facilitator.last_name
+        %td= student.credit_hours
+
+%h3 Students with finalized credits
+%p These students have completed credits against this credit type. These credits have not been approved for transmittal as of yet.
+%table.tiny.striped
+  %thead
+    %tr
+      %th Student
+      %th Coordinator
+      %th Credit Award Date
+      %th Credit Hours
+  - @credit.unapproved_credited_users_report.each do |student|
+    %tr
+      %td= link_to student.last_name_first, credit_assignments_path(student)
+      %td= student.coordinator_last_name
+      %td= student.enrollment_finalized_on
+      %td= student.credit_hours
+

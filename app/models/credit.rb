@@ -15,32 +15,78 @@ class Credit < ActiveRecord::Base
   validates_uniqueness_of :course_name, :message => 'has already been used.'
   validates_uniqueness_of :course_id, :if => Proc.new { |cr| cr.course_id.present? and cr.course_id_changed? and cr.course_id != "0" }, :message => 'ID has already been used.'
   
-  def Credit.all
+  def Credit.admin_credit_report
     find_by_sql %Q{
-      SELECT credits.*, COALESCE(ca_enrolled.count,0) AS enrolled_count, COALESCE(ca_finalized.count,0) AS finalized_count
+      SELECT credits.*, COALESCE(ca_enrolled.count,0) AS enrolled_count, COALESCE(ca_finalized.count,0) AS finalized_count, COALESCE(ca_approved.count,0) AS approved_count
       FROM credits
-
+      
+      # credit assignments that are attached to an unfinalized enrollment
       LEFT OUTER JOIN (
         SELECT credit_id, COALESCE(COUNT(id), 0) AS count FROM credit_assignments ca 
-          WHERE ca.parent_credit_assignment_id IS NULL AND ca.user_id IS NULL AND ca.enrollment_id IS NOT NULL AND ca.enrollment_finalized_on IS NULL
+          WHERE ca.user_id IS NULL AND ca.enrollment_id IS NOT NULL
+          AND ca.enrollment_finalized_on IS NULL  # this is to exclude legacy credit assignments from when dupes were created upon transferral to user
           GROUP BY credit_id) AS ca_enrolled ON ca_enrolled.credit_id = credits.id
 
+      # credit assignments that are finalized and attached to a user record, but not approved by the facilitator
       LEFT OUTER JOIN (
         SELECT credit_id, COALESCE(COUNT(id), 0) AS count FROM credit_assignments ca 
-          WHERE ca.parent_credit_assignment_id IS NULL AND ca.user_id IS NOT NULL
+          WHERE ca.parent_credit_assignment_id IS NULL AND ca.user_id IS NOT NULL AND ca.district_finalize_approved_on IS NULL
           GROUP BY credit_id) AS ca_finalized ON ca_finalized.credit_id = credits.id
 
+      # credit assignments that are approved by the facilitator for transmittal
+      LEFT OUTER JOIN (
+        SELECT credit_id, COALESCE(COUNT(id), 0) AS count FROM credit_assignments ca 
+          WHERE ca.parent_credit_assignment_id IS NULL AND ca.user_id IS NOT NULL AND ca.district_finalize_approved_on IS NOT NULL
+          GROUP BY credit_id) AS ca_approved ON ca_approved.credit_id = credits.id
+
+      GROUP BY credits.id
+      
       ORDER BY course_type, course_name 
     }
   end
   
   # returns a list of users enrolled in a credit
-  def users_enrolled_in
+  def active_enrolled_users_report
     
-    User.find :all, :joins => 'INNER JOIN enrollments e ON e.participant_id = users.id INNER JOIN credit_assignments ca ON ca.enrollment_id = e.id', :group => 'users.id'
+    User.find :all, 
+      :joins => %Q{
+        INNER JOIN enrollments e ON e.participant_id = users.id 
+        INNER JOIN credit_assignments ca ON ca.enrollment_id = e.id
+        INNER JOIN users co ON co.id = users.coordinator_id
+        INNER JOIN contracts c ON c.id = e.contract_id
+      },
+      :conditions => %Q{
+        (ca.enrollment_finalized_on IS NULL) AND
+        (ca.user_id IS NULL) AND
+        (ca.credit_id = #{self.id})
+      },
+      :select => "users.*, co.last_name AS coordinator_last_name, ca.credit_hours as credit_hours, c.id as enrollment_contract_id",
+      :group => 'users.id',
+      :order => 'co.last_name ASC, users.last_name ASC'
     
   end
     
+  
+  # returns a list of users with a finalized but unapproved credit
+  def unapproved_credited_users_report
+    
+    User.find :all, 
+      :joins => %Q{
+        INNER JOIN enrollments e ON e.participant_id = users.id 
+        INNER JOIN credit_assignments ca ON ca.enrollment_id = e.id
+        INNER JOIN users co ON co.id = users.coordinator_id
+      },
+      :conditions => %Q{
+        (ca.enrollment_finalized_on IS NOT NULL) AND
+        (ca.user_id IS NOT NULL) AND
+        (ca.district_finalize_approved_on IS NULL) AND
+        (ca.credit_id = #{self.id})
+      },
+      :select => "users.*, co.last_name AS coordinator_last_name, ca.credit_hours as credit_hours, ca.enrollment_finalized_on as enrollment_finalized_on",
+      :order => 'co.last_name ASC, users.last_name ASC',
+      :group => 'users.id'
+    
+  end
   
   def Credit.options(transmittable = false)
     if transmittable
