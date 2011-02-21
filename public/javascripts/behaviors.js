@@ -4,8 +4,8 @@ $j.fn.stripe_table = function() {
 
     table.find('tbody tr').removeClass('alt1');
     table.find('tbody tr').removeClass('alt0');
-    table.find('tbody tr:odd').addClass('alt1');
-    table.find('tbody tr:even').addClass('alt0');
+    table.find('tbody tr:visible:odd').addClass('alt1');
+    table.find('tbody tr:visible:even').addClass('alt0');
   });
 };
 
