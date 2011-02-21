@@ -66,7 +66,7 @@ class User < ActiveRecord::Base
 	has_many :learning_plans
 	
 	# there is one graduation plan
-	has_one :graduation_plan, :class_name => 'GraduationPlan', :foreign_key => 'user_id'
+	has_one :_graduation_plan, :class_name => 'GraduationPlan', :foreign_key => 'user_id'
 	
 	# has a coordinator
 	belongs_to :coordinator, :class_name=>'User', :foreign_key=>'coordinator_id'
