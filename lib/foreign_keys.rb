@@ -1,3 +1,5 @@
+# TODO: schema dumper is not functioning
+
 module ForeignKeys
   
   FK_ACTIONS = {
