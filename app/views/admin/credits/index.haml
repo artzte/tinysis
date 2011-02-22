@@ -23,8 +23,8 @@
         %td.credit.clink=link_to credit.course_name, edit_credit_path(credit)
         %td.course_id=credit.course_id
         %td.type=Credit::TYPE_NAMES[credit.course_type]
-        %td.count= credit.enrolled_count
-        %td.count= credit.finalized_count
-        %td.count= credit.approved_count
+        %td.count{:title => "Enrolled"}= blank_if_zero(credit.enrolled_count)
+        %td.count{:title => "Finalized"}= blank_if_zero(credit.finalized_count)
+        %td.count{:title => "Approved"}= blank_if_zero(credit.approved_count)
         %td.count
           = link_to 'delete?', destroy_credit_path(credit), :class=>'destroy' if (credit.enrolled_count == "0") and (credit.finalized_count == "0")

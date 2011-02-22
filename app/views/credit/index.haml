@@ -46,7 +46,7 @@
             - elsif @privs[:edit] and ca.parent_credit_assignment.nil?
               = check_box_tag("approve[#{ca.id}]", 1, ca.district_finalize_approved, :id => "approve_#{ca.id}", :onclick=>"Credit.approve(#{ca.id})")
 
-%h2 Finalized Credits
+%h2 Credits finalized for district transcript
 - if @finalized_credit_assignments.empty?
   %p There are no finalized credits.
 - else
@@ -64,11 +64,7 @@
         - if ca.parent_credit_assignment
           - district = ''
         - else
-          - if ca.child_credit_assignments.empty?
-            - rowspan = nil
-          - else
-            - rowspan = ca.child_credit_assignments.length+1
-          - if ca.transmitted?
+          - if ca.credit_transmittal_batch_id?
             - district_indicator = image_tag('check.gif')
           - else
             - district_indicator = '-'
