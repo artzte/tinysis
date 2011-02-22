@@ -13,7 +13,7 @@
 <% if(credits.is_a?(CreditAssignment)) -%>
 	<%= render :partial => 'credit/credits_item', :object => credits, :locals => {:expanded => expanded, :closed => closed, :placeholder => placeholder} %>
 	<% unless credits.child_credit_assignments.empty? %>
-	<li>
+	<li class="children">
 		<ul>
 			<%= render :partial => 'credit/credits_item', :collection => credits.child_credit_assignments, :locals => {:expanded => expanded, :closed => true, :placeholder => false} %>
 		</ul>

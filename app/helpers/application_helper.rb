@@ -126,4 +126,13 @@ module ApplicationHelper
 	def turnin_for assignment, turnins, missing = Turnin.new(:status => :missing)
 	  turnins.detect(Proc.new{missing}){|t| t.assignment_id == assignment.id}
 	end
+	
+	def blank_if_zero(value)
+	  unless value=="0" || value == 0
+	    value
+	  else
+	    ""
+	  end
+	end
+	    
 end
