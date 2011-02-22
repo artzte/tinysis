@@ -44,12 +44,12 @@
     %tbody
       - @credit_assignments[s.id].each do |ca|
         %tr
-          %td.course{:colspan=>4}= ca.credit.course_name
+          %td.course{:colspan=>4}= ca.credit_course_name
           %td.check{:rowspan=>3}
             %div
         %tr
           %td.facilitator= ca.contract_facilitator_name  
-          %td.course_id= ca.credit.course_id_string  
+          %td.course_id= ca.credit_course_id
           %td.hours= ca.credit_hours_string  
           %td.credit_date= d(ca.contract_term.credit_date)
         %tr
