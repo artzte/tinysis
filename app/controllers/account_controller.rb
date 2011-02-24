@@ -12,6 +12,12 @@ protected
     set_meta :tab1=> :school, :tab2 => :login, :title => 'Log In'
   end
   
+  # fill out the below array with entity IDs if you want to put the site into maintenance
+  # mode and only allow certain users access
+  def whitelist
+    AppConfig.whitelisted_users
+  end
+  
 public
   def login
     redir_home and return unless @user.nil?
@@ -34,6 +40,12 @@ public
 		end
 
     if u
+      # you can whitelist IDs through the app config...
+      unless whitelist.blank? || whitelist.include?[u.id]
+        redir_home "I'm sorry, but the site is currently in maintenance mode. Please try again later."
+        return
+      end
+      
       session[:user_id] = u.id
       flash[:notice]  =  "Hi, #{u.given_name}, and welcome to tinySIS."
       if u.privilege>User::PRIVILEGE_STUDENT
