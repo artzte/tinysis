@@ -1,3 +1,5 @@
+- unless AppConfig.whitelisted_users.blank?
+  %p{:style=>"background: red; color: white; font-weight: bold; padding: 5px"} tinySIS is under temporary maintenance... you will not be able to log in. Please check back later. Contact your admin if you have questions.
 %p Please log in
 - tiny_form_for(:user, @user, :url => login_path, :html => {:class=>'tiny'}) do |form|
   = form.text_field :login
