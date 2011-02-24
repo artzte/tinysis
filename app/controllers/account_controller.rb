@@ -41,7 +41,7 @@ public
 
     if u
       # you can whitelist IDs through the app config...
-      unless whitelist.blank? || whitelist.include?[u.id]
+      unless whitelist.blank? || whitelist.include?(u.id)
         redir_home "I'm sorry, but the site is currently in maintenance mode. Please try again later."
         return
       end
