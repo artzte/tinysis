@@ -9,9 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110131225749) do
-
-  disable_foreign_key_checks
+ActiveRecord::Schema.define(:version => 20110221134152) do
 
   create_table "assignments", :force => true do |t|
     t.integer  "contract_id"
@@ -298,12 +296,5 @@ ActiveRecord::Schema.define(:version => 20110131225749) do
   add_index "users", ["date_inactive"], :name => "index_users_on_date_inactive"
   add_index "users", ["privilege"], :name => "index_users_on_privilege"
   add_index "users", ["status"], :name => "index_users_on_user_status"
-
-  add_foreign_key_constraint "credit_assignments", "contract_id", "contracts", "id", :name => "credit_assignments_ibfk_contract_id", :on_update => nil, :on_delete => :set_null
-  add_foreign_key_constraint "credit_assignments", "credit_id", "credits", "id", :name => "credit_assignments_ibfk_credit_id", :on_update => nil, :on_delete => :set_null
-  add_foreign_key_constraint "credit_assignments", "enrollment_id", "enrollments", "id", :name => "credit_assignments_ibfk_enrollment_id", :on_update => nil, :on_delete => :cascade
-  add_foreign_key_constraint "credit_assignments", "user_id", "users", "id", :name => "credit_assignments_ibfk_user_id", :on_update => nil, :on_delete => nil
-
-  enable_foreign_key_checks
 
 end
