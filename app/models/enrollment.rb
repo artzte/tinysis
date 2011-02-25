@@ -259,15 +259,12 @@ public
 		end
 		update_attributes(:enrollment_status => STATUS_FINALIZED, :finalized_on => date)
 
-    # if the enrollment was completed fulfilled, link the credit to the student
-	  if self.completion_status == COMPLETION_FULFILLED
-	    credit_assignments.each do |ca|
-  	    ca.enrollment_finalize(participant, contract, date)
-  	  end 
-    end
+    # fixup the credits
+    credit_assignments.each do |ca|
+	    ca.enrollment_finalize(self.completion_status, participant, contract, date)
+	  end 
     
 		return true
-	    
 	end
 	
 	# performs a student enrollment, setting the enrollment_status 
