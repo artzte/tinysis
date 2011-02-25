@@ -26,31 +26,50 @@ class CreditAssignment < ActiveRecord::Base
   def placeholder?
     false #self.creditable_type == 'GraduationPlan'
   end
-
-	def enrollment_finalize(participant, contract, date)
-    # set finalized_on date and move contract details over
-	  update_attributes(
-	    :enrollment_finalized_on => date, 
-	    :contract_name => contract.name, 
-	    :contract_facilitator_name => contract.facilitator.last_name_first, 
-	    :contract_facilitator_id => contract.facilitator_id, 
-	    :contract_term_id => contract.term_id,
-	    :user_id => participant.id
-	  )
+  
+	def enrollment_finalize(completion_status, participant, contract, date)
+    # set finalized_on date
+	  self.enrollment_finalized_on = date
+	  
+	  # set denormalized contract values
+	  self.contract_name = contract.name
+	  self.contract_facilitator_name = contract.facilitator.last_name_first
+	  self.contract_facilitator_id = contract.facilitator_id
+	  self.contract_term_id = contract.term_id
+    
+	  # assign to student if fulfilled
+	  case completion_status
+	  when Enrollment::COMPLETION_FULFILLED
+	    self.user_id = participant.id
+	    
+	  # cache the credit in case this is a left-behind
+	  when Enrollment::COMPLETION_CANCELED
+	    denormalize_credit
+	  end
+	  save!
+  end
+  
+  def denormalize_credit
+	  self.credit_course_name = credit.course_name
+	  self.credit_course_id = credit.course_id
   end
   
   # facilitator has approved the credit for transmittal to the district. 
   # move the credit course names over and record who approved the credit for transmittal to district
 	def district_approve(user, date)
 	  raise "Can't approve this, as it has already been approved for recording at the district" if self.credit_transmittal_batch_id
-    update_attributes :district_finalize_approved => true, 
-      :district_finalize_approved_by => user.last_name_first, 
-      :district_finalize_approved_on => date, 
-      :credit_course_name => credit.course_name, 
-      :credit_course_id => credit.course_id
-      
-    child_credit_assignments.each do |child|
-      child.update_attributes :credit_course_name => child.credit.course_name, :credit_course_id => child.credit.course_id
+	  
+	  self.district_finalize_approved = true
+    self.district_finalize_approved_by = user.last_name_first
+    self.district_finalize_approved_on = date
+
+    # set denormalized credits info
+    denormalize_credit
+    
+    save!
+
+    self.child_credit_assignments.each do |ca|
+      ca.district_approve(user, date)
     end
 	end
 	
@@ -59,14 +78,17 @@ class CreditAssignment < ActiveRecord::Base
     self.district_finalize_approved = false
     self.district_finalize_approved_by = nil
     self.district_finalize_approved_on = nil
+    
     self.credit_course_name = nil
     self.credit_course_id = nil
+    
+    # ensure a credit
+    self.credit = Credit.find(:first) unless self.credit
+
 	  save!
-	  
-	  child_credit_assignments.each do |child|
-      child.credit_course_name = nil
-      child.credit_course_id = nil
-      child.save!
+
+    self.child_credit_assignments.each do |ca|
+      ca.district_unapprove(user, date)
     end
 	end
 	
