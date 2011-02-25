@@ -24,19 +24,19 @@ class Credit < ActiveRecord::Base
       LEFT OUTER JOIN (
         SELECT credit_id, COALESCE(COUNT(id), 0) AS count FROM credit_assignments ca 
           WHERE ca.user_id IS NULL AND ca.enrollment_id IS NOT NULL
-          AND ca.enrollment_finalized_on IS NULL  # this is to exclude legacy credit assignments from when dupes were created upon transferral to user
+          AND ca.enrollment_finalized_on IS NULL
           GROUP BY credit_id) AS ca_enrolled ON ca_enrolled.credit_id = credits.id
 
       # credit assignments that are finalized and attached to a user record, but not approved by the facilitator
       LEFT OUTER JOIN (
         SELECT credit_id, COALESCE(COUNT(id), 0) AS count FROM credit_assignments ca 
-          WHERE ca.parent_credit_assignment_id IS NULL AND ca.user_id IS NOT NULL AND ca.district_finalize_approved_on IS NULL
+          WHERE ca.user_id IS NOT NULL AND ca.district_finalize_approved_on IS NULL
           GROUP BY credit_id) AS ca_finalized ON ca_finalized.credit_id = credits.id
 
       # credit assignments that are approved by the facilitator for transmittal
       LEFT OUTER JOIN (
         SELECT credit_id, COALESCE(COUNT(id), 0) AS count FROM credit_assignments ca 
-          WHERE ca.parent_credit_assignment_id IS NULL AND ca.user_id IS NOT NULL AND ca.district_finalize_approved_on IS NOT NULL
+          WHERE ca.user_id IS NOT NULL AND ca.district_finalize_approved_on IS NOT NULL
           GROUP BY credit_id) AS ca_approved ON ca_approved.credit_id = credits.id
 
       GROUP BY credits.id
