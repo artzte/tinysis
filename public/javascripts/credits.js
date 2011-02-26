@@ -73,6 +73,7 @@ var Credit = {
     UI.show_progress();
     new Ajax.Request('/credit/update/'+credit_id, {postBody:params,
       onSuccess: function(response) {
+        Modalbox.options.container.closest('tr').find('.approve input').attr('checked', false);
         Modalbox.options.container.replaceWith(response.responseText);
         Util.success(response);
       },
