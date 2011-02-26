@@ -4,8 +4,8 @@
 %h3 Legend
 %ul
   %li Enrolled = attached to un-finalized enrollment
-  %li Finalized = finalized by contract facilitator, but not approved by coordinator
-  %li Approved = approved by coordinator for transmittal to district
+  %li Finalized = finalized by contract facilitator, but not approved by coordinator. Excludes zero-hour credits and credits combined under another.
+  %li Approved = approved by coordinator for transmittal to district. Excludes credits combined under another. 
 %p= link_to "Show only credits that can be safely deleted", '#', :class => 'behavior show_can_delete'
 %table#credits_list.tiny.fixed.padded.striped
   %thead
