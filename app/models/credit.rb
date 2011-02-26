@@ -28,15 +28,16 @@ class Credit < ActiveRecord::Base
           GROUP BY credit_id) AS ca_enrolled ON ca_enrolled.credit_id = credits.id
 
       # credit assignments that are finalized and attached to a user record, but not approved by the facilitator
+      # excluding children of combined credits, and zero-credits
       LEFT OUTER JOIN (
-        SELECT credit_id, COALESCE(COUNT(id), 0) AS count FROM credit_assignments ca 
-          WHERE ca.user_id IS NOT NULL AND ca.district_finalize_approved_on IS NULL
+        SELECT credit_id, COALESCE(COUNT(ca.id), 0) AS count FROM credit_assignments ca
+          WHERE ca.user_id IS NOT NULL AND ca.district_finalize_approved_on IS NULL AND ca.parent_credit_assignment_id IS NULL AND ca.credit_hours > 0
           GROUP BY credit_id) AS ca_finalized ON ca_finalized.credit_id = credits.id
 
       # credit assignments that are approved by the facilitator for transmittal
       LEFT OUTER JOIN (
         SELECT credit_id, COALESCE(COUNT(id), 0) AS count FROM credit_assignments ca 
-          WHERE ca.user_id IS NOT NULL AND ca.district_finalize_approved_on IS NOT NULL
+          WHERE ca.user_id IS NOT NULL AND ca.district_finalize_approved_on IS NOT NULL AND ca.parent_credit_assignment_id IS NULL
           GROUP BY credit_id) AS ca_approved ON ca_approved.credit_id = credits.id
 
       GROUP BY credits.id
@@ -80,7 +81,8 @@ class Credit < ActiveRecord::Base
         (ca.enrollment_finalized_on IS NOT NULL) AND
         (ca.user_id IS NOT NULL) AND
         (ca.district_finalize_approved_on IS NULL) AND
-        (ca.credit_id = #{self.id})
+        (ca.credit_id = #{self.id}) AND
+        (ca.parent_credit_assignment_id IS NULL)
       },
       :select => "users.*, co.last_name AS coordinator_last_name, ca.credit_hours as credit_hours, ca.enrollment_finalized_on as enrollment_finalized_on",
       :order => 'co.last_name ASC, users.last_name ASC',
