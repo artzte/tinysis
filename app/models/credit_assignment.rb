@@ -60,6 +60,13 @@ class CreditAssignment < ActiveRecord::Base
 	  save!
   end
   
+  def normalize_credit
+    return unless credit
+    
+	  self.credit_course_name = nil
+	  self.credit_course_id = nil
+  end
+  
   def denormalize_credit
 	  self.credit_course_name = credit.course_name
 	  self.credit_course_id = credit.course_id
@@ -90,12 +97,11 @@ class CreditAssignment < ActiveRecord::Base
     self.district_finalize_approved_by = nil
     self.district_finalize_approved_on = nil
     
-    self.credit_course_name = nil
-    self.credit_course_id = nil
-    
     # ensure a credit
     self.credit = Credit.find(:first) unless self.credit
 
+    normalize_credit
+    
 	  save!
 
     self.child_credit_assignments.each do |ca|
@@ -193,6 +199,7 @@ class CreditAssignment < ActiveRecord::Base
     credit_assignments.each do |ca|
       ca.graduation_plan_mapping.destroy if ca.graduation_plan_mapping
       ca.parent_credit_assignment = parent
+      ca.denormalize_credit
       ca.save
     end
     student.credit_assignments << parent
@@ -201,6 +208,7 @@ class CreditAssignment < ActiveRecord::Base
 	def uncombine
     child_credit_assignments.each do |ca|
       ca.parent_credit_assignment = nil
+      ca.normalize_credit
       ca.save
     end
     destroy
