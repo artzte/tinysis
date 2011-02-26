@@ -88,7 +88,6 @@ class CreditController < ApplicationController
 	  @credit.override params[:credits_override], @user
 	  
 	  @credit.contract_term = Term.find(params[:term]) if params[:term]
-	  @credit.credit = Credit.find(params[:course])
 	  
 	  @parent = @credit.primary_parent
 	  
@@ -96,7 +95,7 @@ class CreditController < ApplicationController
 	  
 	  # @credit.contract_name = @credit.credit.course_name if @parent.is_a? GraduationPlan
 	  
-	  @credit.save!
+	  @credit.assign_credit( @user, Credit.find(params[:course]) )
 
 	  if @credit.user?
 	    render :partial => 'credit/credits', :object => @credit, :locals => {:expanded => true, :closed=>false}

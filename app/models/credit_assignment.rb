@@ -27,6 +27,17 @@ class CreditAssignment < ActiveRecord::Base
     false #self.creditable_type == 'GraduationPlan'
   end
   
+  def assign_credit(user, new_credit)
+    raise "User does not have privileges to assign credit" unless privileges(user)[:edit]
+    raise "Credit is off limits" if batched_for_transmit?
+
+    self.credit = new_credit
+    save
+
+    district_unapprove if coordinator_approved?
+  end
+    
+  
 	def enrollment_finalize(completion_status, participant, contract, date)
     # set finalized_on date
 	  self.enrollment_finalized_on = date
