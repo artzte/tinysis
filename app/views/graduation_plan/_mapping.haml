@@ -1,7 +1,7 @@
 - klass = mapping.placeholder? ? 'ph' : nil
 .mapping{:id => "cm_#{mapping.id}", :class => klass}
-  .name= mapping.credit_assignment.credit.course_name
-  .number= "(#{mapping.credit_assignment.credit.course_id_string})"
+  .name= mapping.credit_assignment.credit_course_name
+  .number= "(#{mapping.credit_assignment.credit_course_id})"
   .hours= mapping.credit_assignment.credit_hours
   credits
   - if @privs[:edit]
