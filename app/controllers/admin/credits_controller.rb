@@ -44,12 +44,10 @@ public
 
   def destroy
     
-    raise "A credit without denormalized credit info is about to have its credit whacked" if CreditAssignment.find(:first, :conditions => ["(credit_id = ?) AND (enrollment_id IS NOT NULL) AND (credit_course_name IS NULL)", @credit.id])
+    @credit.destroy_credit
     
-    @credit.destroy
     flash[:notice] = "Thank you for deleting the credit type formerly known as #{@credit.course_name}."
     redirect_to credits_path
   end
   
-
 end
