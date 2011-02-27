@@ -61,7 +61,7 @@ class CreditAssignment < ActiveRecord::Base
   end
   
   def normalize_credit
-    return unless credit
+    return unless self.credit_id
     
 	  self.credit_course_name = nil
 	  self.credit_course_id = nil
