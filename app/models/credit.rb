@@ -119,4 +119,13 @@ class Credit < ActiveRecord::Base
     find(:all, :order => 'course_name', :conditions => "course_id IS NOT NULL AND NOT course_id IN ('', '0')")
   end
   
+  def destroy_credit
+    credit_assignments.update_all ["credit_course_name = ?", self.course_name], "credit_course_name IS NULL"
+    credit_assignments.update_all ["credit_course_id = ?", self.course_name], "credit_course_id IS NULL"
+    
+    raise "A credit without denormalized credit info is about to have its credit whacked" if CreditAssignment.find(:first, :conditions => ["(credit_id = ?) AND (enrollment_id IS NOT NULL) AND (credit_course_name IS NULL)", self.id])
+    
+    destroy
+  end
+  
 end
