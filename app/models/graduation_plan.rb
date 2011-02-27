@@ -26,7 +26,7 @@ class GraduationPlan < ActiveRecord::Base
     reqs = reqs.collect{|r| [r.id, r]}.flatten
     reqs = Hash[*reqs]
     
-    gpm = graduation_plan_mappings.find :all, :conditions => conditions, :include => [{:credit_assignment => :credit}, {:credit_assignment => :contract_term}], :order => 'terms.credit_date, credits.course_name, graduation_plan_mappings.date_completed'
+    gpm = graduation_plan_mappings.find :all, :conditions => conditions, :include => [{:credit_assignment => :credit}, {:credit_assignment => :contract_term}], :order => 'terms.credit_date, COALESCE(credit_assignments.credit_course_name, credits.course_name), graduation_plan_mappings.date_completed'
     gpm = gpm.grouped_hash(&:graduation_plan_requirement_id)
     
     # set up the hashes for each requirement
