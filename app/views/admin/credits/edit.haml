@@ -5,48 +5,48 @@
     = submit_button 'Update'
     = url_button 'Cancel', credits_path
   = render :partial => 'form', :object => form
-
-%h3 Students enrolled for this credit
-- @report = @credit.active_enrolled_users_report
-- if @report.length==0
-  %p No active enrollments.
-- else
-  %p These enrollments are currently active.
-  %table.tiny.striped
-    %thead
-      %tr
-        %th{:style => 'width: 18em'} Student
-        %th{:style => 'width: 10em'} Facilitator
-        %th Course
-        %th Credit Hours
-    %tbody
-      - @report.each do |student|
-        - contract = Contract.find(student["enrollment_contract_id"], :include => [:term, :facilitator])
+- unless @credit.new_record?
+  %h3 Students enrolled for this credit
+  - @report = @credit.active_enrolled_users_report
+  - if @report.length==0
+    %p No active enrollments.
+  - else
+    %p These enrollments are currently active.
+    %table.tiny.striped
+      %thead
         %tr
-          %td= student.last_name_first
-          %td= contract.facilitator.last_name
-          %td
-            = link_to contract.name, enrollments_path(contract)
-            %br
-            = contract.term.name
-          %td= student.credit_hours
+          %th{:style => 'width: 18em'} Student
+          %th{:style => 'width: 10em'} Facilitator
+          %th Course
+          %th Credit Hours
+      %tbody
+        - @report.each do |student|
+          - contract = Contract.find(student["enrollment_contract_id"], :include => [:term, :facilitator])
+          %tr
+            %td= student.last_name_first
+            %td= contract.facilitator.last_name
+            %td
+              = link_to contract.name, enrollments_path(contract)
+              %br
+              = contract.term.name
+            %td= student.credit_hours
 
-%h3 Students with finalized but unapproved credits
-- @report = @credit.unapproved_credited_users_report
-- if @report.length == 0
-  %p No finalized credit assignments, or all finalized credits have been approved for transmittal.
-- else
-  %p These students have completed credits against this credit type. These credits have not been approved for transmittal as of yet.
-  %table.tiny.striped
-    %thead
-      %tr
-        %th.name{:style => 'width: 18em'} Student
-        %th{:style => 'width: 10em'} Coordinator
-        %th Credit Award Date
-        %th Credit Hours
-    - @report.each do |student|
-      %tr
-        %td= link_to student.last_name_first, credit_assignments_path(student)
-        %td= student.coordinator_last_name
-        %td= student.enrollment_finalized_on
-        %td= student.credit_hours
+  %h3 Students with finalized but unapproved credits
+  - @report = @credit.unapproved_credited_users_report
+  - if @report.length == 0
+    %p No finalized credit assignments, or all finalized credits have been approved for transmittal.
+  - else
+    %p These students have completed credits against this credit type. These credits have not been approved for transmittal as of yet.
+    %table.tiny.striped
+      %thead
+        %tr
+          %th.name{:style => 'width: 18em'} Student
+          %th{:style => 'width: 10em'} Coordinator
+          %th Credit Award Date
+          %th Credit Hours
+      - @report.each do |student|
+        %tr
+          %td= link_to student.last_name_first, credit_assignments_path(student)
+          %td= student.coordinator_last_name
+          %td= student.enrollment_finalized_on
+          %td= student.credit_hours
