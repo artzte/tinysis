@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110221134152) do
+ActiveRecord::Schema.define(:version => 20110226043501) do
 
   create_table "assignments", :force => true do |t|
     t.integer  "contract_id"
@@ -66,26 +66,28 @@ ActiveRecord::Schema.define(:version => 20110221134152) do
   add_index "contracts", ["term_id"], :name => "index_contracts_on_term_id"
 
   create_table "credit_assignments", :force => true do |t|
-    t.integer "credit_id",                     :default => 0
-    t.float   "credit_hours",                  :default => 0.5, :null => false
-    t.date    "enrollment_finalized_on"
-    t.integer "enrollment_id"
-    t.string  "contract_name"
-    t.string  "contract_facilitator_name"
-    t.boolean "district_finalize_approved"
-    t.string  "district_finalize_approved_by"
-    t.date    "district_finalize_approved_on"
-    t.integer "parent_credit_assignment_id"
-    t.integer "credit_transmittal_batch_id"
-    t.integer "contract_term_id"
-    t.integer "contract_facilitator_id"
-    t.date    "district_transmitted_on"
-    t.float   "override_hours"
-    t.string  "override_by"
-    t.integer "user_id"
-    t.integer "contract_id"
-    t.string  "credit_course_name"
-    t.string  "credit_course_id"
+    t.integer  "credit_id",                     :default => 0
+    t.float    "credit_hours",                  :default => 0.5, :null => false
+    t.date     "enrollment_finalized_on"
+    t.integer  "enrollment_id"
+    t.string   "contract_name"
+    t.string   "contract_facilitator_name"
+    t.boolean  "district_finalize_approved"
+    t.string   "district_finalize_approved_by"
+    t.date     "district_finalize_approved_on"
+    t.integer  "parent_credit_assignment_id"
+    t.integer  "credit_transmittal_batch_id"
+    t.integer  "contract_term_id"
+    t.integer  "contract_facilitator_id"
+    t.date     "district_transmitted_on"
+    t.float    "override_hours"
+    t.string   "override_by"
+    t.integer  "user_id"
+    t.integer  "contract_id"
+    t.string   "credit_course_name"
+    t.string   "credit_course_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   add_index "credit_assignments", ["contract_facilitator_id"], :name => "index_credit_assignments_on_contract_facilitator_id"
@@ -93,6 +95,7 @@ ActiveRecord::Schema.define(:version => 20110221134152) do
   add_index "credit_assignments", ["contract_term_id"], :name => "index_credit_assignments_on_contract_term_id"
   add_index "credit_assignments", ["credit_id"], :name => "index_credit_assignments_on_credit_id"
   add_index "credit_assignments", ["credit_transmittal_batch_id"], :name => "index_credit_assignments_on_credit_transmittal_batch_id"
+  add_index "credit_assignments", ["enrollment_finalized_on"], :name => "index_credit_assignments_on_enrollment_finalized_on"
   add_index "credit_assignments", ["enrollment_id"], :name => "index_credit_assignments_on_enrollment_id"
   add_index "credit_assignments", ["parent_credit_assignment_id"], :name => "index_credit_assignments_on_parent_credit_assignment_id"
   add_index "credit_assignments", ["user_id"], :name => "index_credit_assignments_on_user_id"
@@ -296,5 +299,10 @@ ActiveRecord::Schema.define(:version => 20110221134152) do
   add_index "users", ["date_inactive"], :name => "index_users_on_date_inactive"
   add_index "users", ["privilege"], :name => "index_users_on_privilege"
   add_index "users", ["status"], :name => "index_users_on_user_status"
+
+  add_foreign_key "credit_assignments", "contracts", :name => "credit_assignments_ibfk_contract_id", :dependent => :nullify
+  add_foreign_key "credit_assignments", "credits", :name => "credit_assignments_ibfk_credit_id", :dependent => :nullify
+  add_foreign_key "credit_assignments", "enrollments", :name => "credit_assignments_ibfk_enrollment_id", :dependent => :delete
+  add_foreign_key "credit_assignments", "users", :name => "credit_assignments_ibfk_user_id"
 
 end
