@@ -61,15 +61,21 @@ class CreditAssignment < ActiveRecord::Base
   end
   
   def normalize_credit
-    return unless self.credit_id
+    return false unless self.credit_id
     
 	  self.credit_course_name = nil
 	  self.credit_course_id = nil
+	  
+	  return true
   end
   
   def denormalize_credit
+    return false unless self.credit_id
+    
 	  self.credit_course_name = credit.course_name
 	  self.credit_course_id = credit.course_id
+	  
+	  return true
   end
   
   # facilitator has approved the credit for transmittal to the district. 
@@ -87,7 +93,9 @@ class CreditAssignment < ActiveRecord::Base
     save!
 
     self.child_credit_assignments.each do |ca|
-      ca.district_approve(user, date)
+      if ca.denormalize_credit
+        ca.save
+      end
     end
 	end
 	
@@ -105,7 +113,9 @@ class CreditAssignment < ActiveRecord::Base
 	  save!
 
     self.child_credit_assignments.each do |ca|
-      ca.district_unapprove(user, date)
+      if ca.normalize_credit
+        ca.save
+      end
     end
 	end
 	
@@ -223,10 +233,6 @@ class CreditAssignment < ActiveRecord::Base
 	    raise "Unknown primary parent"
 	  end
 	end
-	  
-	
-	def primary_parent_classname
-  end
 	
 end
 
