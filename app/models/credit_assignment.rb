@@ -167,12 +167,6 @@ class CreditAssignment < ActiveRecord::Base
 	  self.override_hours || self.credit_hours
 	end
 	
-	def self.approved_for_transmittal
-	  
-	  self.find(:all, :include => [:credit], :conditions => "(credit_transmittal_batch_id IS NULL) AND (user_id IS NOT NULL) AND (district_finalize_approved = true)")
-	  
-	end
-	
 	def override(override, user)
 	  if override.blank?
 	    self.override_hours = nil
