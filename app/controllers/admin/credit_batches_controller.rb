@@ -12,7 +12,7 @@ public
   
   def index
 
-    @approved = CreditAssignment.approved_for_transmittal
+    @approved = CreditTransmittalBatch.credits_approved_for_transmittal
 
     @batches = CreditTransmittalBatch.batches_with_counts
 
@@ -34,17 +34,16 @@ public
 
   # Create a credits transmittal batch
   def create
-
-    @credit_assignments = CreditAssignment.approved_for_transmittal
-    if @credit_assignments.empty?
+    
+    @batch = CreditTransmittalBatch.create_batch(@user)
+    
+    unless @batch
       flash[:notice] = "There were no credits to finalize at this time."
       redirect_to :action => 'index'
       return
     end
 
-    @batch = CreditTransmittalBatch.new(:finalized_by => @user.full_name, :finalized_on => Time.now.gmtime)
-    @batch.save
-    @batch.credit_assignments << @credit_assignments
+    @credit_assignments = @batch.credit_assignments
 
     count = @credit_assignments.length
 
