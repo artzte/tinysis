@@ -76,7 +76,6 @@ class User < ActiveRecord::Base
 	validates_presence_of :date_inactive, :if => Proc.new{|user| user.status == User::STATUS_INACTIVE}, :message => 'required if status is INACTIVE'
   validates_presence_of :coordinator, :if => Proc.new{|user| user.privilege == PRIVILEGE_STUDENT}, :message => 'student accounts must have an assigned coordinator.'
   
-  has_many :legacy_credit_assignments, :as => :creditable, :dependent => :destroy, :conditions => 'credit_assignments.parent_credit_assignment_id IS NULL'
   has_many :credit_assignments, :conditions => 'credit_assignments.parent_credit_assignment_id IS NULL'
   has_many :facilitated_credit_assignments, :class_name => 'CreditAssignment', :foreign_key => :contract_facilitator_id
 
