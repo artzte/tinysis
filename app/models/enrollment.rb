@@ -91,8 +91,6 @@ class Enrollment < ActiveRecord::Base
 	  
 	end
 	
-  has_many :legacy_credit_assignments, :as => :creditable, :dependent => :destroy
-
   has_many :credit_assignments, :dependent => :destroy, :conditions => " ((user_id IS NOT NULL) OR ((user_id IS NULL) AND (enrollment_finalized_on IS NULL)))"
   
   # so contract timeslots can be set on enrollment report queries

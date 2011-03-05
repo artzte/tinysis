@@ -4,7 +4,6 @@ class GraduationPlan < ActiveRecord::Base
   
   has_many :graduation_plan_mappings
   belongs_to :user
-  has_many :legacy_credit_assignments, :as => :creditable
   
   validates_format_of :class_of, :with => /2\d\d\d/, :if => Proc.new{|gp| !gp.class_of.nil?}, :message => 'must be a valid 4-digit year'
 
