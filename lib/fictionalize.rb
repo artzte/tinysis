@@ -148,6 +148,17 @@ Witt Wong Woodbury Wooten Workman Wright Wyatt Yates Yeamans Yen York
 Yotov Younan Young Zeldin Zettner Ziegler Zitterkopf Zucker
 }
   end
+  
+  
+  def fictionalized_first_name
+    @fn ||= first_names
+    return @fn[rand(@fn.length)]
+  end
+  
+  def fictionalized_last_name
+    @ln ||= last_names
+    return @ln[rand(@ln.length)]
+  end
 
   def fictionalize(collection, first_name, last_name)
     fn = first_names
