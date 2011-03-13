@@ -6,18 +6,22 @@ set :repository, 'git://github.com/artzte/tinysis.git'
 set :deploy_to, "/var/apps/novatiny/#{environment}"
 set :config_files, ['database.yml']
 set :web_command, "sudo apachectl"
-
+set :config_path, "/var/apps/novatiny/config/#{environment}"
 
 task :remote_path do
   puts remote_path
 end
 
 remote_task :symlink do
+  # shared between deploys
   run "if [[ ! -d \"#{shared_path}/assets/gradesheet\" ]]; then mkdir -p \"#{shared_path}/assets/gradesheet\"; fi"
   run "if [[ ! -d \"#{release_path}/public/assets\" ]]; then mkdir -p \"#{release_path}/public/assets\"; fi"
   run "ln -s #{shared_path}/assets/gradesheet #{release_path}/public/assets/gradesheet"
-  run "ln -s #{shared_path}/config/database.yml #{release_path}/config/database.yml"
-  run "ln -s #{shared_path}/config/environments/production.yml #{release_path}/config/environments/production.yml"
+
+  # config files
+  run "ln -s #{config_path}/database.yml                    #{release_path}/config/database.yml"
+  run "ln -s #{config_path}/environments/#{environment}.yml #{release_path}/config/environments/#{environment}.yml"
+  run "ln -s #{config_path}/environments/#{environment}.rb  #{release_path}/config/environments/#{environment}.rb"
 end
 
 desc "Full deployment cycle"
