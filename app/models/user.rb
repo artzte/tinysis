@@ -459,7 +459,7 @@ END
 	MINPASSWORDLENGTH = 5
 	DEFAULTPASSWORDLENGTH = 6
 	MAXPASSWORDLENGTH = 40
-  REGEX_EMAIL = /^[\w\d_\-\.]+\@[\w\d\.]+$/
+  REGEX_EMAIL = /^[a-z][\w\d_\-\.\+]+\@[\w\d\.]+$/i
   REGEX_VALIDLOGIN =  /^[\w\-]{5,40}$/
   REGEX_CLEANLOGIN =  /[^\w\-]/
   
