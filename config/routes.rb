@@ -39,6 +39,7 @@ ActionController::Routing::Routes.draw do |map|
   map.with_options :controller => 'school', :conditions => {:method => :get} do |s|
     s.catalog '/catalog', :action => 'catalog'
     s.about '/about', :action => 'about'
+    s.boom '/boom', :action => 'boom'
   end
 
   # attendance routes

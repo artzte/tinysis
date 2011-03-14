@@ -1,12 +1,10 @@
 %ul#toolbar
   - @tabs.each do |t|
     - if t==@tab1
-      %li.sel><
-        .r><= tab_title(t)
+      %li.sel= tab_title(t)
     - else
-      %li><
-        .r><
-          %a{:href=>tab_url(t), :title => tab_title(t)}= tab_title(t)
+      %li
+        %a{:href=>tab_url(t), :title => tab_title(t)}= tab_title(t)
 - unless @tabtitle.blank?
   #tab_title= truncate(@tabtitle)
 %ul#toolbar2

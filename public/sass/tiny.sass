@@ -21,15 +21,14 @@ html
   color: white
   padding: 10px 0 0em 0
   #title, #subtitle
-    font-family: "ff-cocon-web-pro-1","ff-cocon-web-pro-2"
-    font-weight: 400
+    font-family: "ff-meta-web-pro-1","ff-meta-web-pro-2"
+    font-weight: 700
     color: #fffcef
   #title
     font-size: 250%
     letter-spacing: 4px
     margin-left: 20px
-  #title
-    padding-bottom: 12px
+    margin-top: -10px
   #subtitle
     font-size: 120%
     letter-spacing: 2px
@@ -82,38 +81,38 @@ html
 
 // Toolbar
 ul#toolbar
-  margin: 16px 0 0px 16px
+  margin: 16px 0 1px 16px
   padding: 2px 0
-  font-size: 95%
-  // 7x27
-  // 234x27
-  // tab_active_l.gif
-  // tab_active_r.gif
-  // tab_inactive_l.gif
-  // tab_inactive_r.gif
   li
+    font-family: "ff-meta-web-pro-1","ff-meta-web-pro-2"
     display: inline
     color= !fg_head
-    font-size: 12px
+    font-size: 14px
     list-style: none
-    margin: 0
-    padding: 10px 0 13px 7px
-    background: url(../images/tab_inactive_l.gif) no-repeat 0px 2px
+    margin: 0 10px
+    padding: 3px 16px
+    
+    border-top: 1px solid #91c4e0
+    border-left: 1px solid #91c4e0
+    border-right: 1px solid #91c4e0
+    
+    -webkit-border-top-left-radius: 6px
+    -webkit-border-top-right-radius: 6px
+    -moz-border-radius-topleft: 6px
+    -moz-border-radius-topright: 6px
+    border-top-left-radius: 6px
+    border-top-right-radius: 6px
+    
+    background: #eee
   a,a:visited,a:hover
     text-decoration: none
     color= !fg_head
   a:hover
     color= !bg_accent
     text-decoration: underline
-  .r
-    padding: 8px 22px 4px 4px
-    background: url(../images/tab_inactive_r.gif) no-repeat top right
-    display: inline
   li.sel
-    background-image: url(../images/tab_active_l.gif)
-    .r
-      background-image: url(../images/tab_active_r.gif)
-      color= !bg_accent
+    background: #fef5c3
+    color= !bg_accent
 ul#toolbar2
   margin:  0
   padding: 10px 0 9px 30px
