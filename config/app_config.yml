@@ -12,8 +12,8 @@ app_organization_homeroom_name: Homeroom
 smtp_tls_config:
   address: smtp.gmail.com
   port: 587
-  domain: nova.tinysis.org
-  user_name: admin@nova.tinysis.org
-  password: stink@rootery
+  domain: xxxxxxxxx
+  user_name: xxxxxxxxxx
+  password: xxxxxxxxxx
 
 fte_hours: 25
