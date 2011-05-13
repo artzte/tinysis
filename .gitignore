@@ -17,7 +17,7 @@ src/*
 public/assets/*
 public/stylesheets/*.css
 !public/stylesheets/addins/*.css
-config/app_config/local.yml
+config/app_config/development.yml
 nohub.out
 nohup.out
 config/environments/local.rb
