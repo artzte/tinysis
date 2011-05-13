@@ -20,7 +20,7 @@ remote_task :symlink do
 
   # config files
   run "ln -s #{config_path}/database.yml                    #{release_path}/config/database.yml"
-  run "ln -s #{config_path}/environments/#{environment}.yml #{release_path}/config/environments/#{environment}.yml"
+  run "ln -s #{config_path}/environments/#{environment}.yml #{release_path}/config/app_config/#{environment}.yml"
   run "ln -s #{config_path}/environments/#{environment}.rb  #{release_path}/config/environments/#{environment}.rb"
 end
 
