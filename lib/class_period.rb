@@ -28,6 +28,10 @@ class ClassPeriod
     
   end
   
+  def self.from_config(config)
+    self.new config.start_time, config.end_time, config.period
+  end
+  
   def self.from_timeslot_hash(p)
     
     period = self.new(p[:start], p[:end])
