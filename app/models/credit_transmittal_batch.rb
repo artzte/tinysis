@@ -10,9 +10,9 @@ class CreditTransmittalBatch < ActiveRecord::Base
   def self.batches_with_counts
     sql = []
     sql << 'SELECT credit_transmittal_batches.*, COUNT(credit_assignments.id) as credit_assignment_count FROM credit_transmittal_batches'
-    sql << 'LEFT JOIN credit_assignments ON credit_assignments.credit_transmittal_batch_id = credit_transmittal_batches.id'
+    sql << 'INNER JOIN credit_assignments WHERE credit_assignments.credit_transmittal_batch_id = credit_transmittal_batches.id'
     sql << 'GROUP BY credit_transmittal_batches.id'
-    sql << 'ORDER BY credit_transmittal_batches.id DESC'
+    sql << 'ORDER BY credit_transmittal_batches.finalized_on DESC'
     
     CreditTransmittalBatch.find_by_sql(sql.join(' '))
   end
