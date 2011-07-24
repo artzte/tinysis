@@ -1,16 +1,24 @@
 class Setting < ActiveRecord::Base
   
+	def Setting.periods=(p)
+	
+		setting = Setting.find_by_name("periods")
+		if setting.nil? 
+			setting = Setting.create(:name => "periods")
+		end
+		
+		setting.update_attribute(:value, Marshal.dump(p))
+		
+		p		
+	
+	end
+	
 	def Setting.periods
-	  
-	  return @@periods if @@periods
-	  
-	  @@periods = []
-	  periods = AppConfig.periods
-	  periods.each do |p|
-	    @@periods << ClassPeriod.new_from_config p
-	  end
-	  
-	  return @@periods
+	
+		setting = Setting.find_by_name("periods")
+		return [{}] if setting.nil?
+		ClassPeriod.new
+		Marshal.load(setting.value)
 	
 	end
 	
