@@ -119,6 +119,10 @@ ActionController::Routing::Routes.draw do |map|
     batches.credit_batch '/admin/credit_batches/:id', :action => 'show'
   end
 
+  map.with_options :controller => 'admin/reports', :conditions => {:method => :get} do |batches|
+    batches.credit_batches '/admin/reports', :action => 'index'
+  end
+  
   map.with_options :controller => 'admin/categories', :conditions => {:method => :get} do |category|
     category.categories '/admin/categories', :action => 'index'
     category.new_category '/admin/categories/new', :action => 'new'

@@ -83,8 +83,9 @@ module TinyTabs
             :accounts => { :path => '/admin/accounts'},
             :enrollments => { :path => '/admin/enrollments'},
             :credit_batches => { :path => '/admin/credit_batches'},
+            :reports => { :path => '/admin/reports'},
           },
-          :order => [:accounts, :enrollments, :credit_batches]
+          :order => [:accounts, :enrollments, :credit_batches, :reports]
         },
         
       :settings => {
