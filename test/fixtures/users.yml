@@ -8,7 +8,6 @@ admin:
   nickname: 
   password_salt: <%= salt %>
   date_active: "2006-09-01"
-  community_grade: 
   district_id: 
   district_grade: 
   password_hash: <%= hash %>
@@ -28,7 +27,6 @@ CLANS.keys.each do |c|
   nickname: 
   password_salt: <%= salt %>
   date_active: "2006-09-01"
-  community_grade: 
   district_id: 
   district_grade: 
   password_hash: <%= hash %>
@@ -48,7 +46,6 @@ CLANS.keys.each do |c|
   nickname: <%= u.capitalize %>
   password_salt: <%= salt %>
   date_active: "2006-09-01"
-  community_grade: 
   district_id: 
   district_grade: 
   password_hash: <%= hash %>
