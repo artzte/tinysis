@@ -3,6 +3,7 @@
 %tr
   %td.name= link_to(@student.last_name_first, student_status_path(@student))
   %td.coordinator= @student.coordinator ? @student.coordinator.last_name_f : 'Unassigned'
+  %td.grade= @student.district_grade
   %td.status= User::STATUS_NAMES[@student.status]
   - @months.each do |month|
     - status = statuses.find{|s| s.month == month}

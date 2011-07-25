@@ -22,5 +22,4 @@
     %h3 Student Settings
     = form.select :coordinator_id, [["None assigned", 0]]+User.staff_users.collect{|u| [u.last_name_f, u.id]}, :disabled => @user.privilege < User::PRIVILEGE_ADMIN
     = form.text_field :district_id, :label => 'District ID'
-    = form.text_field :district_grade, :ua => 'Official grade as recorded in District systems'
-    = form.text_field :community_grade, :ua => 'Community grade level'
+    = form.text_field :district_grade, :ua => 'Grade level'

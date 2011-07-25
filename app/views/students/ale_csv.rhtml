@@ -1,2 +1,2 @@
-Student,Coordinator,Status,Active Date,Inactive Date<%= @months.collect{|m| ",#{m.strftime('%b')},"}%>
+Student,Coordinator,Grade,Status,Active Date,Inactive Date<%= @months.collect{|m| ",#{m.strftime('%b')},"}%>
 <%= render :partial => 'ale_csv_item', :collection => @students %>
