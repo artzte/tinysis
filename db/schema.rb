@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110226043501) do
+ActiveRecord::Schema.define(:version => 20110724104518) do
 
   create_table "assignments", :force => true do |t|
     t.integer  "contract_id"
@@ -95,7 +95,6 @@ ActiveRecord::Schema.define(:version => 20110226043501) do
   add_index "credit_assignments", ["contract_term_id"], :name => "index_credit_assignments_on_contract_term_id"
   add_index "credit_assignments", ["credit_id"], :name => "index_credit_assignments_on_credit_id"
   add_index "credit_assignments", ["credit_transmittal_batch_id"], :name => "index_credit_assignments_on_credit_transmittal_batch_id"
-  add_index "credit_assignments", ["enrollment_finalized_on"], :name => "index_credit_assignments_on_enrollment_finalized_on"
   add_index "credit_assignments", ["enrollment_id"], :name => "index_credit_assignments_on_enrollment_id"
   add_index "credit_assignments", ["parent_credit_assignment_id"], :name => "index_credit_assignments_on_parent_credit_assignment_id"
   add_index "credit_assignments", ["user_id"], :name => "index_credit_assignments_on_user_id"
@@ -276,16 +275,15 @@ ActiveRecord::Schema.define(:version => 20110226043501) do
 
   create_table "users", :force => true do |t|
     t.string  "login"
-    t.integer "login_status",    :default => 0
+    t.integer "login_status",   :default => 0
     t.string  "first_name"
     t.string  "last_name"
     t.string  "nickname"
     t.string  "email"
-    t.integer "privilege",       :default => 0, :null => false
+    t.integer "privilege",      :default => 0, :null => false
     t.integer "status"
     t.string  "district_id"
     t.integer "district_grade"
-    t.integer "community_grade"
     t.string  "password_hash"
     t.string  "password_salt"
     t.integer "coordinator_id"
