@@ -3,7 +3,8 @@
   %td.coordinator= student.coordinator ? student.coordinator.last_name_f : 'Unassigned'
   %td.grade= student.district_grade
   %td.links
+    = link_to "Status", student_status_path(student)
     = link_to "ALE Report", "#"
-    = link_to "Learning Plan", "#"
-    = link_to "Credits", "#"
-    = link_to "Graduation Plan", "$"
+    = link_to "Learning Plan", learning_path(student)
+    = link_to "Credits", credit_assignments_path(student)
+    = link_to "Graduation Plan", graduation_path(student)
