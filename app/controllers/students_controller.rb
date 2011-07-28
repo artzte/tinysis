@@ -18,7 +18,6 @@ class StudentsController < ApplicationController
     set_meta :tab1 => :my, :tab2 => :summary, :title => @user.full_name
     render :text => 'My status page', :layout => true
     
-    
   end
   
   def status
@@ -34,30 +33,6 @@ class StudentsController < ApplicationController
 		setup_coor_report :school_year => @year_filter, :editable => false
 
     set_meta :title => @student.name
-  end
-  
-protected
-  def ale_data(all_statuses = false)
-    
-    
-    if @school_year_filter == coor_term.school_year
-      @term = coor_term
-    else
-      @term = Term.coor(@school_year_filter)
-    end
-    @months = @term.months
-        
-    return if @students.empty?
-    
-    if all_statuses
-      statuses = @students
-    else
-      statuses = @page_items
-    end
-    
-    @statuses = Status.find(:all, :conditions => "statusable_type = 'User' and statusable_id in (#{statuses.collect{|s| s.id}.join(',')})")
-
-    @statuses = @statuses.group_by{|s| s.statusable_id}
   end
   
 end
