@@ -1,15 +1,19 @@
-%h1 ALE Report
+%h1 Students
 = render :partial => 'shared/student_filter', :locals => { :filter_action => 'index', :filter_controller =>'students'}
 %p.left.clear= "Found #{pluralize(@students.length,'student')}."
-.right= link_to "<span>Download Excel format (CSV)</span>", formatted_students_path({:format=>:csv}.update(@fp)), :class=>'btn_small'
+.right.dropdown-menu.reports
+  .title
+    = link_to "Download Reports (CSV)"
+  .menu
+    %ul
+      %li= link_to "ALE Report", formatted_students_path({:format=>:csv})
+      %li= link_to "Credits Report", formatted_students_path({:format=>:csv})
 %table.tiny.clear{:width=>'100%'}
   %thead
     %tr
       %th Student
       %th Coordinator
       %th Grade
-      %th.cel Status
-      - @months.each do |m|
-        %th.month= m.strftime('%b')
+      %th Links
   %tbody
-    = render :partial => 'ale_item', :collection => @page_items
+    = render :partial => 'student', :collection => @page_items
