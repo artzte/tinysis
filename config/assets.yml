@@ -1,17 +1,3 @@
-stylesheets:
-  tinysis:
-    - screen.css
-  legacy:
-    - tiny.css
-    - overrides.css
-    - forms.css
-    - addins/modalbox.css
-  ie:
-    - ie.css
-    - tiny_ie.css
-  print:
-    - print.css
-
 javascripts:
   system:
     - prototype.js
