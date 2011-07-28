@@ -10,20 +10,7 @@ class StudentsController < ApplicationController
   before_filter :set_meta, :only => [:index, :status]
   
   def index
-    
-    respond_to do |format|
-    format.html { ale_data }
-      
-    format.csv {
-      ale_data(true)
-
-      response.headers['Content-Type'] = 'text/csv; charset=iso-8859-1; header=present'
-      response.headers['Content-Disposition'] = "attachment; filename=#{Time.now.gmtime.strftime('ALE_%Y-%m-%d-%H_%M')}.csv"
-      
-      render :action => 'ale_csv', :layout => false
-    }
-    end
-
+    students_index
   end
   
   def my
@@ -51,7 +38,7 @@ class StudentsController < ApplicationController
   
 protected
   def ale_data(all_statuses = false)
-    students_index
+    
     
     if @school_year_filter == coor_term.school_year
       @term = coor_term
