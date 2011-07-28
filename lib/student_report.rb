@@ -33,4 +33,30 @@ module StudentReport
 	  @coor_report[:statuses] = Hash[*@student.statuses.collect{|s| [s.month, s]}.flatten]
 	end
 	
+	
+	
+  def ale_data(all_statuses = false)
+
+
+    if @school_year_filter == coor_term.school_year
+      @term = coor_term
+    else
+      @term = Term.coor(@school_year_filter)
+    end
+    @months = @term.months
+
+    return if @students.empty?
+
+    if all_statuses
+      statuses = @students
+    else
+      statuses = @page_items
+    end
+
+    @statuses = Status.find(:all, :conditions => "statusable_type = 'User' and statusable_id in (#{statuses.collect{|s| s.id}.join(',')})")
+
+    @statuses = @statuses.group_by{|s| s.statusable_id}
+  end
+
+	
 end
