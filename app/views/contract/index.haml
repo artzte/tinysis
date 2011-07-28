@@ -1,7 +1,9 @@
 %h1 Contracts
-%p= link_to("<span>New contract</span>", new_contract_path, :class=>'btn')
-%p.left= "Found #{pluralize(@contracts.length, 'contract')}."
-= render :partial => 'shared/contract_filter', :locals => {:filter_controller => 'contract', :filter_action => 'index'}
+.left
+  %p= link_to("<span>New contract</span>", new_contract_path, :class=>'btn')
+  %p= "Found #{pluralize(@contracts.length, 'contract')}."
+.right
+  = render :partial => 'shared/contract_filter', :locals => {:filter_controller => 'contract', :filter_action => 'index'}
 .clear
 - unless @contracts.empty?
   %table.tiny{:width=>'100%'}
