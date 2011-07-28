@@ -13,7 +13,7 @@ protected
   	students_find
   	setup_page_variables @students, 20
   	
-    @fp = ({:na => @name_filter, :pg => @page, :co=>@coor_filter, :sy=>@school_year_filter})
+    @fp = ({:na => @name_filter, :pg => @page, :co=>@coor_filter, :sy=>@school_year_filter, :sc => @class_filter})
     
   	store_session_pager('student')
   	
@@ -40,8 +40,15 @@ protected
   	  @school_year_filter = params[:sy].to_i
   	end
   	
+    # class
+  	if params[:cl].blank? || params[:cl] == "-1"
+   	  @class_filter = @fp[:cl] || -1
+  	else
+  	  @class_filter = params[:cl].to_i
+  	end
+  	
   	# if selections changed, reset the pager variable to 1
-  	if @coor_filter != @fp[:co] or @name_filter != @fp[:na] or @school_year_filter != @fp[:sy]
+  	if @coor_filter != @fp[:co] or @name_filter != @fp[:na] or @school_year_filter != @fp[:sy] or @class_filter != @fp[:sc]
   	  @page = 1
   	end
 	
@@ -61,10 +68,17 @@ protected
       # nothing added for full range
     when -2
       # unassigned
-      conditions << "users.coordinator_id is null"
+      conditions << "(users.coordinator_id is null)"
     else
-      conditions << "users.coordinator_id = ?"
+      conditions << "(users.coordinator_id = ?)"
       arguments << @coor_filter
+    end
+
+    case @class_filter
+    when "", -1
+    else
+      conditions << "(users.district_grade = ?)"
+      arguments << @class_filter
     end
     
     @students = User.find(:all, :include => [:coordinator], :conditions => [conditions.join(' and ')]+arguments, :order => 'users.last_name, users.first_name')
