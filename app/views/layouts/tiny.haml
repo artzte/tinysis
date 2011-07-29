@@ -13,36 +13,37 @@
   <script type="text/javascript" src="http://use.typekit.com/keo6rba.js"></script>
   <script type="text/javascript">try{Typekit.load();}catch(e){}</script>
 %body
-  #banner
-    #progress{:style=>"display: none"}
-      = image_tag "ajax-loader.gif"
-    #login
-      - if @user
-        Hello, 
-        %strong= @user.given_name
-        = "... it's #{D(Time.now.gmtime, true)} ..." 
-        = link_to("log off", logout_path, :style=> "color: white")
-        = "..."
-        = mail_to "bugs@baddabigboom.com", "report bug", :subject => "tinySIS bug report", :body => "I found a bug here: http://#{request.host_with_port}#{request.request_uri}\n\nI am trying to:  \n\nInstead, tinySIS is:  \n\nThis makes me feel:  \n\nMy browser is:  #{request.headers['HTTP_USER_AGENT']}\n\nMy phone number is:  \n\n", :style=> "color: white"
-      - else
-        = image_tag 'tiny_up.gif'
-    #title= AppConfig.app_organization
-    = render :partial => "shared/toolbar"
-  #flash{:style=>flash[:notice]?nil:"display: none"}
-    .left &nbsp;
-    #flash_msg= flash[:notice]
-    .right &nbsp;
-  #header= tab_title @tab2
-  #content
-    .app_c{:id=>"c_#{controller.controller_path.gsub(/\//,'_')}"}
-      .app_a{:id=>"a_#{controller.action_name}"}
-        = yield
-  #scripts
-    = javascripts_from_config :only => [:system]
-    = javascripts_from_config :only => [:tinysis]
+  #page
+    #banner
+      #progress{:style=>"display: none"}
+        = image_tag "ajax-loader.gif"
+      #login
+        - if @user
+          Hello, 
+          %strong= @user.given_name
+          = "... it's #{D(Time.now.gmtime, true)} ..." 
+          = link_to("log off", logout_path, :style=> "color: white")
+          = "..."
+          = mail_to "bugs@baddabigboom.com", "report bug", :subject => "tinySIS bug report", :body => "I found a bug here: http://#{request.host_with_port}#{request.request_uri}\n\nI am trying to:  \n\nInstead, tinySIS is:  \n\nThis makes me feel:  \n\nMy browser is:  #{request.headers['HTTP_USER_AGENT']}\n\nMy phone number is:  \n\n", :style=> "color: white"
+        - else
+          = image_tag 'tiny_up.gif'
+      #title= AppConfig.app_organization
+      = render :partial => "shared/toolbar"
+    #flash{:style=>flash[:notice]?nil:"display: none"}
+      .left &nbsp;
+      #flash_msg= flash[:notice]
+      .right &nbsp;
+    #header= tab_title @tab2
+    #content
+      .app_c{:id=>"c_#{controller.controller_path.gsub(/\//,'_')}"}
+        .app_a{:id=>"a_#{controller.action_name}"}
+          = yield
+    #scripts
+      = javascripts_from_config :only => [:system]
+      = javascripts_from_config :only => [:tinysis]
     
-    - if @head[:javascripts]
-      = javascript_include_tag *@head[:javascripts].collect{|j|j.to_s}
-    = yield :javascript
-  /#debug
+      - if @head[:javascripts]
+        = javascript_include_tag *@head[:javascripts].collect{|j|j.to_s}
+      = yield :javascript
+    /#debug
   
