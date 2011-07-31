@@ -34,29 +34,23 @@ module StudentReport
 	end
 	
 	
+  # request is a hash with the following keys
+  # :cl = -1 for any class, or 9|10|11|12 to filter by *current* class
+  # :co = -1 for any coordinator, or a positive integer to filter by coordinator's user ID
+  # :sy = required school year filter
+  # :na = blank for any name, or string to filter by student name fragment
+  #
+  # students - list of students
 	
-  def ale_data(all_statuses = false)
+  def ale_data(request, students)
 
+    months = Term.coor(@fp[:sy]).months
 
-    if @school_year_filter == coor_term.school_year
-      @term = coor_term
-    else
-      @term = Term.coor(@school_year_filter)
-    end
-    @months = @term.months
+    return nil if students.empty?
 
-    return if @students.empty?
+    statuses = Status.find(:all, :conditions => ["statusable_type = 'User' and statusable_id in (?)", students.collect(&:id)])
 
-    if all_statuses
-      statuses = @students
-    else
-      statuses = @page_items
-    end
-
-    @statuses = Status.find(:all, :conditions => "statusable_type = 'User' and statusable_id in (#{statuses.collect{|s| s.id}.join(',')})")
-
-    @statuses = @statuses.group_by{|s| s.statusable_id}
+    return [statuses.group_by(&:statusable_id), months]
   end
 
-	
 end
