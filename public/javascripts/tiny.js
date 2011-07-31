@@ -6,53 +6,6 @@ if(navigator.appName=="Microsoft Internet Explorer") {
   };
 }
 
-var FilterForm = Class.create();
-
-FilterForm.prototype = {
-  form_id : '',
-  
-  initialize : function(form_id) {
-    this.form_id = form_id;
-    
-    var form, elements, i, el, text = null;
-    
-    form = $(this.form_id);
-    
-    elements = form.getElements();
-    
-    form.observe('submit', this.form_submitted.bindAsEventListener(this));
-    
-    for(i = 0; el = elements[i]; i++) {
-      switch(el.tagName.toLowerCase()) {
-      case 'select':
-        el.observe('change', this.form_changed.bindAsEventListener(this));
-        break;
-      case 'input':
-        switch(el.type.toLowerCase()) {
-        case 'radio':
-        case 'checkbox':
-          el.observe('change', this.form_changed.bindAsEventListener(this));
-          break;
-        case 'text':
-          if(!text)
-            text = el;
-          break;
-        }
-        break;
-      }
-    }
-    if(text)
-      Field.focus(text);
-  },
-  
-  form_submitted : function() {
-    return true;
-  },
-  
-  form_changed : function() {
-    $(this.form_id).submit();
-  }
-};
 
 // Inline editing
 var InlineEditor = Class.create({
@@ -532,12 +485,8 @@ var Enrollment = {
   
 
 var actions_table = {
-  c_school: {
-    a_catalog: function() {new FilterForm('filter');}
-  },
   c_contract: {
     a_index: function() {
-      new FilterForm('filter');
       $$('a.destroy').invoke('observe', 'click', Contract.destroy);
     },
     a_show: function() { 
@@ -570,8 +519,6 @@ var actions_table = {
     }
   },
   c_status : {
-    a_contract: function() {new FilterForm('filter');},
-    a_index: function() {new FilterForm('filter');},
     a_coor_report: function() {
       Status.bind();
     },
@@ -620,9 +567,6 @@ var actions_table = {
         return false;
       });
     }
-  },
-  c_attendance : {
-    a_index: function() { new FilterForm('filter'); }
   },
   c_credit: {
     a_index: function() {
@@ -702,7 +646,6 @@ var actions_table = {
   },
   c_admin_ealrs: {
     a_index: function() {
-      new FilterForm('filter');
       $$('a.destroy').invoke('observe', 'click', AdminEalr.destroy);
     }
   },

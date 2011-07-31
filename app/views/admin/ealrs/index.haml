@@ -1,5 +1,5 @@
 %h1 Configure EALRs
-.filter
+.filter.resubmit
   - form_tag ealrs_path, {:method => :get, :id=>'filter', :class=>'left'} do 
     %label{:for => 'category'} Pick a category
     = select_tag "category", options_for_select(@categories, @category) 
