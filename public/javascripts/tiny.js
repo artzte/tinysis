@@ -580,7 +580,6 @@ var actions_table = {
     }
   },
   c_students : {
-    a_index: function() {new FilterForm('filter');},
     a_status: function() {
     }
   },
