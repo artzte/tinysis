@@ -7,7 +7,7 @@
           %th.name
             %label{:for=>'na'} Name:
             = text_field_tag("na", @name_filter)
-            %input.submit.smaller(type="submit" value="Find")
+            %input.btn.smaller(type="submit" value="Find")
           %th= select_tag('co', options_for_select(coordinator_selections, @coor_filter) )
           %th
             = select_tag('cl', options_for_select([["All grades", -1], ["Freshmen", 9], ["Sophomores", 10], ["Juniors", 11], ["Seniors", 12]], @class_filter) )
