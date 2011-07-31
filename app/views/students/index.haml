@@ -6,8 +6,8 @@
     = link_to "Download Reports (CSV)"
   .menu
     %ul
-      %li= link_to "ALE Report", formatted_students_path({:format=>:csv})
-      %li= link_to "Credits Report", formatted_students_path({:format=>:csv})
+      %li= link_to "ALE Report", report_path(@fp.merge(:action => "ale"))
+      %li= link_to "Credits Report", report_path(@fp.merge(:action => "credits"))
 %table.tiny.clear{:width=>'100%'}
   %thead
     %tr
@@ -16,4 +16,12 @@
       %th Grade
       %th Links
   %tbody
-    = render :partial => 'student', :collection => @page_items
+    - @page_items.each do |student|
+      %tr
+        = render :partial => 'student_columns', :object => student
+        %td.links
+          = link_to "Status", student_status_path(student)
+          = link_to "ALE Report", "#"
+          = link_to "Learning Plan", learning_path(student)
+          = link_to "Credits", credit_assignments_path(student)
+          = link_to "Graduation Plan", graduation_path(student)

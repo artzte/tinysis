@@ -2,24 +2,10 @@ module StudentsSearchHelper
   
 protected
 
-  def students_index
-  
-  	@coordinator_selections = [['All coordinators',-1],['Unassigned',-2]]+User.coordinators.collect{|u| [u.last_name_f, u.id]}
-
-  	get_session_pager('student')
-  	
-  	students_index_init
-  	
-  	students_find
-  	setup_page_variables @students, 20
-  	
-    @fp = ({:na => @name_filter, :pg => @page, :co=>@coor_filter, :sy=>@school_year_filter, :sc => @class_filter})
-    
-  	store_session_pager('student')
-  	
-  end
-
   def students_index_init
+    
+    # init the session pager if its not already there
+    @fp ||= {}
   
     # if a name specified, set students filter to "all"
     unless params[:na].blank?
@@ -48,22 +34,25 @@ protected
   	end
   	
   	# if selections changed, reset the pager variable to 1
-  	if @coor_filter != @fp[:co] or @name_filter != @fp[:na] or @school_year_filter != @fp[:sy] or @class_filter != @fp[:sc]
+  	if @coor_filter != @fp[:co] or @name_filter != @fp[:na] or @school_year_filter != @fp[:sy] or @class_filter != @fp[:cl]
   	  @page = 1
   	end
 	
+    @fp = {:na => @name_filter, :pg => @page, :co=>@coor_filter, :sy=>@school_year_filter, :cl => @class_filter}
+    
   end
 
-  def students_find
+  # returns a list of database IDs matching the passed request hash
+  def students_find(request)
     conditions = ["(users.privilege = #{User::PRIVILEGE_STUDENT}) AND (users.date_inactive IS NULL OR users.date_inactive >= ?) AND (users.date_active <= ?)"]
     arguments = [Date.new(@school_year_filter,coor_term.months.first.month).end_of_month,Date.new(@school_year_filter+1, coor_term.months.last.month)]
     
-    if @name_filter
+    if request[:na]
       conditions << "((users.last_name like ?) or (users.first_name like ?) or (users.nickname like ?))"
-      3.times{ arguments << "%#{@name_filter}%"}
+      3.times{ arguments << "%#{request[:na]}%"}
     end
     
-    case @coor_filter
+    case request[:co]
     when -1
       # nothing added for full range
     when -2
@@ -71,18 +60,17 @@ protected
       conditions << "(users.coordinator_id is null)"
     else
       conditions << "(users.coordinator_id = ?)"
-      arguments << @coor_filter
+      arguments << request[:co]
     end
 
-    case @class_filter
+    case request[:cl]
     when "", -1
     else
       conditions << "(users.district_grade = ?)"
-      arguments << @class_filter
+      arguments << request[:cl]
     end
     
-    @students = User.find(:all, :include => [:coordinator], :conditions => [conditions.join(' and ')]+arguments, :order => 'users.last_name, users.first_name')
-
+    students = User.find(:all, :include => [:coordinator], :conditions => [conditions.join(' and ')]+arguments, :order => 'users.last_name, users.first_name')
   end
 
 
