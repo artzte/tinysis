@@ -10,7 +10,7 @@
 -  filter_url = "/#{filter_controller}"
 -  filter_url += "/#{filter_action}" unless filter_action=="index"
 
-.filter
+.filter.resubmit
   - form_tag({:controller => filter_controller, :action => filter_action}, :method=>:get, :id=>'filter') do 
     %table
       %thead
