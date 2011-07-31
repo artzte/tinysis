@@ -134,6 +134,10 @@ ActionController::Routing::Routes.draw do |map|
     category.connect '/admin/categories/:id/:group', :action=>'assign_group', :conditions => { :id => /^d+/, :group => /^d+/, :method => :post}
   end
   
+  map.with_options :controller => "reports", :conditions => {:method => :get} do |r|
+    r.report '/reports/:action', :controller => 'reports'
+  end
+  
   
   map.with_options :controller => 'students', :conditions => {:method => :get} do |s|
     s.students '/students', :action => 'index'

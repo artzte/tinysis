@@ -1,3 +1,5 @@
+- student = local_assigns[:student]
+- statuses = local_assigns[:statuses]
 %td.status= User::STATUS_NAMES[student.status]
 - @months.each do |month|
   - status = statuses.find{|s| s.month == month}
@@ -13,4 +15,4 @@
   - else 
     - klass = Status::STATUS_NAMES[status.academic_status][0..0].downcase
     - status = "#{Status::STATUS_NAMES[status.academic_status][0..0]} / #{status.fte_hours}"
-  %td{:class=>"month #{klass}"}= status
+  %td{:class=>"status month #{klass}"}= status
