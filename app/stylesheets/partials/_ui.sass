@@ -22,14 +22,24 @@ ul#toolbar2
       color: $fg_head
       text-decoration: underline
 
-
-a.btn
-  
-  &.small
-
-input.submit
-  background: $bg_accent
-  +border-radius(4px)
-  color: #eee
-  border: 1px solid $bg_accent
+=button
+  background-color: $bg_accent
+  +border_radius(4px)
+  color: white
+  text-decoration: none
+  padding: 4px 8px
+  margin-right: 12px
+  border: none
+  // this idiocy is so IE applies "hasLayout"
+  zoom: 1
   cursor: pointer
+  &:hover
+    color: $bg_alt_light
+    text-decoration: underline
+  &.smaller
+    padding: 3px 6px
+
+// Rounded submit buttons and links
+
+.btn
+  +button
