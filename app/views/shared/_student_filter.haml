@@ -1,17 +1,5 @@
-/ 
-/ Call this partial with the following local variables:
-/ 
-/ filter_controller => the controller to call
-/ filter_action => the action to call
-/ 
-/ Your controller action needs to populate an @contracts variable with a list of contracts, and 
-/ populate the @page etc. items and @fp variable with the find parameters.
-/ 
-/ 
-/  filter_url = "/#{filter_controller}"
-/  filter_url += "/#{filter_action}" unless filter_action=="index"
-/ 
-.filter
+- coordinator_selections = [['All coordinators',-1],['Unassigned',-2]]+User.coordinators.collect{|u| [u.last_name_f, u.id]}
+.student.filter.resubmit
   - form_tag({:controller => filter_controller, :action => filter_action}, :method=>:get, :id=>'filter') do 
     %table
       %thead
@@ -19,13 +7,14 @@
           %th.name
             %label{:for=>'na'} Name:
             = text_field_tag("na", @name_filter)
-            = submit_button('Find', :small=>true)
-          %th= select_tag('co', options_for_select(@coordinator_selections, @coor_filter) )
+            %input.submit.smaller(type="submit" value="Find")
+          %th= select_tag('co', options_for_select(coordinator_selections, @coor_filter) )
           %th
             = select_tag('cl', options_for_select([["All grades", -1], ["Freshmen", 9], ["Sophomores", 10], ["Juniors", 11], ["Seniors", 12]], @class_filter) )
           %th
             = select_tag 'sy', options_for_select(Term.find_by_sql('SELECT DISTINCT school_year FROM terms ORDER BY school_year DESC').collect{|t| t.school_year}, @school_year_filter)
-          %th.pager
-            = link_to_prev_page('<<')
-            = select_pages
-            = link_to_next_page('>>')
+          - unless local_assigns[:exclude_pager]
+            %th.pager
+              = link_to_prev_page('<<')
+              = select_pages
+              = link_to_next_page('>>')
