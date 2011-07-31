@@ -14,7 +14,7 @@ class StudentsController < ApplicationController
   	
   	students_index_init
   	
-  	students_find
+  	@students = students_find(@fp)
   	setup_page_variables @students, 50
   	
   	store_session_pager('student')
