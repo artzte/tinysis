@@ -137,10 +137,10 @@ public
 	def link_to_prev_page(link)
 	
 		if @page <= 1
-			content_tag 'span', link
+			content_tag 'span', link, :class => 'smaller'
 		else
 			fp = @fp.merge({:pg => @page-1})
-			link_to "<span>#{link}</span>", { :action => controller.action_name }.update(fp), :class=>'btn_small'
+			link_to "<span>#{link}</span>", { :action => controller.action_name }.update(fp), :class=>'btn smaller'
 		end
 	
 	end
@@ -149,10 +149,10 @@ public
 	def link_to_next_page(link)
 	
 		if @page >= @page_count
-			content_tag 'span', link
+			content_tag 'span', link, :class => 'smaller'
 		else
 			fp = @fp.merge({:pg => @page+1})
-			link_to "<span>#{link}</span>", { :action => controller.action_name }.update(fp), :class=>'btn_small'
+			link_to "<span>#{link}</span>", { :action => controller.action_name }.update(fp), :class=>'btn smaller'
 		end
 	end
 	
