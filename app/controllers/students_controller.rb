@@ -10,7 +10,14 @@ class StudentsController < ApplicationController
   before_filter :set_meta, :only => [:index, :status]
   
   def index
-    students_index
+  	get_session_pager('student')
+  	
+  	students_index_init
+  	
+  	students_find
+  	setup_page_variables @students, 50
+  	
+  	store_session_pager('student')
   end
   
   def my
