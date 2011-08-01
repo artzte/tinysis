@@ -4,9 +4,6 @@ protected
 
   def students_index_init
     
-    # init the session pager if its not already there
-    @fp ||= {}
-  
     # if a name specified, set students filter to "all"
     unless params[:na].blank?
       @name_filter = params[:na]
@@ -32,7 +29,7 @@ protected
   	else
   	  @class_filter = params[:cl].to_i
   	end
-  	
+  	  
   	# if selections changed, reset the pager variable to 1
   	if @coor_filter != @fp[:co] or @name_filter != @fp[:na] or @school_year_filter != @fp[:sy] or @class_filter != @fp[:cl]
   	  @page = 1
