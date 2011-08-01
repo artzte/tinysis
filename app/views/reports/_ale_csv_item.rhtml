@@ -1,6 +1,6 @@
 <% 
   student = ale_csv_item
-  statuses = @statuses[student.id] || []
+  statuses = @data[student.id] || []
   columns = [
       student.last_name_first,
       student.coordinator ? student.coordinator.last_name_f : 'Unassigned',
