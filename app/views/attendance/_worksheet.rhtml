@@ -2,7 +2,7 @@
 <p>
 	<label>Mark all enrollees:</label>
 	<%= select_tag('update_all', options_for_select(MeetingParticipant::PARTICIPATION_STATUSES.collect{|p| [p[:name], p[:value]]}, MeetingParticipant::PRESENT), :style=>'width: 10em') %>
-	<%= link_to_function("<span>Update all</all>", "Attendance.update_all(#{@meeting.id})", :class=>'btn_small', :id => 'update_all_enrollments')%>
+	<%= link_to_function("<span>Update all</all>", "Attendance.update_all(#{@meeting.id})", :class=>'btn smaller', :id => 'update_all_enrollments')%>
 </p>
 <table class='tiny attendance padded' style="margin-top: 1em">
 <thead>
