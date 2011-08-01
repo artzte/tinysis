@@ -135,7 +135,7 @@ ActionController::Routing::Routes.draw do |map|
   end
   
   map.with_options :controller => "reports", :conditions => {:method => :get} do |r|
-    r.report '/reports/:action', :controller => 'reports'
+    r.report '/reports/:action.:format', :controller => 'reports'
   end
   
   
