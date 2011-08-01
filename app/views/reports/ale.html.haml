@@ -1,11 +1,12 @@
 %h1 ALE Report
-= render :partial => 'shared/student_filter', :locals => { :filter_action => 'ale', :filter_controller =>'reports', :exclude_pager => true}
+= render :partial => 'shared/student_filter', :locals => { :filter_action => 'ale', :filter_controller =>'reports'}
 %p
   Back to 
   = link_to "students list", students_path
 - if @students.empty?
   %p No students found.
 - else
+  %p= link_to "CSV", report_path(@fp.merge(:action => "ale", :format => "csv")), :class => 'load-once'
   %table.tiny.clear{:width=>'100%'}
     %thead
       %tr
@@ -16,7 +17,7 @@
         - @months.each do |m|
           %th.status.month= m.strftime('%b')
     %tbody
-      - @students.each do |student|
+      - @page_items.each do |student|
         %tr
           = render :partial => 'students/student_columns', :object => student
           = render :partial => 'ale_student', :locals => {:student => student, :statuses => @data[student.id]||[]}
