@@ -188,4 +188,12 @@ protected
     end
   end
   
+protected
+  def d(aDate, zoned = false)
+	  return '-' unless aDate
+	  aDate = Timezone.get('America/Los_Angeles').utc_to_local(aDate) if zoned and aDate.is_a? DateTime
+		aDate.strftime(FORMAT_DATE)
+	end
+	helper_method :d
+  
 end
