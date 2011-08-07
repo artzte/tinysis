@@ -15,6 +15,7 @@ javascripts:
     - application.js
     - tiny.js
     - credits.js
+    - behaviors.js
     - behaviors/notes.js
     - behaviors/filterform.js
   assignments:
