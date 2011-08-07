@@ -18,7 +18,7 @@
     el.data('loaded', true);
     return true;
   });
-
+  
   $(document).ready(function() {
     $('.behavior.year_filter select').change(function() {
       document.location = $(this).closest('form').attr('action')+"/"+this.value;
@@ -26,7 +26,13 @@
 
     $('table.striped').stripe_table();
     
-    $('a.load-once').
+    var flash = $('#flash');
+    if(flash.is(":visible")) {
+      setTimeout(function() {
+        flash.fadeOut('slow');
+      }, 1500);
+    }
+    
   });  
 })(jQuery);
 
