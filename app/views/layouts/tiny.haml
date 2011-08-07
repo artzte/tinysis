@@ -29,12 +29,10 @@
           = image_tag 'tiny_up.gif'
       #title= AppConfig.app_organization
       = render :partial => "shared/toolbar"
-    #flash{:style=>flash[:notice]?nil:"display: none"}
-      .left &nbsp;
-      #flash_msg= flash[:notice]
-      .right &nbsp;
-    #header= tab_title @tab2
+    #flash{:style=> flash[:notice] ? nil : "display: none"}
+      = flash[:notice]
     #content
+      #header= tab_title @tab2
       .app_c{:id=>"c_#{controller.controller_path.gsub(/\//,'_')}"}
         .app_a{:id=>"a_#{controller.action_name}"}
           = yield

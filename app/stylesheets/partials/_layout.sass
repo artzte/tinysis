@@ -1,13 +1,26 @@
 body
   background: #6699cc
   @include background(linear-gradient(#6699CC, #fff))
+  background-repeat: no-repeat
 
 #page
   margin: 0 auto
   width: 1004px
+  position: relative
+ 
+ 
+#header
+  color: $fg_rule
+  font-weight: bold
+  font-size: small
+  letter-spacing: 2px
+  text-transform: uppercase
+  padding-top: 1em
   
-#header,#content
+#content
   background: #fff
+  margin: 0
+  padding: 0 2em
   
 #banner
   color: white
