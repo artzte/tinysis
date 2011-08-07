@@ -1,41 +1,3 @@
-html, body, div, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, img, dl, dt, dd, ol, ul, li, fieldset, form, legend, table, caption, input
-  font-family: Lucida Grande, Verdana, Arial, Helvetica, sans-serif
-  font-size: 12px
-tbody, tfoot, thead, tr, th, td, span, a, em, label, abbr, acronym, address, code, del, dfn, q, input
-  font-size: inherit
-
-
-#flash
-  position: absolute
-  left: 200px
-  .left
-    background-image: url(../images/notice_l.gif)
-    background-position: top left
-    background-repeat: none
-    position: absolute
-    height: 42px
-    padding-left: 18px
-  .right
-    background-image: url(../images/notice_r.gif)
-    background-position: top right
-    background-repeat: none
-    position: absolute
-    left: 575px
-    height: 42px
-    padding-right: 18px
-  #flash_msg
-    background-image: url(../images/notice_s.gif)
-    background-repeat: repeat-x
-    position: absolute
-    left: 18px
-    width: 570px
-    color: $fg_head
-    height: 46px
-    font-weight: normal
-    padding: 4px
-    overflow: hidden
-    font-size: 12px
-    line-height: 15px
 #login
   color: white
   padding-top: 1em
@@ -47,7 +9,7 @@ ul#toolbar
   margin: 16px 0 1px 16px
   padding: 2px 0
   li
-    font-family: "ff-meta-web-pro-1","ff-meta-web-pro-2"
+    +ff-meta-web-pro
     display: inline
     color: $fg_head
     font-size: 14px
@@ -81,17 +43,6 @@ ul#toolbar
   margin-right: 1em 
   padding-top: 1em
   color: $fg_head
-#header
-  color: $fg_rule
-  font-weight: bold
-  font-size: small
-  letter-spacing: 2px
-  text-transform: uppercase
-  padding: .5em 1em
-#content
-  width: 980px
-  margin: 0
-  padding: 0 1em 3em 1em
   
 #debug
   position: absolute
