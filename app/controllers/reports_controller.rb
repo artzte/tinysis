@@ -41,7 +41,32 @@ public
   
   def credits
     @students = students_find(@fp)
-    credits_data(params)
+    params[:span] ||= 1
+    
+    @data, @years = credits_data(@students, :span => params[:span].to_i)
+    
+    respond_to do |format|
+      format.csv do
+        csv_string = FasterCSV.generate do |csv|
+          csv << ["Student","Coordinator","Grade","Status","Active Date","Inactive Date"] + @years + ["Total"]
+          @students.each do |student|
+            credits = @data[student.id]
+            columns = [
+                student.last_name_first,
+                student.coordinator ? student.coordinator.last_name_f : 'Unassigned',
+                student.district_grade,
+                User::STATUS_NAMES[student.status][0..0],
+                d(student.date_active),
+                student.date_inactive ? d(student.date_inactive) : '',
+              ]
+            columns += @years.collect{|y| credits[y]}
+            columns << credits.values.sum
+            csv << columns.flatten
+          end
+        end
+        render :text => csv_string, :layout => false
+      end
+    end
   end
   
 protected
