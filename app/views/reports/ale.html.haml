@@ -6,7 +6,7 @@
 - if @students.empty?
   %p No students found.
 - else
-  %p= link_to "CSV", report_path(@fp.merge(:action => "ale", :format => "csv")), :class => 'load-once'
+  %p= link_to "Download CSV", report_path(@fp.merge(:action => "ale", :format => "csv")), :class => 'load-once'
   %table.tiny.clear{:width=>'100%'}
     %thead
       %tr
