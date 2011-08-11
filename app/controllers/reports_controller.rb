@@ -42,11 +42,16 @@ public
   def credits
     @students = students_find(@fp)
     params[:span] ||= 1
-    
-    @data, @years = credits_data(@students, :span => params[:span].to_i)
+    params[:span] = params[:span].to_i
     
     respond_to do |format|
+      format.html
+        setup_page_variables @students, 50
+        @data, @years = credits_data(@page_items, :span => params[:span].to_i)
+        
       format.csv do
+        @data, @years = credits_data(@students, :span => params[:span].to_i)
+        
         csv_string = FasterCSV.generate do |csv|
           csv << ["Student","Coordinator","Grade","Status","Active Date","Inactive Date"] + @years + ["Total"]
           @students.each do |student|
