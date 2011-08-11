@@ -13,6 +13,9 @@
             = select_tag('cl', options_for_select([["All grades", -1], ["Freshmen", 9], ["Sophomores", 10], ["Juniors", 11], ["Seniors", 12]], @class_filter) )
           %th
             = select_tag 'sy', options_for_select(Term.find_by_sql('SELECT DISTINCT school_year FROM terms ORDER BY school_year DESC').collect{|t| t.school_year}, @school_year_filter)
+          - if local_assigns[:include_year_span]
+            %th.years
+              = select_tag 'span', options_for_select((1..6).to_a.collect{|y| ["#{y} year", y]}, params[:span])
           - unless local_assigns[:exclude_pager]
             %th.pager
               = link_to_prev_page('<<')

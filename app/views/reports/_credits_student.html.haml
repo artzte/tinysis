@@ -1,0 +1,9 @@
+-#= render :partial => 'credits_student', :locals => {:student => student, :years => @years, :data => @data[student.id]}
+
+- student = local_assigns[:student]
+- data = local_assigns[:data]
+- years = local_assigns[:years]
+%td.status= User::STATUS_NAMES[student.status]
+- years.each do |year|
+  %td.grade= data[year]
+%td.grade= data.values.sum

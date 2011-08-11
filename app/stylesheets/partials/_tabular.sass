@@ -1,3 +1,10 @@
+= right-aligned-cell
+  padding-right: 4px
+  text-align: right
+
+= center-aligned-cell
+  text-align: center
+
 table.tiny
   margin-top: 1em
   font-size: inherit
@@ -18,10 +25,9 @@ table.tiny
       vertical-align: top
   td,th
     &.status
-      text-align: center
+      +center-aligned-cell
     &.grade
-      padding-right: 4px
-      text-align: right
+      +right-aligned-cell
 .alt0 
   background-color: $bg_alt1
 .alt1 
