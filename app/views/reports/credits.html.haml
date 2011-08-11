@@ -1,0 +1,25 @@
+%h1 Credits Report
+= render :partial => 'shared/student_filter', :locals => { :filter_action => 'credits', :filter_controller =>'reports', :include_year_span => true}
+%p
+  Back to 
+  = link_to "students list", students_path
+- if @students.empty?
+  %p No students found.
+- else
+  %p= link_to "Download CSV", report_path(@fp.merge(:action => "credits", :format => "csv")), :class => 'load-once'
+  %table.tiny.clear{:width=>'100%'}
+    %thead
+      %tr
+        %th Student
+        %th Coordinator
+        %th.grade Grade
+        %th.status Status
+        - @years.each do |year|
+          %th.grade.year= year
+        %th.grade== #{@years.length}y total
+          
+    %tbody
+      - @page_items.each do |student|
+        %tr
+          = render :partial => 'students/student_columns', :object => student
+          = render :partial => 'credits_student', :locals => {:student => student, :years => @years, :data => @data[student.id]}
