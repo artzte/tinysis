@@ -83,16 +83,19 @@ jQuery('a.behavior.attendance_update').live('click', function(event) {
   
   event.preventDefault();
 
-  if(el.is('.processing'))
+  if(el.data('processing'))
     return;
 
   if(el.is('.sel'))
     return;
     
-  el.addClass('processing');
+  el.data('processing', true);
   el.closest('tr').find('a.behavior.attendance_update').removeClass('sel');
   el.addClass('sel');
-  jQuery.post(this.href, {}, function() {el.removeClass('processing');});
+  jQuery.post(this.href, {})
+    .done(function() {
+      el.data('processing', false);
+    });
 });
 
 var ContractCategory = {
@@ -321,12 +324,13 @@ var UI = {
     Element.hide('progress');
   },
   fade_notice : function(notice) {
-    $("flash_msg").innerHTML = notice;
-    $("flash").show();
+    var flash = $j('#flash');
+    flash.html(notice);
+    flash.show();
     UI.clear_notice();
   },
   clear_notice : function() {
-    new Effect.Fade('flash', {delay:3, duration:3});
+    $j('#flash').fadeOut('slow');
   }
 };
 
