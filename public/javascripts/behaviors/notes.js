@@ -179,7 +179,7 @@ $j(document).ready(function(){
       }
     });
     
-    $('ul.notes li.edit textarea').livequery('blur', function() {
+    $('ul.notes li.edit textarea').live('blur', function() {
       $(this).trigger('tiny_notes_save');
     });
     
