@@ -5,10 +5,9 @@ javascripts:
     - dragdrop.js
     - controls.js
     
-    - jquery/jquery-1.4.3.min.js
+    - jquery/jquery-1.6.2.min.js
     - jquery/jquery-ui.js
     - jquery/jquery_compat.js
-    - jquery/jquery.livequery.js
     
     - modalbox.js
   tinysis:
