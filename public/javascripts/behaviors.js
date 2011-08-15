@@ -28,9 +28,7 @@
     
     var flash = $('#flash');
     if(flash.is(":visible")) {
-      setTimeout(function() {
-        flash.fadeOut('slow');
-      }, 1500);
+      UI.fade_notice();
     }
     
   });  
