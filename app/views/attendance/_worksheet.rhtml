@@ -1,8 +1,9 @@
 <%- @dummy = MeetingParticipant.new(:participation => 0) -%>
 <p>
 	<label>Mark all enrollees:</label>
-	<%= select_tag('update_all', options_for_select(MeetingParticipant::PARTICIPATION_STATUSES.collect{|p| [p[:name], p[:value]]}, MeetingParticipant::PRESENT), :style=>'width: 10em') %>
-	<%= link_to_function("<span>Update all</all>", "Attendance.update_all(#{@meeting.id})", :class=>'btn smaller', :id => 'update_all_enrollments')%>
+	<%= select_tag('all_participation', options_for_select(MeetingParticipant::PARTICIPATION_STATUSES.collect{|p| [p[:name], p[:value]]}, MeetingParticipant::PRESENT), :style=>'width: 10em') %>
+  <%= select_tag('all_contact', options_for_select(MeetingParticipant::CONTACT_TYPES)) %>
+  <%= link_to_function("<span>Update all</all>", "Attendance.update_all(#{@meeting.id})", :class=>'btn smaller', :id => 'update_all_enrollments')%>
 </p>
 <table class='tiny attendance padded' style="margin-top: 1em">
 <thead>
@@ -11,6 +12,8 @@
 <% MeetingParticipant::PARTICIPATION_STATUSES.collect do |s| %>
 	<th class="status"><%= s[:name] %></th>
 <% end -%>
+<th>Contact</th>
+
 </tr>
 </thead>
 <tbody>
