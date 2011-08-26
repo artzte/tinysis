@@ -26,7 +26,7 @@ class MeetingParticipant < ActiveRecord::Base
 	  TARDY => 'Tardy'
 	}
 
-  PARTICIPATION_TYPE_NAMES = %w{COOR, Class, Other}
+  CONTACT_TYPES = %w{Class COOR Other}
 
   belongs_to :enrollment
 	belongs_to :meeting

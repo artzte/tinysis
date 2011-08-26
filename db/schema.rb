@@ -196,7 +196,7 @@ ActiveRecord::Schema.define(:version => 20110826053451) do
     t.integer "meeting_id"
     t.integer "enrollment_id"
     t.integer "participation"
-    t.string  "participation_type", :limit => 8, :default => "class"
+    t.string  "contact_type",  :limit => 8, :default => "class"
   end
 
   add_index "meeting_participants", ["enrollment_id"], :name => "index_meeting_participants_on_enrollment_id"
