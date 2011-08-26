@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110724104518) do
+ActiveRecord::Schema.define(:version => 20110826053451) do
 
   create_table "assignments", :force => true do |t|
     t.integer  "contract_id"
@@ -95,6 +95,7 @@ ActiveRecord::Schema.define(:version => 20110724104518) do
   add_index "credit_assignments", ["contract_term_id"], :name => "index_credit_assignments_on_contract_term_id"
   add_index "credit_assignments", ["credit_id"], :name => "index_credit_assignments_on_credit_id"
   add_index "credit_assignments", ["credit_transmittal_batch_id"], :name => "index_credit_assignments_on_credit_transmittal_batch_id"
+  add_index "credit_assignments", ["district_finalize_approved_on"], :name => "index_credit_assignments_on_district_finalize_approved_on"
   add_index "credit_assignments", ["enrollment_id"], :name => "index_credit_assignments_on_enrollment_id"
   add_index "credit_assignments", ["parent_credit_assignment_id"], :name => "index_credit_assignments_on_parent_credit_assignment_id"
   add_index "credit_assignments", ["user_id"], :name => "index_credit_assignments_on_user_id"
@@ -195,6 +196,7 @@ ActiveRecord::Schema.define(:version => 20110724104518) do
     t.integer "meeting_id"
     t.integer "enrollment_id"
     t.integer "participation"
+    t.string  "participation_type", :limit => 8, :default => "class"
   end
 
   add_index "meeting_participants", ["enrollment_id"], :name => "index_meeting_participants_on_enrollment_id"
