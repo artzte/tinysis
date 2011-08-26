@@ -37,7 +37,7 @@ var Attendance = {
   meeting_id : 0,
   pick_roll : function(contract_id) {
     Modalbox.show('/attendance/pick_roll/'+contract_id,{title:"Take attendance",width:400}); 
-    return false;    
+    return false;
   },
   page_calendar : function(year, month, page, contract_id, meeting_id) {
     month += page;
@@ -57,13 +57,13 @@ var Attendance = {
   },
   update_all : function(meeting_id) {
     var sel = jQuery('#update_all');
-    
+
     if(sel.is('.processing'))
       return;
-      
+
     participation = sel.val();
     sel.addClass('processing');
-    
+
     jQuery.post('/attendance/update_all/'+meeting_id+'/'+participation, {}, function() {
       sel.removeClass('processing');
     });
