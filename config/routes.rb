@@ -56,7 +56,7 @@ ActionController::Routing::Routes.draw do |map|
     att.connect '/attendance/show_calendar/:id/:year/:month', :action => 'show_calendar'
     att.connect '/attendance/show_calendar/:id', :action => 'show_calendar'
     att.update_attendance '/attendance/update/:meeting_id/:enrollment_id/:participation', :action => 'update', :conditions => {:method => :post}
-    att.connect '/attendance/update_all/:id/:participation', :action => 'update_all', :conditions => {:method => :post}
+    att.update_all_attendance '/attendance/:id/update_all', :action => 'update_all', :conditions => {:method => :post}
     att.connect '/attendance/delete_roll/:id', :action => 'delete_roll', :conditions => {:method => :post}
   end
   
