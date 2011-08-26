@@ -1,10 +1,11 @@
 <%- @dummy = MeetingParticipant.new(:participation => 0) -%>
-<p>
-	<label>Mark all enrollees:</label>
-	<%= select_tag('all_participation', options_for_select(MeetingParticipant::PARTICIPATION_STATUSES.collect{|p| [p[:name], p[:value]]}, MeetingParticipant::PRESENT), :style=>'width: 10em') %>
-  <%= select_tag('all_contact', options_for_select(MeetingParticipant::CONTACT_TYPES)) %>
-  <%= link_to_function("<span>Update all</all>", "Attendance.update_all(#{@meeting.id})", :class=>'btn smaller', :id => 'update_all_enrollments')%>
-</p>
+<form id="update_all" action="<%= update_all_attendance_url(@meeting) %>" method="post">
+  <label>Mark all enrollees:</label>
+  <%= hidden_field_tag "authenticity_token", form_authenticity_token, :id => nil %>
+  <%= select_tag('participation', options_for_select(MeetingParticipant::PARTICIPATION_STATUSES.collect{|p| [p[:name], p[:value]]}, MeetingParticipant::PRESENT), :style=>'width: 10em', :id => nil) %>
+  <%= select_tag('contact', options_for_select(MeetingParticipant::CONTACT_TYPES), :id => nil) %>
+  <%= submit_tag "Update all", :class => 'btn small' %>
+</form>
 <table class='tiny attendance padded' style="margin-top: 1em">
 <thead>
 <tr class='th'>
@@ -13,7 +14,7 @@
 	<th class="status"><%= s[:name] %></th>
 <% end -%>
 <th>Contact</th>
-
+<th class="note">Note</th>
 </tr>
 </thead>
 <tbody>

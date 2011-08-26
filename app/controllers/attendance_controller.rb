@@ -125,15 +125,16 @@ class AttendanceController < ApplicationController
 	    render :text => "You don't have privileges to do this.", :status=>500 and return unless privs[:edit]
 	    
 	    @meeting.contract.enrollments.statusable.each do |enrollment|
-	      update_attendance_for_enrollment(@meeting, enrollment, params[:participation])
+	      update_attendance_for_enrollment(@meeting, enrollment, params)
 	    end
 	  end
-    render :nothing => true
+    flash[:notice] = "Thanks for updating attendance."
+    redirect_to roll_path(@meeting.contract_id, @meeting.meeting_date.year, @meeting.meeting_date.month, @meeting.meeting_date.day)
 	end
 
 protected
-  def update_attendance_for_enrollment(meeting, enrollment, participation)
+  def update_attendance_for_enrollment(meeting, enrollment, params)
     participant = MeetingParticipant.find_or_create_by_enrollment_id_and_meeting_id(enrollment.id, meeting.id)
-    participant.update_attribute(:participation, participation)
+    participant.update_attributes(:participation => params[:participation], :contact_type => params[:contact])
 	end
 end
