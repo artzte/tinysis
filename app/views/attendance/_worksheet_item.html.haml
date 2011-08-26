@@ -8,3 +8,5 @@
     - classes << 'sel' if p.participation==st[:value]
     %td.status
       %a.behavior.attendance_update{:href => update_attendance_path(@meeting.id, enrollment.id, st[:value]), :class => classes.join(' ')}= st[:name][0..0]
+  %td.contact_type
+    = select_tag("contact_type", options_for_select(MeetingParticipant::CONTACT_TYPES, p.contact_type), :id => nil)
