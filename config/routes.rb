@@ -46,7 +46,7 @@ ActionController::Routing::Routes.draw do |map|
   
   map.with_options :controller => 'attendance', :conditions => {:method => :get} do |att|
   
-    att.attendance '/contracts/:id/attendance/:meeting_id', :action => 'index'
+    # att.attendance '/contracts/:id/attendance/:meeting_id', :action => 'index'
     att.attendance '/contracts/:id/attendance', :action => 'index'
     att.roll '/contracts/:id/attendance/:year/:month/:day', :controller=>'attendance', :action=>'roll'
 
@@ -57,7 +57,7 @@ ActionController::Routing::Routes.draw do |map|
     att.connect '/attendance/show_calendar/:id', :action => 'show_calendar'
     att.update_attendance '/attendance/update/:meeting_id/:enrollment_id/:participation', :action => 'update', :conditions => {:method => :post}
     att.update_all_attendance '/attendance/:id/update_all', :action => 'update_all', :conditions => {:method => :post}
-    att.connect '/attendance/delete_roll/:id', :action => 'delete_roll', :conditions => {:method => :post}
+    att.delete_attendance_roll '/attendance/delete_roll/:id', :action => 'delete_roll', :conditions => {:method => :post}
   end
   
   map.with_options :controller => 'account' do |account|
