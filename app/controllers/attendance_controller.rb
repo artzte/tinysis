@@ -53,7 +53,7 @@ class AttendanceController < ApplicationController
 
 		@enrollments = @contract.enrollments.statusable
 		@meeting_participants = @meeting.meeting_participants
-		@participant_notes = Note.notes_hash(@meeting_participants)
+		@notes_hash = Note.notes_hash(@meeting_participants)
 		@meeting_participants_hash = @meeting_participants.index_by(&:enrollment_id)
 	end
 	
