@@ -1,0 +1,8 @@
+%h1 
+  Attendance for 
+  == #{@meeting.meeting_date.strftime('%A')}, #{@meeting.meeting_date.strftime('%d %B %Y')}
+.right
+  = link_to "Delete this roll", delete_attendance_roll_path(@meeting), :class => 'btn behavior post_with_confirm', 'data-confirmation' => 'Are you sure you want to delete this attendance roll and all the records along with it?'
+%p= link_to "Return to summary", attendance_path(:id => @contract, :meeting_id => @meeting.id)
+#worksheet
+  = render :partial => 'attendance/worksheet', :locals => {:notes_hash => Note.notes_hash(@meeting_participants)}
