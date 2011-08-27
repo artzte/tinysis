@@ -67,9 +67,9 @@ class AttendanceController < ApplicationController
 	  
 	  @meeting.destroy
 	  
-	  flash[:notice] = "Roll was removed."
+	  flash[:notice] = "The attendance roll was removed."
 	  
-	  redirect_to :controller => 'contract', :action => 'attendance', :id => contract_id
+	  redirect_to attendance_path(:id => contract_id)
 	end
 	
 	def pick_roll
@@ -110,20 +110,20 @@ class AttendanceController < ApplicationController
 	    privs = @enrollment.contract.privileges(@user)
 	    render :text => "You don't have privileges to do this.", :status=>500 and return unless privs[:edit]
 	    
-	    update_attendance_for_enrollment(@meeting, @enrollment, params[:participation])
+	    participant = update_attendance_for_enrollment(@meeting, @enrollment, params)
 	  end
     
-    render :nothing => true
+    render :json => {:id => participant.id}.to_json
 	end
 	
 	# updates all participants
 	def update_all
-	  
+ 
 	  @meeting = Meeting.find(params[:id], :include => [:contract])
 	  if @meeting
 	    privs = @meeting.contract.privileges(@user)
 	    render :text => "You don't have privileges to do this.", :status=>500 and return unless privs[:edit]
-	    
+ 
 	    @meeting.contract.enrollments.statusable.each do |enrollment|
 	      update_attendance_for_enrollment(@meeting, enrollment, params)
 	    end
@@ -136,5 +136,6 @@ protected
   def update_attendance_for_enrollment(meeting, enrollment, params)
     participant = MeetingParticipant.find_or_create_by_enrollment_id_and_meeting_id(enrollment.id, meeting.id)
     participant.update_attributes(:participation => params[:participation], :contact_type => params[:contact])
+    return participant
 	end
 end
