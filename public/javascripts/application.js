@@ -54,47 +54,47 @@ var Attendance = {
       url += '/'+meeting_id;
     }
     new Ajax.Updater('att_calendar', url, {method:'get'});
-  },
-  update_all : function(meeting_id) {
-    var sel = jQuery('#update_all');
-
-    if(sel.is('.processing'))
-      return;
-
-    participation = sel.val();
-    sel.addClass('processing');
-
-    jQuery.post('/attendance/update_all/'+meeting_id+'/'+participation, {}, function() {
-      sel.removeClass('processing');
-    });
-    jQuery('a.behavior.attendance_update').removeClass('sel');
-    jQuery('a.behavior.attendance_update.'+participation).addClass('sel');
-    UI.fade_notice('Attendance updated.');
-    return true;
-  },
-  update_failed : function(t) {
-    Element.hide('progress');
-    alert(t.responseText);
   }
 };
 
-jQuery('a.behavior.attendance_update').live('click', function(event) {
+jQuery('.behavior.submit-once').live('click submit', function(event) {
+  var el = $(this);
+  if(el.data('submitted')) {
+    return false;
+  }
+  el.data('submitted', true);
+});
+
+jQuery('.behavior.attendance_update').live('click change', function(event) {
   var el = jQuery(this);
-  
+  var parent = el.closest('tr');
+  var url;
+
   event.preventDefault();
 
-  if(el.data('processing'))
+  if(parent.data('processing')) {
     return;
+  }
 
-  if(el.is('.sel'))
+  // user clicked an already selected link
+  if(el.is('a.sel')) {
     return;
-    
-  el.data('processing', true);
-  el.closest('tr').find('a.behavior.attendance_update').removeClass('sel');
-  el.addClass('sel');
-  jQuery.post(this.href, {})
+  }
+
+  parent.data('processing', true);
+
+  if(el.is('a')) {
+    parent.find('a.behavior.attendance_update').removeClass('sel');
+    el.addClass('sel');
+  }
+
+  url = parent.find('a.behavior.attendance_update.sel').attr('href');
+
+  console.warn(url);
+
+  jQuery.post(url, {contact: parent.find('select.attendance_update').val()})
     .done(function() {
-      el.data('processing', false);
+      parent.data('processing', false);
     });
 });
 
