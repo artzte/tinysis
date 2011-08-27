@@ -10,7 +10,7 @@
     });
   };
   
-  $('a.load-once').live('click', function() {
+  $('a.load-once').live('click', function(event) {
     var el = $(this);
     if(el.data('loaded')) {
       return false;
@@ -18,7 +18,25 @@
     el.data('loaded', true);
     return true;
   });
-  
+
+  $('a.behavior.post_with_confirm').live('click', function(event) {
+    var el = $(this);
+    if(el.data('posted')) {
+      return false;
+    }
+
+    if(!confirm(el.data("confirmation")||"Are you sure?")) {
+      return false;
+    }
+
+    event.preventDefault();
+
+    el.data('posted', true);
+
+    $('<form></form>').attr({method: 'post', action: this.href}).appendTo($('body')).submit();
+  });
+
+
   $(document).ready(function() {
     $('.behavior.year_filter select').change(function() {
       document.location = $(this).closest('form').attr('action')+"/"+this.value;
