@@ -28,6 +28,51 @@ table.tiny
       +center-aligned-cell
     &.grade
       +right-aligned-cell
+
+  &.zoomed
+    width: 100%
+  &.attendance
+    label
+      padding-left: 20px
+      display: block
+      font-size: 110%
+    .status
+      vertical-align: top
+      padding-right: 1em
+      text-align: center
+    .min-10
+      min-width: 10em
+    td.status 
+      a 
+        background-image: url(../images/absent.gif)
+        background-repeat: no-repeat
+        background-position: top left
+        padding-left: 20px
+        padding-top: 2px
+        padding-bottom: 2px
+        padding-right: 7px
+        font-size: 12px
+        color: black
+        text-decoration: none
+        &:hover
+          text-decoration: underline
+        &.sel
+          background-image: url(../images/absent_sel.gif)
+          font-size: 14px
+          font-weight: bold
+          &:hover 
+            text-decoration: none
+table#attendance_summary td,table#attendance_summary th 
+  text-align: center
+  width: 4em
+
+table#attendance_summary th a 
+  text-decoration: none
+
+table#attendance_summary .name 
+  width: 20em
+  text-align: left
+
 .alt0 
   background-color: $bg_alt1
 .alt1 
