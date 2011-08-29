@@ -51,7 +51,7 @@ class AttendanceController < ApplicationController
 		  
     set_meta :title => "#{@contract.name} - Attendance - #{@meeting.meeting_date.strftime(FORMAT_DATE)}", :tab1 => :contracts, :tab2 => :attendance
 
-		@enrollments = @contract.enrollments.statusable
+		@enrollments = @contract.enrollments.statusable(true)
 		@meeting_participants = @meeting.meeting_participants
 		@notes_hash = Note.notes_hash(@meeting_participants)
 		@meeting_participants_hash = @meeting_participants.index_by(&:enrollment_id)
