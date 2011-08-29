@@ -1,3 +1,16 @@
+_.mixin({
+  isBlank: function(s) {
+    if(_.isString(s)) {
+      return /\S/.test(s)===false;
+    }
+    else {
+      return _.isEmpty(s);
+    }
+  }
+});
+
+
+
 var Status = {
   reg_id : /status_(\d+)/,
   update : function(event) {
@@ -90,11 +103,16 @@ jQuery('.behavior.attendance_update').live('click change', function(event) {
 
   url = parent.find('a.behavior.attendance_update.sel').attr('href');
 
-  console.warn(url);
-
-  jQuery.post(url, {contact: parent.find('select.attendance_update').val()})
-    .done(function() {
+  $j.post(url, {contact: parent.find('select.attendance_update').val()})
+    .done(function(result) {
+      var notes_cel = parent.find('td:last');
+      var notes_markup;
       parent.data('processing', false);
+      if( _.isBlank(notes_cel.text()) ){
+        notes_markup = $j('#notes-dummy ul').clone();
+        notes_markup.find('a.add_note').data('notableId', result.id);
+        notes_markup.appendTo(notes_cel);
+      }
     });
 });
 
