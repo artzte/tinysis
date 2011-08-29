@@ -13,6 +13,6 @@
 - unless (notes.length==0) && options[:editable] == false
   %ul{:class=>klass, :style => options[:style]}
     - if options[:editable] && !parent_element.is_a?(Array)
-      %li.add{:id=>"notes_#{parent_element.class}_#{parent_element.id}"}
-        = link_to options[:add_title] || 'Add note', create_note_path(:notable_class=>parent_element.class, :notable_id => parent_element.id), :class => 'add_note'
+      %li.add
+        = link_to options[:add_title] || 'Add note', "#", "data-notable-class" => parent_element.class, "data-notable-id" => parent_element.id, :class => 'add_note'
     = render(:partial => 'note/note_item', :collection => notes, :locals => {:editable => options[:editable]})
