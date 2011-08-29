@@ -2,7 +2,7 @@
 - participant = @meeting_participants_hash[enrollment.id]
 - p = participant||@dummy
 %tr{:class=>cycle_stripes}
-  %td.name= enrollment.participant.last_name_first
+  %td.min-10= enrollment.participant.last_name_first
   - MeetingParticipant::PARTICIPATION_STATUSES.each do |st|
     - classes = [st[:value]]
     - classes << 'sel' if p.participation==st[:value]
@@ -10,8 +10,6 @@
       %a.behavior.attendance_update{:href => update_attendance_path(@meeting.id, enrollment.id, st[:value]), :class => classes.join(' ')}= st[:name][0..0]
   %td.contact_type
     = select_tag("contact_type", options_for_select(MeetingParticipant::CONTACT_TYPES, p.contact_type), :id => nil, :class => 'behavior attendance_update')
-  %td.note
+  %td.min-10
     - if participant
       = notes_for(participant, :notes_hash => @notes_hash)
-    - else
-      Update attendance to add a note
