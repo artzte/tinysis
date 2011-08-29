@@ -319,17 +319,18 @@
       
       // Close the active editor
       that.tb_grades.find('td.a input').live('tiny_gradesheet_close_edit', function(event) {
-        var td = this.parentNode;
-        var val = this.value;
-        
+        var el = $(this);
+        var td = el.closest('td');
+        var val = el.val();
+
         // explicit reset or value is not right, reset to cached value
         if(!that.legal_value(val)) {
           val = '';
         }
 
-        val = that.cel_value(this.value);
+        val = that.cel_value(val);
 
-        td.innerHTML = val;
+        $(td).html(val);
       });
       
       // Bind the turnin form that cometh down from the cloud
