@@ -1,15 +1,17 @@
 javascripts:
   system:
-    - prototype.js
-    - effects.js
-    - dragdrop.js
-    - controls.js
+    - external/prototype.js
+    - external/effects.js
+    - external/dragdrop.js
+    - external/controls.js
     
-    - jquery/jquery-1.6.2.min.js
-    - jquery/jquery-ui.js
-    - jquery/jquery_compat.js
+    - external/jquery-1.6.2.min.js
+    - external/jquery-ui.js
+    - external/jquery_compat.js
     
-    - modalbox.js
+    - external/underscore-min.js
+
+    - external/modalbox.js
   tinysis:
     - application.js
     - tiny.js
