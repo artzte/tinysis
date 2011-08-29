@@ -6,16 +6,16 @@ $j(document).ready(function(){
       var ul = el.closest('ul');
       UI.show_progress();
       $.ajax({
-        url: this.href,
+        url: ["/note/new/", el.data("notableClass"), "/", el.data("notableId")].join(""),
         type: 'POST',
         data: "",
         complete: UI.hide_progress,
         success:function(html){
           var li = $(html);
           var textarea = li.find('textarea');
-          
+ 
           ul.find('li:first').after(li);
-          
+
           textarea.trigger('tiny_notes_setup');
         },
         error:Util.error
