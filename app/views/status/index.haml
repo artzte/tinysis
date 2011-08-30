@@ -2,7 +2,7 @@
   = @user.full_name
   Status Page
 %h2.left My Contracts
-= render :partial => 'shared/contract_filter', :locals => { :filter_controller => 'status', :filter_action => 'index' }
+= render :partial => 'shared/contract_filter', :locals => { :filter_controller => 'status', :filter_action => 'index', :exclude_facilitator => true }
 - if @contracts.empty?
   %p.clear No contracts.
 - else
