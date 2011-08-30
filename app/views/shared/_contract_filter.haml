@@ -16,7 +16,8 @@
       %thead
         %tr
           %td= select_tag('t', options_for_select(@term_options, @term))
-          %td= select_tag('f', options_for_select(@facilitator_options, @facilitator))
+          - unless local_assigns[:exclude_facilitator]
+            %td= select_tag('f', options_for_select(@facilitator_options, @facilitator))
           %td= select_tag('g', options_for_select(@category_options, @category))
           %td.check_box
             = check_box_tag('c', 1, @closed==1)
