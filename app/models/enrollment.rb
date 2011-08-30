@@ -8,7 +8,7 @@ class Enrollment < ActiveRecord::Base
   # Closed - Active, Finalized (fulfilled), Finalized (canceled)
   # Finalized - cannot change state
 
-	belongs_to :participant, :foreign_key => 'participant_id', :class_name => 'User'
+  belongs_to :participant, :foreign_key => 'participant_id', :class_name => 'User'
 	belongs_to :contract, :include => :category
 	belongs_to :creator, :foreign_key => 'creator_id', :class_name => 'User'
 
@@ -135,12 +135,13 @@ public
 	# student successfully completed contract
 	COMPLETION_FULFILLED = 2
 
-	# name constants for completion types
+# name constants for completion types
 	COMPLETION_NAMES = { COMPLETION_UNKNOWN => "Incomplete",
 		COMPLETION_CANCELED => "Canceled",
 		COMPLETION_FULFILLED => "Fulfilled" }
-		
-		
+
+  named_scope :uncanceled, :conditions => "completion_status != #{COMPLETION_CANCELED}"
+	
 	# status methods
 	
 	def enrolled?

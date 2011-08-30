@@ -13,7 +13,7 @@ class MeetingParticipant < ActiveRecord::Base
 	]
 
 	PARTICIPATION_STRINGS = {
-	  OPTIONAL => '-',
+	  OPTIONAL => 'O',
 	  PRESENT => 'P',
 	  ABSENT => 'A',
 	  TARDY => 'T'

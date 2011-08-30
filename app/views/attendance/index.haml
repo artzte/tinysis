@@ -16,26 +16,27 @@
     %thead
       %tr
         %th.name Participant
+        %th Optional
         %th Present
-        %th Absent  
+        %th Absent
         %th Tardy
         - @page_items.each do |m|
           %th= link_to_if(@privs[:view_students], m.meeting_date.strftime("%m/%d"), roll_path(:id => @contract, :year => m.meeting_date.year, :month => m.meeting_date.month, :day => m.meeting_date.day))
     %tbody
-      - if @stats.empty?
+      - if @enrollments.empty?
         %tr{:style=>"text-align: center"}
           %td{:colspan=>"#{@meetings.length+4}"}
             No participants are enrolled in this contract.    
       - else
-        - @stats.each do |p|
+        - @enrollments.each do |e|
+          - stats = @stats[e.id] || Contract.hash_with_default(0)
           %tr{:class=>cycle_stripes}
-            %td.name= p[:name]
-            %td= p[:present_count]
-            %td= p[:absence_count]
-            %td= p[:tardy_count]
+            %td.name.min-10= e[:name]
+            - [ MeetingParticipant::OPTIONAL, MeetingParticipant::PRESENT, MeetingParticipant::ABSENT, MeetingParticipant::TARDY ].each do |participation|
+              %td= stats[participation]
             - @page_items.each do |m|
               %td
-                - if @meeting_participants[p[:id]] && @meeting_participants[p[:id]][m.id]
-                  = MeetingParticipant::PARTICIPATION_STRINGS[@meeting_participants[p[:id]][m.id][0].participation]
+                - if @meeting_participants[e[:id]] && @meeting_participants[e[:id]][m.id]
+                  = MeetingParticipant::PARTICIPATION_STRINGS[@meeting_participants[e[:id]][m.id][0].participation]
                 - else
                   = "-"

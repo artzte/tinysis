@@ -28,6 +28,8 @@ table.tiny
       +center-aligned-cell
     &.grade
       +right-aligned-cell
+    &.min-10
+      min-width: 10em
 
   &.zoomed
     width: 100%
@@ -40,10 +42,8 @@ table.tiny
       vertical-align: top
       padding-right: 1em
       text-align: center
-    .min-10
-      min-width: 10em
     td.status 
-      a 
+      a
         background-image: url(../images/absent.gif)
         background-repeat: no-repeat
         background-position: top left
@@ -62,18 +62,15 @@ table.tiny
           font-weight: bold
           &:hover 
             text-decoration: none
-table#attendance_summary td,table#attendance_summary th 
-  text-align: center
-  width: 4em
+  &#attendance_summary
+    td, th
+      text-align: center
+    th a 
+      text-decoration: none
+    .name 
+      text-align: left
 
-table#attendance_summary th a 
-  text-decoration: none
-
-table#attendance_summary .name 
-  width: 20em
-  text-align: left
-
-.alt0 
+alt0 
   background-color: $bg_alt1
 .alt1 
   background-color: $bg_alt0
