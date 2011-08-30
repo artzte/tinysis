@@ -10,8 +10,8 @@ class Status < ActiveRecord::Base
 	STATUS_PARTICIPATING = 2
 	
 	STATUS_NAMES = {
-		STATUS_ACCEPTABLE => "Acceptable",
-		STATUS_UNACCEPTABLE => "Unacceptable",
+		STATUS_ACCEPTABLE => "Satisfactory",
+		STATUS_UNACCEPTABLE => "Unsatisfactory",
 		STATUS_PARTICIPATING => "Participating" }
 		
 	def self.make(month, statusable, user)
