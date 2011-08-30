@@ -1,8 +1,8 @@
 #student_report
   - if @student.status == User::STATUS_ACTIVE
-    %p= "#{User::STATUS_NAMES[@student.status]} since #{dm(@student.date_active)}."
+    %p= "Grade #{@student.district_grade}; #{User::STATUS_NAMES[@student.status].downcase} since #{dm(@student.date_active)}."
   - else
-    %p= "#{User::STATUS_NAMES[@student.status]}; was active from #{dm(@student.date_active)} to #{dm(@student.date_inactive)}"
+    %p= "Grade #{@student.district_grade}; #{User::STATUS_NAMES[@student.status].downcase}; was active from #{dm(@student.date_active)} to #{dm(@student.date_inactive)}"
 
   %table#report.tiny.fixed.padded
     %thead
