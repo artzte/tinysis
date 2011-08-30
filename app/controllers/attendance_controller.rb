@@ -7,22 +7,27 @@ class AttendanceController < ApplicationController
 	
 	def index
 	  redirect_to contracts_path and return unless @contract
-    
+
     set_meta :title => "#{@contract.name} - Attendance", :tab1 => :contracts, :tab2 => :attendance
-	  
+
 	  @meetings = @contract.meetings.find(:all, :order=>'meeting_date DESC')
-	  
+
 	  if params[:meeting_id] && params[:pg].nil?
 	    @meeting = @contract.meetings.find(params[:meeting_id]) 
 	    params[:i] = @meetings.index(@meeting)
 	  end
-	  
-	  setup_page_variables @meetings, 10
-	  
-	  @stats = @contract.attendance_stats
-	  
-	  @meeting_dates = @page_items.collect{|m| m.meeting_date}
-	  
+
+	  setup_page_variables @meetings, 12
+
+    @enrollments = @contract.enrollments.uncanceled.find :all, 
+      :select => "enrollments.*, CONCAT(u.last_name, ', ', u.first_name) AS name",
+      :joins => "INNER JOIN users u ON u.id = enrollments.participant_id",
+      :order => "u.last_name, u.first_name"
+
+    @stats = @contract.attendance_stats
+
+    @meeting_dates = @page_items.collect{|m| m.meeting_date}
+
 	  unless @page_items.blank?
 	    @meeting_participants = @contract.attendance_hash(:last=>@page_items.first.meeting_date, :first=>@page_items.last.meeting_date)
     else
