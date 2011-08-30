@@ -315,22 +315,42 @@ class Contract < ActiveRecord::Base
 	# attendance queries
 	
 	def attendance_stats
-	  q = []
-	  q << "SELECT enrollments.id, enrollments.participant_id, CONCAT(users.last_name, ', ', users.first_name) AS name, presents.count as present_count, absences.count as absence_count, tardies.count as tardy_count FROM enrollments"
-    q << "INNER JOIN users ON users.id = enrollments.participant_id"
-    q << "LEFT JOIN (SELECT COUNT(meeting_participants.participation) AS count, meeting_participants.enrollment_id FROM meeting_participants WHERE meeting_participants.participation = #{MeetingParticipant::PRESENT} GROUP BY meeting_participants.enrollment_id) AS presents ON presents.enrollment_id = enrollments.id"
-    q << "LEFT JOIN (SELECT COUNT(meeting_participants.participation) AS count, meeting_participants.enrollment_id FROM meeting_participants WHERE meeting_participants.participation = #{MeetingParticipant::ABSENT} GROUP BY meeting_participants.enrollment_id) AS absences ON absences.enrollment_id = enrollments.id"
-    q << "LEFT JOIN (SELECT COUNT(meeting_participants.participation) AS count, meeting_participants.enrollment_id FROM meeting_participants WHERE meeting_participants.participation = #{MeetingParticipant::TARDY} GROUP BY meeting_participants.enrollment_id) AS tardies ON tardies.enrollment_id = enrollments.id"
-    q << "WHERE enrollments.contract_id = #{self.id} AND enrollments.completion_status != #{Enrollment::COMPLETION_CANCELED}"
-    q << "GROUP BY enrollments.participant_id"
-    q << "ORDER BY name"
-        
-    Enrollment.find_by_sql(q.join(' '))
-    
-	end
-	
+
+   # get meeting count -- will assign optional to any "missing" records
+    meeting_count = meetings.count
+
+    # get the meeting participants with subtotals for each enrollment/participation combo
+    mp_subtotals = MeetingParticipant.connection.select_rows(%Q{
+      SELECT mp.enrollment_id, mp.participation, COUNT(mp.id) as count FROM meeting_participants mp
+      INNER JOIN enrollments e ON e.id = mp.enrollment_id AND e.contract_id = #{id} AND e.completion_status != #{Enrollment::COMPLETION_CANCELED}
+      GROUP BY mp.enrollment_id, mp.participation
+      ORDER BY mp.enrollment_id
+    })
+
+    results = {}
+
+    # setup the hashes for each contract enrollee
+    mp_subtotals.each do |row|
+
+      id = row[0].to_i
+      participation = row[1].to_i
+      count = row[2].to_i
+      results[id] ||= Contract.hash_with_default(0)
+      results[id][participation] = count
+
+    end
+
+    return results
+
+  end
+
+  def self.hash_with_default(default, init = {})
+    init.default = default
+    init
+  end
+
 	def attendance_hash(options = {})
-	  
+
 	  q = []
 	  q << "SELECT * FROM meeting_participants"
 	  q << "INNER JOIN enrollments ON enrollments.id = meeting_participants.enrollment_id"
@@ -338,14 +358,16 @@ class Contract < ActiveRecord::Base
     q << "WHERE enrollments.contract_id = #{self.id} AND enrollments.completion_status != #{Enrollment::COMPLETION_CANCELED}"
     q << "AND meetings.meeting_date >= '#{options[:first]}'" if options[:first]
     q << "AND meetings.meeting_date <= '#{options[:last]}'" if options[:last]
-      
-	  participants = MeetingParticipant.find_by_sql(q.join(' '))
+
+    participants = MeetingParticipant.find_by_sql(q.join(' '))
 	  participants = participants.group_by{|p| p.enrollment_id}
 	  participants.each do |k,v|
 	    participants[k] = participants[k].group_by{|p| p.meeting_id}
 	  end
 	  participants
+
 	end
+ 
 	
 	def after_initialize
 	  
@@ -356,6 +378,5 @@ class Contract < ActiveRecord::Base
 		self.contract_status ||= Contract::STATUS_PROPOSED
 
   end
-	
 
 end
