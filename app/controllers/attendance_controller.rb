@@ -38,6 +38,8 @@ class AttendanceController < ApplicationController
 	def roll
 	  redirect_to contracts_path and return unless @contract
 
+    @default_contact_type = 'COOR' if @contract.homeroom?
+
 		if !@privs[:view_students]
 			redir_error(TinyException::SECURITYHACK, @user)
 			return
