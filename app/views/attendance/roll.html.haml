@@ -2,7 +2,7 @@
 %h1
   Attendance for 
   == #{@meeting.meeting_date.strftime('%A')}, #{@meeting.meeting_date.strftime('%d %B %Y')}
-%p= link_to "Return to summary", attendance_path(:id => @contract, :meeting_id => @meeting.id)
+%p= link_to "Return to summary", attendance_path(:id => @contract.id)
 #worksheet
   .form-controls{:style => 'margin: 1em 0'}
     %form.left.behavior.submit-once#update_all{:action=> update_all_attendance_url(@meeting), :method => "post"}
