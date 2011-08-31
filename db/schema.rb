@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110826053451) do
+ActiveRecord::Schema.define(:version => 20110831193004) do
 
   create_table "assignments", :force => true do |t|
     t.integer  "contract_id"
@@ -31,6 +31,7 @@ ActiveRecord::Schema.define(:version => 20110826053451) do
     t.integer "sequence",                :default => 0,     :null => false
     t.boolean "public",                  :default => false
     t.integer "statusable", :limit => 1, :default => 0
+    t.integer "homeroom",   :limit => 1, :default => 0
   end
 
   add_index "categories", ["public"], :name => "index_categories_on_public"

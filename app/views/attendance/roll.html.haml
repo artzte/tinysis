@@ -1,4 +1,4 @@
-- @dummy = MeetingParticipant.new(:participation => 0)
+- @dummy = MeetingParticipant.new(:participation => 0, :contact_type => @default_contact_type)
 %h1
   Attendance for 
   == #{@meeting.meeting_date.strftime('%A')}, #{@meeting.meeting_date.strftime('%d %B %Y')}
@@ -9,7 +9,7 @@
       %label Mark all enrollees:
       = hidden_field_tag "authenticity_token", form_authenticity_token, :id => nil
       = select_tag('participation', options_for_select(MeetingParticipant::PARTICIPATION_STATUSES.collect{|p| [p[:name], p[:value]]}, MeetingParticipant::PRESENT), :style=>'width: 10em', :id => nil)
-      = select_tag('contact', options_for_select(MeetingParticipant::CONTACT_TYPES), :id => nil)
+      = select_tag('contact', options_for_select(MeetingParticipant::CONTACT_TYPES, @default_contact_type), :id => nil)
       = submit_tag "Update all", :class => 'btn small'
     .right
       = link_to "Delete this roll", delete_attendance_roll_path(@meeting), :class => 'btn small behavior post_with_confirm', 'data-confirmation' => 'Are you sure you want to delete this attendance roll and all the records along with it?'
@@ -18,9 +18,9 @@
     %thead
       %tr.th
         %th.name Participant
+        %th Type
         - MeetingParticipant::PARTICIPATION_STATUSES.collect do |s|
           %th.status= s[:name]
-        %th Contact
         %th.note Notes
     %tbody= render :partial => 'attendance/worksheet_item', :collection => @enrollments
 - @dummy.id = -1
