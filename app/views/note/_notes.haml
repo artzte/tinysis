@@ -7,7 +7,10 @@
 - elsif options[:notes_hash]
   - notes = options[:notes_hash][parent_element.id] || []
 - else
-  - notes = parent_element.notes.find(:all, :order => 'updated_at asc')
+  - if parent_element.new_record?
+    - notes = []
+  - else
+    - notes = parent_element.notes.find(:all, :order => 'updated_at asc')
 - klass = 'notes'
 - klass << " #{options[:class]}" if options[:class]
 - unless (notes.length==0) && options[:editable] == false
