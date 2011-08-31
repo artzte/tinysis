@@ -17,13 +17,3 @@ smtp_tls_config:
   password: xxxxxxxxxx
 
 fte_hours: 25
-
-school_year: 2011
-school_year_description: 9/7/2011 - 6/25/2012
-
-periods:
-  - one: foo
-    start: 1
-    end: 2
-  - two
-  - three
