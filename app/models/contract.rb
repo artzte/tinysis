@@ -63,6 +63,10 @@ class Contract < ActiveRecord::Base
 	def status_name
 	  STATUS_NAMES[self.contract_status]
 	end
+
+  def homeroom?
+    category.homeroom? 
+  end
 		
 	def before_save
 	  self.timeslots ||= []
@@ -345,7 +349,7 @@ class Contract < ActiveRecord::Base
   end
 
   def self.hash_with_default(default, init = {})
-    init.default = default
+   init.default = default
     init
   end
 
