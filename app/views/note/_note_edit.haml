@@ -1,8 +1,6 @@
 - note = note_edit
 %li.edit{:class => @new ? 'add' : nil}
   .header
-    .title
-      = note_title(note)
     .right
       = link_to "save", update_note_path(note), :class => 'update'
       = link_to 'autosave', save_note_path(note), :class => 'autosave hidden'
