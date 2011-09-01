@@ -320,7 +320,7 @@ class Contract < ActiveRecord::Base
 	
 	def attendance_stats
 
-   # get meeting count -- will assign optional to any "missing" records
+    # get meeting count -- will assign as absent any "missing" records
     meeting_count = meetings.count
 
     # get the meeting participants with subtotals for each enrollment/participation combo
@@ -341,6 +341,15 @@ class Contract < ActiveRecord::Base
       count = row[2].to_i
       results[id] ||= Contract.hash_with_default(0)
       results[id][participation] = count
+
+    end
+
+    # second pass through the list to adjust all the absence counts
+    results.values.each do |stats| 
+
+      total = stats.values.sum
+      stats[MeetingParticipant::ABSENT] ||= 0
+      stats[MeetingParticipant::ABSENT] += meeting_count - total
 
     end
 
