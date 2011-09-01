@@ -58,6 +58,7 @@ ActionController::Routing::Routes.draw do |map|
     att.update_attendance '/attendance/update/:meeting_id/:enrollment_id/:participation', :action => 'update', :conditions => {:method => :post}
     att.update_all_attendance '/attendance/:id/update_all', :action => 'update_all', :conditions => {:method => :post}
     att.delete_attendance_roll '/attendance/delete_roll/:id', :action => 'delete_roll', :conditions => {:method => :post}
+    att.update_meeting '/attendance/:meeting_id', :action => 'update', :conditions => {:method => :post}
   end
   
   map.with_options :controller => 'account' do |account|

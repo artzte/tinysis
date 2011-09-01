@@ -1,7 +1,7 @@
 - @dummy = MeetingParticipant.new(:participation => 0, :contact_type => @default_contact_type)
-%h1
-  Attendance for 
-  == #{@meeting.meeting_date.strftime('%A')}, #{@meeting.meeting_date.strftime('%d %B %Y')}
+%h1.behavior.editable_head{'data-text-cache' => h(@meeting.display_title)}
+  = @meeting.display_title
+  %a.icon.edit{:href => update_meeting_path(@meeting)} Edit
 %p= link_to "Return to summary", attendance_path(:id => @contract.id)
 #worksheet
   .form-controls{:style => 'margin: 1em 0'}

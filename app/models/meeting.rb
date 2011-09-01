@@ -47,5 +47,13 @@ class Meeting < ActiveRecord::Base
       ORDER BY participant_name") 
     
   end
+
+  def display_title
+    if title.blank?
+      %{Attendance for #{meeting_date.strftime('%A')}, #{meeting_date.strftime('%d %B %Y')}}
+    else
+      title
+    end
+ end
   
 end
