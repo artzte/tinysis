@@ -6,7 +6,8 @@ class MeetingParticipant < ActiveRecord::Base
   TARDY = 3
 
 	PARTICIPATION_STATUSES = [
-	  {:name => "Optional", :value => OPTIONAL},
+  # deprecated
+	#  {:name => "Optional", :value => OPTIONAL},
 	  {:name => "Present", :value => PRESENT},
 	  {:name => "Tardy", :value => TARDY},
 	  {:name => "Absent", :value => ABSENT},
