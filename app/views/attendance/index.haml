@@ -10,13 +10,12 @@
     Found 
     = @meetings.length 
     meetings / 
-    = @stats.length
+    = @enrollments.length
     participants.
   %table.tiny#attendance_summary
     %thead
       %tr
         %th.name Participant
-        %th Optional
         %th Present
         %th Absent
         %th Tardy
@@ -32,7 +31,7 @@
           - stats = @stats[e.id] || Contract.hash_with_default(0)
           %tr{:class=>cycle_stripes}
             %td.name.min-10= e[:name]
-            - [ MeetingParticipant::OPTIONAL, MeetingParticipant::PRESENT, MeetingParticipant::ABSENT, MeetingParticipant::TARDY ].each do |participation|
+            - [ MeetingParticipant::PRESENT, MeetingParticipant::ABSENT, MeetingParticipant::TARDY ].each do |participation|
               %td= stats[participation]
             - @page_items.each do |m|
               %td
