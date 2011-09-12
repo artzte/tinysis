@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110831193004) do
+ActiveRecord::Schema.define(:version => 20110901125026) do
 
   create_table "assignments", :force => true do |t|
     t.integer  "contract_id"
@@ -206,6 +206,7 @@ ActiveRecord::Schema.define(:version => 20110831193004) do
   create_table "meetings", :force => true do |t|
     t.integer "contract_id"
     t.date    "meeting_date"
+    t.string  "title"
   end
 
   add_index "meetings", ["contract_id"], :name => "index_meetings_on_contract_id"
