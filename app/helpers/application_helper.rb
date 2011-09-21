@@ -128,5 +128,13 @@ module ApplicationHelper
 	    ""
 	  end
 	end
+
+  def attendance_summary_string(stats)
+    MeetingParticipant::PARTICIPATION_STATUSES.collect do |ps|
+      if ( count = stats[ ps[:value] ] )
+        "#{count} #{ps[:name]}"
+      end
+    end.join('; ')
+ end
 	    
 end

@@ -19,5 +19,9 @@
     %tr
       %th Attendance
       %td
-        = attendance_status_text(attendance).join('; ')
-=notes_for enrollment, :editable => false
+        == #{attendance[:total_attended]}/#{attendance[:total_meetings]}
+        &nbsp;:&nbsp;
+        (
+        = attendance_summary_string(attendance)
+        )
+= notes_for enrollment, :editable => false

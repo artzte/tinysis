@@ -68,26 +68,23 @@ class Enrollment < ActiveRecord::Base
 	has_many :meeting_participants, :dependent => :destroy do 
 	  
 	  def stats
-	    meetings = MeetingParticipant.find_by_sql(%{
-	      SELECT participation, COUNT(participation) AS count FROM meeting_participants
-	      INNER JOIN meetings ON meeting_participants.meeting_id = meetings.id
-	      WHERE enrollment_id = #{proxy_owner.id}
-	      GROUP BY participation
-	    })
-	    return {} if meetings.empty?
-
-	    absences = meetings.detect{|m| m.participation == MeetingParticipant::ABSENT}
-	    tardies = meetings.detect{|m| m.participation == MeetingParticipant::TARDY}
-	    presents = meetings.detect{|m| m.participation == MeetingParticipant::PRESENT}
-	    
-	    s = {
-	      :absences => absences ? absences.count.to_i : nil,
-	      :presents => presents ? presents.count.to_i : nil,
-	      :tardies => tardies ? tardies.count.to_i : nil,
-	    }
-	    
-	    return s
-	  end
+	    stats_results = Meeting.connection.select_all(%{
+        SELECT participation, COUNT(mp.id) AS count
+        FROM meetings
+        LEFT OUTER JOIN meeting_participants mp ON mp.meeting_id = meetings.id AND mp.enrollment_id = #{proxy_owner.id}
+        WHERE meetings.contract_id = #{proxy_owner.contract_id}
+        GROUP BY participation
+        ORDER BY participation
+      })
+      meetings_count = Meeting.count(:conditions => "contract_id = #{proxy_owner.contract_id}")
+      stats_hash = Hash[ *stats_results.collect{|v| v["participation"] ? [ v["participation"].to_i, v["count"].to_i] : nil }.reject(&:nil?).flatten ]
+      
+      stats_hash[ MeetingParticipant::ABSENT ] ||= 0
+      stats_hash[ MeetingParticipant::ABSENT ] += (meetings_count - stats_hash.values.sum)
+      stats_hash[ :total_meetings ] = meetings_count
+      stats_hash[ :total_attended ] = meetings_count - stats_hash[ MeetingParticipant::ABSENT ]
+      stats_hash
+   end
 	  
 	end
 	
