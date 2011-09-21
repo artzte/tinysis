@@ -10,14 +10,7 @@
     });
   };
   
-  $('.editable_head.behavior a.edit').click(function(event) {
-    var el = $(this);
-    var head = el.closest('.editable_head');
-    event.preventDefault();
-    head.data('editCache', head.html());
-    head.html("<form action='"+el.attr('href')+"'><input type='text' value='" + head.data('textCache') + "'></form>");
-  });
-  
+ 
   $('a.load-once').live('click', function(event) {
     var el = $(this);
     if(el.data('loaded')) {

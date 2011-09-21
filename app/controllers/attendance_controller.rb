@@ -139,6 +139,17 @@ class AttendanceController < ApplicationController
     redirect_to roll_path(@meeting.contract_id, @meeting.meeting_date.year, @meeting.meeting_date.month, @meeting.meeting_date.day)
 	end
 
+  def update_meeting
+    @meeting = Meeting.find(params[:id], :include => [:contract])
+    if @meeting
+      privs = @meeting.contract.privileges(@user)
+      render :text => "You don't have privileges to do this.", :status=>500 and return unless privs[:edit]
+
+      @meeting.update_attribute(:title, params[:value])
+    end
+    render :nothing => true
+  end
+
 protected
   def update_attendance_for_enrollment(meeting, enrollment, params)
     participant = MeetingParticipant.find_or_create_by_enrollment_id_and_meeting_id(enrollment.id, meeting.id)

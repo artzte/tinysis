@@ -20,7 +20,7 @@
         %th Absent
         %th Tardy
         - @page_items.each do |m|
-          %th= link_to_if(@privs[:view_students], m.meeting_date.strftime("%m/%d"), roll_path(:id => @contract, :year => m.meeting_date.year, :month => m.meeting_date.month, :day => m.meeting_date.day))
+          %th= link_to_if(@privs[:view_students], m.meeting_date.strftime("%m/%d"), roll_path(:id => @contract, :year => m.meeting_date.year, :month => m.meeting_date.month, :day => m.meeting_date.day), :title => m.display_title)
     %tbody
       - if @enrollments.empty?
         %tr{:style=>"text-align: center"}
