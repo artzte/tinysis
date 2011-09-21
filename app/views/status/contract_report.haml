@@ -1,7 +1,7 @@
-%h1= @contract_name
-.left= url_button 'Return to summary page', contract_status_detail_path(@enrollment.contract)
+%h1.left= @enrollment.contract.name
 = render :partial => 'report_paging_buttons'
-%br.clear
+.clear
+%p= link_to 'Return to summary page', contract_status_detail_path(@enrollment.contract)
 %h2= @student.last_name_first
 = render :partial => 'enrollment_summary', :object => @enrollment
 %table#report.tiny.fixed.padded

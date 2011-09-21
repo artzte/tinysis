@@ -18,11 +18,10 @@
       - editable = (!e.finalized_fulfilled?) and @privs[:edit]
       %tr
         %td
+          .status.right
+            = render :partial => "status_update", :object => e, :locals => {:editable => editable}
           .enrollment
-            %h3
-              = e.participant.last_name_first
-            .status
-              = render :partial => "status_update", :object => e, :locals => {:editable => editable}
+            = e.participant.last_name_first
         %td
           - unless e.canceled?
             .credits
