@@ -30,9 +30,10 @@
           = image_tag 'tiny_up.gif'
       #title= AppConfig.app_organization
       = render :partial => "shared/toolbar"
-    #flash{:style=> flash[:notice] ? nil : "display: none"}
-      = flash[:notice]
     #content
+      #flash{:style=> flash[:notice] ? nil : "display: none"}
+        %a{:href => '#'} Close
+        = flash[:notice]
       #header= tab_title @tab2
       .app_c{:id=>"c_#{controller.controller_path.gsub(/\//,'_')}"}
         .app_a{:id=>"a_#{controller.action_name}"}

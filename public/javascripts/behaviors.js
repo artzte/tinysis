@@ -37,6 +37,11 @@
     $('<form></form>').attr({method: 'post', action: this.href}).appendTo($('body')).submit();
   });
 
+  $('#flash').live('click', function() {
+    UI.fade_notice();
+    return false;
+  });
+
 
   $(document).ready(function() {
     $('.behavior.year_filter select').change(function() {
@@ -44,11 +49,6 @@
     });
 
     $('table.striped').stripe_table();
-    
-    var flash = $('#flash');
-    if(flash.is(":visible")) {
-      UI.fade_notice();
-    }
     
   });  
 })(jQuery);
