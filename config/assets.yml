@@ -17,8 +17,7 @@ javascripts:
     - tiny.js
     - credits.js
     - behaviors.js
-    - behaviors/notes.js
-    - behaviors/filterform.js
+    - behaviors/*.js
   assignments:
     - assignments.js
     

@@ -24,7 +24,7 @@
           %td.number= c.active_enrollments
           %td= c.category_name
           %td= c.facilitator_name
-          %td.term= c.term_name
+          %td.nowrap.term= c.term_name
           %td= Contract::STATUS_NAMES[c.contract_status]
           %td.actions
             - if @user.staff?

@@ -1,12 +1,27 @@
 #flash
   position: absolute
-  margin: 1em
-  padding: 1em
-  +border-radius(10px)
-  background-color: #ffffcc
+  padding: 10px 12px 10px 15px
+  +border-radius(6px)
   color: $fg_head
   line-height: 15px
-  top: 107px
+  background: #ffffcc
+  cursor: pointer
+  margin-left: 110px
+  margin-top: 2px
+  max-width: 695px
+  a
+    display: block
+    position: absolute
+    height: 24px
+    width: 24px
+    background: url(/images/circle-x.png) no-repeat top left
+    margin: -16px 0 0 -26px
+    overflow: hidden
+    text-indent: -9999px
+  &:hover
+    a
+      background-position: 0px -24px
+
 
 ul#toolbar2
   padding: 10px 0 6px 30px
@@ -53,3 +68,17 @@ ul#toolbar2
 
 .btn
   +button
+
+.icon
+  display: inline-block
+  height: 18px
+  width: 18px
+  text-indent: -999999px
+  overflow: hidden
+  &.edit
+    background: url(/images/pencil.png)
+
+.editable_head
+  form, input[type="text"]
+    color: inherit
+    font-size: inherit

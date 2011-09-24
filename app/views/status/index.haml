@@ -23,7 +23,7 @@
         %tr
           %td.name= link_to(c.name, contract_path(c))
           %td.enrollees= c.active_enrollments
-          %td.term= c.term_name
+          %td.term.nowrap= c.term_name
           %td.status
             %span{:class=>Contract::STATUS_NAMES[c.contract_status].downcase}= Contract::STATUS_NAMES[c.contract_status]
           %td.links

@@ -3,7 +3,9 @@ class Meeting < ActiveRecord::Base
   has_many :meeting_participants, :dependent => :destroy
   belongs_to :contract
 	has_many :notes, :as => :notable, :dependent => :destroy
-  
+ 
+  named_scope :reverse_chrono, :order => 'meeting_date DESC' 
+
   # Return a hash describing privileges of the specified user
 	# on this meeting
 
@@ -47,5 +49,13 @@ class Meeting < ActiveRecord::Base
       ORDER BY participant_name") 
     
   end
+
+  def display_title
+    if title.blank?
+      %{Attendance for #{meeting_date.strftime('%A')}, #{meeting_date.strftime('%d %B %Y')}}
+    else
+      title
+    end
+ end
   
 end
