@@ -29,3 +29,6 @@ export/
 config/environments/development.yml
 config/environments/production.yml
 config/environments/test.yml
+*.mysql
+latest
+
