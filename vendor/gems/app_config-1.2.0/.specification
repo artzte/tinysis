@@ -1,0 +1,86 @@
+--- !ruby/object:Gem::Specification 
+name: app_config
+version: !ruby/object:Gem::Version 
+  hash: 31
+  prerelease: 
+  segments: 
+  - 1
+  - 2
+  - 0
+  version: 1.2.0
+platform: ruby
+authors: 
+- Christopher J Bottaro
+autorequire: 
+bindir: bin
+cert_chain: []
+
+date: 2009-09-08 00:00:00 -07:00
+default_executable: 
+dependencies: []
+
+description: Application level configuration that supports YAML config file, inheritance, ERB, and object member notation.
+email: cjbottaro@alumni.cs.utexas.edu
+executables: []
+
+extensions: []
+
+extra_rdoc_files: 
+- README.rdoc
+files: 
+- CHANGELOG
+- README.rdoc
+- Rakefile
+- VERSION.yml
+- app_config.gemspec
+- init.rb
+- install.rb
+- lib/app_config.rb
+- lib/closed_struct.rb
+- tasks/app_config_tasks.rake
+- test/app_config.yml
+- test/app_config_test.rb
+- test/closed_struct_test.rb
+- test/development.yml
+- test/empty1.yml
+- test/empty2.yml
+- test/environments.yml
+- test/override_with.yml
+- uninstall.rb
+has_rdoc: true
+homepage: http://github.com/cjbottaro/app_config
+licenses: []
+
+post_install_message: 
+rdoc_options: 
+- --charset=UTF-8
+require_paths: 
+- lib
+required_ruby_version: !ruby/object:Gem::Requirement 
+  none: false
+  requirements: 
+  - - ">="
+    - !ruby/object:Gem::Version 
+      hash: 3
+      segments: 
+      - 0
+      version: "0"
+required_rubygems_version: !ruby/object:Gem::Requirement 
+  none: false
+  requirements: 
+  - - ">="
+    - !ruby/object:Gem::Version 
+      hash: 3
+      segments: 
+      - 0
+      version: "0"
+requirements: []
+
+rubyforge_project: 
+rubygems_version: 1.5.3
+signing_key: 
+specification_version: 3
+summary: Application level configuration.
+test_files: 
+- test/app_config_test.rb
+- test/closed_struct_test.rb
