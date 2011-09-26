@@ -7,6 +7,7 @@ set :deploy_to, "/var/apps/novatiny/#{environment}"
 set :config_files, ['database.yml']
 set :web_command, "sudo apachectl"
 set :config_path, "/var/apps/novatiny/config/#{environment}"
+set :skip_scm, false
 
 task :remote_path do
   puts remote_path
@@ -22,6 +23,14 @@ remote_task :symlink do
   run "ln -s #{config_path}/database.yml                    #{release_path}/config/database.yml"
   run "ln -s #{config_path}/environments/#{environment}.yml #{release_path}/config/app_config/#{environment}.yml"
   run "ln -s #{config_path}/environments/#{environment}.rb  #{release_path}/config/environments/#{environment}.rb"
+
+  # bundle folder
+  run "if [[ ! -d \"#{shared_path}/bundle\" ]]; then mkdir -p \"#{shared_path}/bundle\"; fi"
+  run "ln -s #{shared_path}/bundle  #{release_path}/bundle"
+end
+
+remote_task :package_assets do
+  run "cd #{release_path} && bundle exec RAILS_ENV=#{environment} rake assets:package"
 end
 
 desc "Full deployment cycle"
