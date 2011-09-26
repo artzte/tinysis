@@ -1,23 +1,22 @@
 javascripts:
   system:
-    - external/prototype.js
-    - external/effects.js
-    - external/dragdrop.js
-    - external/controls.js
-    
-    - external/jquery-1.6.2.min.js
-    - external/jquery-ui.js
-    - external/jquery_compat.js
-    
-    - external/underscore-min.js
+    - public/javascripts/external/prototype.js
+    - public/javascripts/external/effects.js
+    - public/javascripts/external/dragdrop.js
+    - public/javascripts/external/controls.js
+    - public/javascripts/external/jquery-1.6.2.min.js
+    - public/javascripts/external/jquery-ui.js
+    - public/javascripts/external/jquery_compat.js
+    - public/javascripts/external/underscore-min.js
+    - public/javascripts/external/modalbox.js
 
-    - external/modalbox.js
   tinysis:
-    - application.js
-    - tiny.js
-    - credits.js
-    - behaviors.js
-    - behaviors/*.js
+    - public/javascripts/application.js
+    - public/javascripts/tiny.js
+    - public/javascripts/credits.js
+    - public/javascripts/behaviors.js
+    - public/javascripts/behaviors/*.js
+
   assignments:
-    - assignments.js
+    - public/javascripts/assignments.js
     
