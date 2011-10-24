@@ -30,7 +30,7 @@ remote_task :symlink do
 end
 
 remote_task :bundle do
-  run "cd #{release_path} && env bundle install --deployment"
+  run "cd #{release_path} && env bundle install --deployment --binstubs"
 end
 
 remote_task :generate_css do

@@ -23,5 +23,6 @@
     %p.check_box
       = check_box_tag(name, goal.id, @goals.include?(goal), :id => id)
       %label{:for=> id}= goal.description
+  .clear
   %h3 Personal Goals
-  = form.text_area :user_goals, :ua => textile_example
+  = form.text_area :user_goals, :ua => textile_example, :label => ""

@@ -13,7 +13,7 @@
   %p
     Weekly hours engaged in learning activity:&nbsp;&nbsp;
     = @plan.weekly_hours
-  %h2 Standardized Goals
+  %h2 Standard Student Goals
   %ul.goals
     - @plan.learning_plan_goals.each do |goal|
       %li= goal.description
@@ -22,12 +22,13 @@
     .personal No personal goals defined
   - else
     .personal= textilize @plan.user_goals
-  %h2 Notes
-  %p Add notes below to comment on the student's learning progress, or to identify any needed interventions.
+  -# %h2 Monthly Progress Notes
+  -# %p Add notes below to comment on the student's learning progress, or to identify any needed interventions.
   = notes_for(@plan)
 - else
   %p No learning plan defined for this year.
 %h2 Schedule
+Evaluation methods and competencies are included in each class syllabus.
 .schedule
   = render :partial => 'show_schedule', :object => @active_terms, :locals => {:title => 'Current Enrollments'}
   = render :partial => 'show_schedule', :object => @finalized_terms, :locals => { :title => 'Finalized Enrollments'}
