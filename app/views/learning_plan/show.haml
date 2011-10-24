@@ -9,6 +9,7 @@
   - if @privs[:edit]
     %p= link_to "<span>Edit learning plan</span>", edit_learning_path(@student, @year), :class=>'btn'
 - if @plan
+  %h3 This plan meets state and district graduation requirements.
   %p
     Weekly hours engaged in learning activity:&nbsp;&nbsp;
     = @plan.weekly_hours
