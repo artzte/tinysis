@@ -26,16 +26,27 @@ remote_task :symlink do
 
   # bundle folder
   run "if [[ ! -d \"#{shared_path}/bundle\" ]]; then mkdir -p \"#{shared_path}/bundle\"; fi"
-  run "ln -s #{shared_path}/bundle  #{release_path}/bundle"
+  run "ln -s #{shared_path}/bundle  #{release_path}/vendor/bundle"
+end
+
+remote_task :bundle do
+  run "cd #{release_path} && env bundle install --deployment"
+end
+
+remote_task :generate_css do
+  run "cd #{release_path} && env RAILS_ENV=#{environment} bundle exec compass compile"
 end
 
 remote_task :package_assets do
-  run "cd #{release_path} && bundle exec RAILS_ENV=#{environment} rake assets:package"
+  run "cd #{release_path} && env RAILS_ENV=#{environment} bundle exec rake assets:package"
 end
 
 desc "Full deployment cycle"
 task "vlad:deploy" => %w[
   vlad:update
   symlink
+  bundle
+  generate_css
+  package_assets
   vlad:start_app
 ]
