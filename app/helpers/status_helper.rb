@@ -45,5 +45,9 @@ module StatusHelper
 	  messages
 	  
 	end
+
+  def student_links(student)
+    render :partial => "status/student_links", :locals => {:student => student}
+  end
 	  
 end

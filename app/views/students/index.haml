@@ -20,8 +20,5 @@
       %tr
         = render :partial => 'student_columns', :object => student
         %td.links
-          = link_to "Status", student_status_path(student)
-          = link_to "ALE Report", "#"
-          = link_to "Learning Plan", learning_path(student)
-          = link_to "Credits", credit_assignments_path(student)
-          = link_to "Graduation Plan", graduation_path(student)
+          = student_links(student)
+

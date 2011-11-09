@@ -1,0 +1,8 @@
+- s = local_assigns[:student]
+.student_links
+  = link_to('COOR Report', coor_report_path(s), :class=> 'link')
+  = link_to('Status', student_status_path(s), :class=> 'link')
+  = link_to('Learning Plan', learning_path(s), :class=> 'link')
+  = link_to('Credits', credit_assignments_path(s), :class=> 'link')
+  = link_to("Graduation Plan", graduation_path(student), :class => 'link')
+
