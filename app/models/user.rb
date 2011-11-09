@@ -60,10 +60,17 @@ class User < ActiveRecord::Base
 	  def make(month, user)
 	    Status.make(month, proxy_owner, user)
 	  end
+    def current
+      find_by_month Date.today.beginning_of_month
+    end
 	end
 	
 	# each year there is a learning plan.
-	has_many :learning_plans
+	has_many :learning_plans do
+    def current
+      find_by_year Setting.current_year
+    end
+  end
 	
 	# there is one graduation plan
 	has_one :_graduation_plan, :class_name => 'GraduationPlan', :foreign_key => 'user_id'
@@ -138,6 +145,12 @@ class User < ActiveRecord::Base
 		p
 			
 	end
+
+  # returns learning plan FTE or 0 if there is no current learning plan
+  def fte
+    lp = learning_plans.current
+    return lp ? lp.weekly_hours : 0
+  end
 
 	def privileges(user)
 

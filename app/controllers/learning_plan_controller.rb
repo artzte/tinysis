@@ -48,6 +48,11 @@ class LearningPlanController < ApplicationController
 
 		if @plan.update_attributes(params[:plan])
 		  flash[:notice] = "Learning plan saved"
+
+      # update the current student status report to the new FTE hours
+      status = @student.statuses.current
+      status.update_attributes(:fte_hours => @plan.weekly_hours) if status
+
 		  redirect_to learning_path(@student)
 		else
 		  edit

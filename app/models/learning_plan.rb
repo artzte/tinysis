@@ -7,7 +7,7 @@ class LearningPlan < ActiveRecord::Base
 	has_many :notes, :as => :notable
 	validates_presence_of :year, :user
 	
-	# Return a hash describing privileges of the specified user
+  # Return a hash describing privileges of the specified user
 	# on this learning plan
 
 	def privileges(u)

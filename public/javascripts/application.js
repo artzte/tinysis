@@ -19,11 +19,11 @@ var Status = {
     var status_id = match[1];
     
     params = Form.serialize(form);
-    if($('status_fte_hours') && (!Util.validate_number($F('status_fte_hours')) || parseInt($F('status_fte_hours')) >25)) {
-      alert('Please enter a number from 0 to 25 for the FTE hours.');
-      $('status_fte_hours').focus();
-      return;
-    }
+    // if($('status_fte_hours') && (!Util.validate_number($F('status_fte_hours')) || parseInt($F('status_fte_hours')) >25)) {
+    //   alert('Please enter a number from 0 to 25 for the FTE hours.');
+    //   $('status_fte_hours').focus();
+    //   return;
+    // }
     new Ajax.Request('/status/update_status/'+status_id,{parameters:params});
   },
   bind : function() {
@@ -33,8 +33,8 @@ var Status = {
       
     $('status_academic').observe('change', Status.update);
 
-    if($('status_fte_hours'))
-      $('status_fte_hours').observe('blur', Status.update);
+    // if($('status_fte_hours'))
+    //   $('status_fte_hours').observe('blur', Status.update);
     if($('status_held_periodic_checkins'))
       $('status_held_periodic_checkins').observe('change', Status.update);
     if($('status_attendance'))

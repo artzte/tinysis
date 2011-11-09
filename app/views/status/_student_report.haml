@@ -1,3 +1,4 @@
+- this_month = Date.today.beginning_of_month
 #student_report
   - if @student.status == User::STATUS_ACTIVE
     %p= "Grade #{@student.district_grade}; #{User::STATUS_NAMES[@student.status].downcase} since #{dm(@student.date_active)}."
@@ -17,6 +18,7 @@
         - status = @coor_report[:statuses][m]
         - current = @month==m
         - active = (current && @coor_report[:editable]  )
+        - current_month = m==this_month
         - klass = cycle_stripes
         - id = nil
         - if current
@@ -26,7 +28,6 @@
           - if active
             - id = "status_#{status.id}"
           - else
-            - fte = status.fte_hours
             - aca = Status::STATUS_NAMES[status.academic_status]
             - if status.held_periodic_checkins
               - meetings = 'Y'
@@ -45,11 +46,15 @@
           %td.status_month= link_to_if((@coor_report[:editable] && !active), m.strftime('%b %Y'), coor_report_path(:id => @student, :m => m.to_s))
           - if active
             %td.academic= select_tag("status[academic_status]", aca_options(status.academic_status, true), :id => 'status_academic')
-            %td.fte= text_field_tag("status[fte_hours]", status.fte_hours, :size => 5, :id => 'status_fte_hours')
+            %td.fte
+              = current_month ? @student.fte : status.fte_hours
+              -# only allow update of the FTE value if this is the current month status that is being edited.
+              - if current_month
+                %input{:type => 'hidden', :name => "status[fte_hours]", :value =>  @student.fte}
             %td.checkin= check_box_tag("status[held_periodic_checkins]", 1, status.held_periodic_checkins?, :id => 'status_held_periodic_checkins')
           - else
             %td.academic{:class=>status_klass}= aca
-            %td.fte= fte
+            %td.fte= status.fte_hours
             %td.checkin{:class=>status_klass}= meetings
           %td.notes= notes
 
