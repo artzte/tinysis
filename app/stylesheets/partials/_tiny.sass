@@ -205,11 +205,11 @@ label
 div.link,span.link,a.link
   margin-top: 0
   margin-bottom: .5em
-  padding-left: 1em
+  padding-left: 10px
   background: url(../images/tocbullet.gif) no-repeat left 
 
 a.link
-  margin-right: 2em
+  margin-right: 1em
   text-decoration: none
 
 a.link:hover
@@ -385,26 +385,45 @@ table.ealrs td.seq
     background-color: #f2f2f2
 form.tiny
   padding: 1em 2em
-  fieldset
+
+
+
+  textarea, input[type="text"], input[type="password"], select 
+    font-family: "Trebuchet MS", Helvetica, Arial, sans-serif
+    font-size: 110%
+    font-weight: normal
+    border: 1px solid #6699cc
+    padding: .2em
+    +border-radius(4px)
+
+  .check input 
+    position: relative
+    top: 5px
+
+  .check label 
+    position: relative
+    display: block
+    top: -12px
+    margin-left: 2em
+
+  textarea 
+    width: 98%
+
+  fieldset 
+    border: 2px solid #6699cc
+    margin-top: 2em
     +curved_border
     background-color: #fcfcfc
     padding: 1em
-    margin-top: 2em
     h3
       margin-top: 0
+
   div.submit
     text-align: right
     padding: 1em 0
   label
     display: block
     font-size: 110%
-  input[type='text'],input[type='checkbox'],input[type='radio'],select
-    border: 1px solid #6699cc
-    padding: 2px 3px
-    font-size: 110%
-    option
-      font-size: 90%
-      padding-bottom: 1px
   .check_box
     input[type=checkbox]
       position: absolute
