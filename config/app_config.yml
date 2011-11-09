@@ -8,6 +8,7 @@ app_admin_email: your_admin_email@yourdomain.com
 app_accounts_email: your_accounts_email@yourdomain.com
 app_exception_email_recipient: bug_mailer_recipient@yourdomain.com
 app_organization_homeroom_name: Homeroom
+production_environment?: false
 
 smtp_tls_config:
   address: smtp.gmail.com

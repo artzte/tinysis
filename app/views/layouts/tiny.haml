@@ -29,6 +29,8 @@
         - else
           = image_tag 'tiny_up.gif'
       #title= AppConfig.app_organization
+      - unless AppConfig.production_environment?
+        #staging-warning You are visiting a test server. Your changes will not be saved.
       = render :partial => "shared/toolbar"
     #content
       #flash{:style=> flash[:notice] ? nil : "display: none"}
