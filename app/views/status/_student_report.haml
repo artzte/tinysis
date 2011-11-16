@@ -34,6 +34,7 @@
             - else
               - meetings = 'N'
             - status_klass = status.unacceptable? ? 'u' : nil
+            - fte = status.fte_hours
         - elsif active
           - raise ArgumentError, "COOR status record for active month is missing."
         - elsif !@student.was_active?(m)
@@ -54,7 +55,7 @@
             %td.checkin= check_box_tag("status[held_periodic_checkins]", 1, status.held_periodic_checkins?, :id => 'status_held_periodic_checkins')
           - else
             %td.academic{:class=>status_klass}= aca
-            %td.fte= status.fte_hours
+            %td.fte= fte
             %td.checkin{:class=>status_klass}= meetings
           %td.notes= notes
 
