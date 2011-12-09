@@ -20,7 +20,7 @@
         - active = c.enrollments.find(:all, :conditions => 'finalized_on is null', :include => [:participant], :order => 'users.last_name, users.first_name')
         %tr
           %td.facilitator= c.facilitator.last_name_f
-          %td.name= c.name
+          %td.name= link_to c.name, enrollments_path(c)
           %td.count= active.length
           %td.facilitator
             - active.each do |e|
