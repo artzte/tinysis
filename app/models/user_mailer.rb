@@ -28,6 +28,14 @@ class UserMailer < ActionMailer::Base
     @sent_on    = sent_at
     @headers    = {}
   end
+
+  def trouble_report(title, current_user, data_hash = {})
+    @subject = "[#{AppConfig.app_domain}]: #{title}"
+    @recipients = AppConfig.app_exception_email_recipient
+    @from       = AppConfig.app_accounts_email
+    @body["data"] = data_hash
+    @body["user"] = current_user
+  end
 	
 	
 end

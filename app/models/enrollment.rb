@@ -138,6 +138,7 @@ public
 		COMPLETION_FULFILLED => "Fulfilled" }
 
   named_scope :uncanceled, :conditions => "completion_status != #{COMPLETION_CANCELED}"
+  named_scope :unfinalized, :conditions => "enrollment_status != #{STATUS_FINALIZED}"
 	
 	# status methods
 	
@@ -189,10 +190,17 @@ public
 		  )
 			raise TinyException, TinyException::MESSAGES[TinyException::NOPRIVILEGES]
 		end
+
+    if finalized? # assume it was canceled and is being reinstated. set credits back to unfinalized state.
+      credit_assignments.each do |ca|
+	      ca.enrollment_unfinalize
+	    end 
+    end
 		
 		self.completion_date = nil
 		self.completion_status = COMPLETION_UNKNOWN
 		self.enrollment_status = STATUS_ENROLLED
+    self.finalized_on = nil
 		save!
 		
 		true
@@ -212,7 +220,7 @@ public
 			raise TinyException, TinyException::MESSAGES[TinyException::NOPRIVILEGES]
 		end
 		
-		destroy 
+		destroy
 		true
 	end
 	
@@ -227,6 +235,7 @@ public
 		self.completion_date = date
 		self.completion_status = completion_status
 		self.enrollment_status = STATUS_CLOSED
+    self.finalized_on = nil
 		save!
 		true
 	end
@@ -247,19 +256,21 @@ public
 	end
 	
 	def set_finalized(user, date = Time.now.gmtime)
-	  return false if self.finalized_on?
 	  return false if self.enrollment_status != Enrollment::STATUS_CLOSED
 
 	  unless user.admin?
 			raise TinyException, TinyException::MESSAGES[TinyException::NOPRIVILEGES]
 		end
+    if self.finalized_on?
+      UserMailer.deliver_trouble_report "Finalizing enrollment that already has a finalized_on stamp", user, {:enrollment => self, :student => self.participant, :contract => self.contract}
+    end
 		update_attributes(:enrollment_status => STATUS_FINALIZED, :finalized_on => date)
 
     # fixup the credits
     credit_assignments.each do |ca|
 	    ca.enrollment_finalize(self.completion_status, participant, contract, date)
 	  end 
-    
+
 		return true
 	end
 	

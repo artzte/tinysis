@@ -64,6 +64,13 @@ class CreditAssignment < ActiveRecord::Base
 	  end
 	  save!
   end
+
+  def enrollment_unfinalize
+    raise "Trying to unfinalize a credit that has already passed to the user" if self.user_id?
+    self.normalize_credit
+    self.enrollment_finalized_on = nil
+    save!
+  end
   
   def normalize_credit
     return false unless self.credit_id

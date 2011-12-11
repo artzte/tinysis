@@ -47,7 +47,6 @@ public
   end
   
   def update
-
     @term = Term.find(params[:id])
 
     @contracts = Contract.find(:all, :conditions => "term_id = #{@term.id}", :include => [:facilitator, :term], :order => 'users.last_name, users.first_name, contracts.name')
@@ -55,7 +54,7 @@ public
     finalized = 0
     closed = 0
     @contracts.each do |contract|
-      contract.enrollments.each do |e|
+      contract.enrollments.unfinalized.each do |e|
         if e.set_finalized(@user, finalize_date)
           finalized += 1
         end

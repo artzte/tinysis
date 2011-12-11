@@ -1,0 +1,7 @@
+TinySIS encountered the above problem.
+
+User: <%= @user %>
+Data blob:
+<% @data.keys.each do |key| -%>
+  <%= key %>: <%= @data[key].inspect %>
+<% end -%>
