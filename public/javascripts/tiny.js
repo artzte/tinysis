@@ -583,7 +583,7 @@ var actions_table = {
     a_reset: function() { Field.focus('user_email');}
   },
   c_admin_accounts: {
-    a_index: function() {new FilterForm('filter'); Field.focus('n');},
+    a_index: function() { Field.focus('n');},
     a_edit : function() { Account.observe_inactive(); },
     a_update : function() { Account.observe_inactive(); },
     a_edit : function() { Account.observe_inactive(); },
