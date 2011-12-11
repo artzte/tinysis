@@ -261,9 +261,9 @@ public
 	  unless user.admin?
 			raise TinyException, TinyException::MESSAGES[TinyException::NOPRIVILEGES]
 		end
-    if self.finalized_on?
-      UserMailer.deliver_trouble_report "Finalizing enrollment that already has a finalized_on stamp", user, {:enrollment => self, :student => self.participant, :contract => self.contract}
-    end
+    # if self.finalized_on?
+    #   UserMailer.deliver_trouble_report "Finalizing enrollment that already has a finalized_on stamp", user, {:enrollment => self, :student => self.participant, :contract => self.contract}
+    # end
 		update_attributes(:enrollment_status => STATUS_FINALIZED, :finalized_on => date)
 
     # fixup the credits
