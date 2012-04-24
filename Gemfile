@@ -28,9 +28,8 @@ group :development do
   # bundler requires these gems in development
   gem "mongrel"
   gem "ruby-debug"
-  gem "vlad", :require => false
   gem "vlad-git", :require => false
-
+  gem "vlad", :require => false
 end
 
 group :test do
