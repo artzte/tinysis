@@ -12,7 +12,6 @@ gem "RedCloth"
 gem "rmagick"
 gem "app_config", :path => "vendor/gems/app_config-1.2.0"
 gem 'jammit'
-gem 'iconv'
 
 # bundler requires these gems in all environments
 # gem "nokogiri", "1.4.2"
@@ -26,8 +25,7 @@ end
 
 group :development do
   # bundler requires these gems in development
-  gem "mongrel"
-  gem "ruby-debug"
+  gem "ruby-debug19"
   gem "vlad", :require => false
   gem "vlad-git", :require => false
 
