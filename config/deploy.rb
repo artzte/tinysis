@@ -1,12 +1,12 @@
 set :environment, ENV["env"]||"development"
 
 set :application, "novatiny"
-set :domain,      "74.63.3.51"
+set :domain,      "69.25.136.54"
 set :repository, 'git://github.com/artzte/tinysis.git'
-set :deploy_to, "/var/apps/novatiny/#{environment}"
+set :deploy_to, "/home/deploy/#{environment}"
 set :config_files, ['database.yml']
 set :web_command, "sudo apachectl"
-set :config_path, "/var/apps/novatiny/config/#{environment}"
+set :config_path, "/home/deploy/config/#{environment}"
 set :skip_scm, false
 
 task :remote_path do
