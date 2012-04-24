@@ -9,7 +9,7 @@ class Ealr < ActiveRecord::Base
 	end
 	
 	def self.categories
-		["Arts", "Civics", "Communication", "Economics", "Geography", "Health and Fitness", "History", "Mathematics", "Reading", "Science", "Writing"]
+		["Arts", "Civics", "Communication", "Economics", "Geography", "Health and Fitness", "History", "Mathematics", "Reading", "Science", "Technology", "Writing"]
 	end
 		
 end
