@@ -1,3 +1,5 @@
+require 'jammit'
+
 # Methods added to this helper will be available to all templates in the application.
 module ApplicationHelper
   
@@ -44,21 +46,6 @@ module ApplicationHelper
 	  return '-' unless aDate
 	  aDate = Timezone.get('America/Los_Angeles').utc_to_local(aDate) if zoned and aDate.is_a? DateTime
 		aDate.strftime("%m/%Y")
-	end
-	
-	# encodes a string in hex to obfuscate it to robots
-	def hexencode(s)
-	
-  	string = ''
-		for i in 0...s.length
-			if s[i,1] =~ /\w/
-				string << sprintf("&#%d;",s[i])
-			else
-				string << s[i,1]
-			end
-		end
-		string
-	
 	end
 	
 	def cycle_stripes

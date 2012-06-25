@@ -5,6 +5,7 @@ gem "compass"
 gem "haml"
 gem "sass"
 gem "fastercsv"
+gem 'rake', "~> 0.9.2.2"
 gem "mysql"
 gem "vlad"
 gem "vlad-git"
@@ -12,6 +13,7 @@ gem "RedCloth"
 gem "rmagick"
 gem "app_config", :path => "vendor/gems/app_config-1.2.0"
 gem 'jammit'
+gem 'foreigner'
 
 # bundler requires these gems in all environments
 # gem "nokogiri", "1.4.2"

@@ -76,6 +76,8 @@ Rails::Initializer.run do |config|
 
   config.action_mailer.perform_deliveries = true
   config.action_mailer.default_charset = "utf-8"
+
+  config.gem "jammit"
 end
 
 require 'monkey_patches'

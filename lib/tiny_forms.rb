@@ -18,7 +18,7 @@ module TinyForms
         content << @template.content_tag("label", "\#{options[:label] || field.to_s.humanize}\#{ua}", :for => "\#{@object_name}_\#{field}")
       end
       content << error_message_on(field)
-      content   
+      content
     END_SRC
     
     
@@ -28,7 +28,7 @@ module TinyForms
         def #{selector}(field, options = {})
           options[:label_position] = :after
           #{BUILDER_FIELD}
-          @template.content_tag(options[:tag] || 'p', content, :class=>"#{selector}\#{options[:required]?' required':''}", :id => "p_\#{@object_name}_\#{field}")
+          @template.content_tag(options[:tag] || 'p', content.join, :class=>"#{selector}\#{options[:required]?' required':''}", :id => "p_\#{@object_name}_\#{field}")
         end
       END_SRC
       class_eval src, __FILE__, __LINE__
@@ -39,7 +39,7 @@ module TinyForms
       src = <<-END_SRC
         def #{selector}(field, options = {})
           #{BUILDER_FIELD}
-          @template.content_tag(options[:tag] || 'p', content, :class=>"#{selector}\#{options[:required]?' required':''}", :id => "p_\#{@object_name}_\#{field}")
+          @template.content_tag(options[:tag] || 'p', content.join, :class=>"#{selector}\#{options[:required]?' required':''}", :id => "p_\#{@object_name}_\#{field}")
         end
       END_SRC
       class_eval src, __FILE__, __LINE__
@@ -49,7 +49,7 @@ module TinyForms
       content = eval(BUILDER_FIELD)
       klass = "select"
       klass << " required" if options[:required]
-      @template.content_tag(options[:tag] || 'p', content, :class=>klass, :id => "p_#{@object_name}_#{field}")
+      @template.content_tag(options[:tag] || 'p', content.join, :class=>klass, :id => "p_#{@object_name}_#{field}")
     end
   end
 
