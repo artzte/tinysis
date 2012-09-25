@@ -9,8 +9,8 @@ protected
 	def get_note_and_check_privileges
 		@note = Note.find(params[:id])
 
-		privs = @note.privileges(@user)
-    render :text => "You don't have privileges to do this.", :status => 500 and return unless privs[:edit_note]
+		priv = @note.privileges(@user)
+    render :text => "You don't have privileges to do this.", :status => 500 and return unless priv == Note::PRIVILEGE_EDIT
 	  
 	end
 public
