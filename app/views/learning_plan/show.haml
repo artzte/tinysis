@@ -1,6 +1,6 @@
 .filter
   - form_tag learning_path(:id => @student.id, :year => 'current'), :reset=>true, :class=> 'behavior year_filter' do
-    = select_tag ('sy', options_for_select(@year_options.collect{|y| ["#{y} plan", y]}, @year))
+    = select_tag('sy', options_for_select(@year_options.collect{|y| ["#{y} plan", y]}, @year))
 %h1
   = @student.name
   Learning Plan / 

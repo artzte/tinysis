@@ -10,7 +10,7 @@
   %p There are no credits to approve.
 - elsif @privs[:edit]
   %p
-    = link_to ('<span>Combine selected credits</span>', combine_credit_assignments_form_path(@student), :class=>'btn', :id => 'combine_link')
+    = link_to('<span>Combine selected credits</span>', combine_credit_assignments_form_path(@student), :class=>'btn', :id => 'combine_link')
     - if @user.admin?
       = link_to('<span>Delete selected credits</span>', admin_destroy_credit_assignments_path(@student), :class=>'btn', :id => 'admin_destroy_link')
   %table.tiny.worksheet.fixed
