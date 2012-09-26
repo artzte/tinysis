@@ -1,5 +1,5 @@
 module EnrollmentHelper
-	include CreditHelper
-	include NoteHelper
-	
+  include CreditHelper
+  include NoteHelper
+
 end

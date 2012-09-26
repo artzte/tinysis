@@ -13,7 +13,7 @@ module Admin::AccountsHelper
   def status_options all=false
     options=[User::STATUS_ACTIVE, User::STATUS_INACTIVE].collect{|o| [User::STATUS_NAMES[o], o]}
     options=[['Active & inactive',0]]+options if all
-    options    
+    options
   end
   def coordinator_options all=false
     options=[["Unassigned", 0]]+User.coordinators.collect{|u| [u.last_name_f,u.id]}

@@ -1,20 +1,20 @@
 class Admin::CreditsController < AdminBaseController
-  
+
   before_filter :get_credit, :only => [:edit, :update, :destroy]
   before_filter :set_meta
 
-protected  
+protected
   def get_credit
     @credit = Credit.find(params[:id])
   end
-  
+
   def set_meta
     super :tab1 => :settings, :tab2 => :credits, :title => 'Settings - Credits'
   end
-  
+
 public
   def index
-  	@credits = Credit.admin_credit_report
+    @credits = Credit.admin_credit_report
   end
 
   def new
@@ -43,11 +43,11 @@ public
   end
 
   def destroy
-    
+
     @credit.destroy_credit
-    
+
     flash[:notice] = "Thank you for deleting the credit type formerly known as #{@credit.course_name}."
     redirect_to credits_path
   end
-  
+
 end

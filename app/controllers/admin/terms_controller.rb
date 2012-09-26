@@ -11,17 +11,17 @@ protected
       redirect_to terms_path
     end
   end
-  
+
   def set_meta
     super :tab1 => :settings, :tab2 => :terms, :title => 'Settings - Terms'
   end
 
 public
   def index
-		@terms = Term.all
-		@base_month = Setting.reporting_base_month
+    @terms = Term.all
+    @base_month = Setting.reporting_base_month
   end
-  
+
   def edit
   end
 
@@ -56,15 +56,15 @@ public
     redirect_to terms_path
   end
 end
-# 
-# 
+#
+#
 # @base_month = Setting.reporting_base_month
 # if params[:id]
 #   @term = Term.find(params[:id])
 # else
 #   @term = Term.new(:months => [], :school_year => Setting.current_year)
 # end
-# 
+#
 # case request.method
 # when :post
 #   @term.set_dates params[:term][:school_year], params[:month].values
@@ -76,4 +76,4 @@ end
 # when :get
 #   render :layout => false
 #   return
-# end  
+# end

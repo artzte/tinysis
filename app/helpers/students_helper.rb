@@ -1,5 +1,5 @@
 module StudentsHelper
-  
+
   include SearchHelper
 
 

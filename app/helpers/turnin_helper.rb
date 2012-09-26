@@ -1,4 +1,4 @@
 require 'helpers/note_helper'
 module TurninHelper
-	include NoteHelper
+  include NoteHelper
 end
