@@ -2,6 +2,7 @@ class LearningPlanController < ApplicationController
 
   helper :note
   
+  before_filter :login_required
   before_filter :get_student
   before_filter :get_lp, :except => [:show, :edit]
   before_filter :lp_meta
