@@ -76,7 +76,7 @@
         %tr
           %td.select= district_indicator
           %td.credits= render(:partial => 'credit/credits', :object => ca, :locals => {:expanded=>true, :closed=>true})
-          %td.term= ca.contract_term.name
+          %td.term= ca.contract_term_name
           %td.hours= ca.credit_hours_string
           %td.date= d(ca.enrollment_finalized_on, true)
           %td.approved= approved
