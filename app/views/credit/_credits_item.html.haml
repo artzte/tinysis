@@ -20,5 +20,5 @@
     = credit_string
   - if expanded
     %br
-    == #{ca.contract_name} (#{ca.contract_term.name}): #{ca.contract_facilitator_name}
+    == #{ca.contract_name} (#{ca.contract_term_name}): #{ca.contract_facilitator_name}
   = notes_for(ca, :editable=>false, :notes_hash => @credit_notes)

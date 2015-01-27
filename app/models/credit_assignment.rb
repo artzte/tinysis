@@ -110,7 +110,15 @@ class CreditAssignment < ActiveRecord::Base
       end
     end
 	end
-	
+
+  # safe retrieval of contract term name
+  def contract_term_name
+    unless self.contract_term_id and self.contract_term
+      return 'Unknown term'
+    end
+    return self.contract_term.name
+  end
+
 	def district_unapprove
 	  raise "Can't unapprove this, as it has already been approved for recording at the district" if self.credit_transmittal_batch_id
     self.district_finalize_approved = false
