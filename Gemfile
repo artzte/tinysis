@@ -1,18 +1,18 @@
-source :gemcutter
-gem "rails", "~> 2.3.14"
+source 'https://rubygems.org'
+gem "rails", "~> 3.2"
 
-gem "compass"
+gem "sass-rails"
+gem "compass-rails"
 gem "haml"
 gem "sass"
 gem "fastercsv"
 gem "mysql"
-gem "vlad"
-gem "vlad-git"
 gem "RedCloth"
 gem "rmagick"
-gem "app_config", :path => "vendor/gems/app_config-1.2.0"
+gem 'config_spartan'
 gem 'jammit'
 gem 'iconv'
+gem 'enum_column3'
 
 # bundler requires these gems in all environments
 # gem "nokogiri", "1.4.2"
@@ -26,8 +26,7 @@ end
 
 group :development do
   # bundler requires these gems in development
-  gem "mongrel"
-  gem "ruby-debug"
+  gem "ruby-debug19"
   gem "vlad-git", :require => false
   gem "vlad", :require => false
 end
