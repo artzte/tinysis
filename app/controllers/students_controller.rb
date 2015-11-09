@@ -20,13 +20,6 @@ class StudentsController < ApplicationController
   	store_session_pager('student')
   end
   
-  def my
-    
-    set_meta :tab1 => :my, :tab2 => :summary, :title => @user.full_name
-    render :text => 'My status page', :layout => true
-    
-  end
-  
   def status
     
     # get a list of school years to which terms are assigned
