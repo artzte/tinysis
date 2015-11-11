@@ -60,7 +60,7 @@ TinySIS::Application.routes.draw do
     get '/status/coor_detail/:id', action: 'coor_detail', as: 'coor_status_detail'
     get '/status/coor_report/:id', action: 'coor_report', as: 'coor_report'
   end
-  map.connect '/status/:action/:id', :controller => 'status'
+  #map.connect '/status/:action/:id', :controller => 'status'
 
   resources :account do
     get '/my/account', action: 'edit', as: 'my_account'
@@ -114,12 +114,10 @@ TinySIS::Application.routes.draw do
     post '/contracts/:contract_id/assignments/:id/feedback/:enrollment_id', action: 'feedback_edit', as: 'assignment_feedback'
   end
 
+end
   # return a page not found for other routes
- end
 
-<<-DOC
-
-  
+=begin
   map.with_options :controller => 'admin/ealrs', :conditions => {:method => :get} do |ealrs|
     ealrs.ealrs '/admin/ealrs', action: 'index'
     ealrs.new_ealr '/admin/ealrs/new/:category', action: 'new'
@@ -188,4 +186,4 @@ TinySIS::Application.routes.draw do
   map.connect '*anything', :controller => 'school', action: 'unknown_request'
 end
 
-DOC
+=end
