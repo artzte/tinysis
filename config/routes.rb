@@ -100,18 +100,18 @@ TinySIS::Application.routes.draw do
   end
 
   resources :assignment do
-    get student_assignments '/contracts/:contract_id/student/:id', action: 'student'
-    get assignments '/contracts/:contract_id/assignments', action: 'index'
-    get assignment_report '/contracts/:contract_id/assignments/report', action: 'report'
-    get enrollee '/contracts/:contract_id/enrollee/:id', action: 'enrollee'
-    get new_assignment '/contracts/:contract_id/assignments/new', action: 'new'
-    get create_assignment '/contracts/:contract_id/assignments', action: 'create', :conditions => {:method => :post}
-    get edit_assignment '/contracts/:contract_id/assignments/:id', action: 'edit'
-    get destroy_assignment '/contracts/:contract_id/assignments/:id/destroy', action: 'destroy', :conditions => {:method => :post}
-    get update_assignment '/contracts/:contract_id/assignments/:id', action: 'update', :conditions => {:method => :post}
-    get contract_participant '/contracts/:contract_id/participant/:id', action: 'participant'
-    get record_assignment '/contracts/:contract_id/assignments/:id/record/:enrollment_id', action: 'record', :conditions => {:method => :post}
-    get assignment_feedback '/contracts/:contract_id/assignments/:id/feedback/:enrollment_id', action: 'feedback_edit', :conditions => {:method => :post}
+    get '/contracts/:contract_id/student/:id', action: 'student', as: 'student_assignments'
+    get '/contracts/:contract_id/assignments', action: 'index', as: 'assignments'
+    get '/contracts/:contract_id/assignments/report', action: 'report', as: 'assignment_report'
+    get '/contracts/:contract_id/enrollee/:id', action: 'enrollee', as: 'enrollee'
+    get '/contracts/:contract_id/assignments/new', action: 'new', as: 'new_assignment'
+    post '/contracts/:contract_id/assignments', action: 'create', as: 'create_assignment'
+    get '/contracts/:contract_id/assignments/:id', action: 'edit', as: 'edit_assignment'
+    post '/contracts/:contract_id/assignments/:id/destroy', action: 'destroy', as: 'destroy_assignment'
+    post '/contracts/:contract_id/assignments/:id', action: 'update', as: 'update_assignment'
+    get '/contracts/:contract_id/participant/:id', action: 'participant', as: 'contract_participant'
+    post '/contracts/:contract_id/assignments/:id/record/:enrollment_id', action: 'record', as: 'record_assignment'
+    post '/contracts/:contract_id/assignments/:id/feedback/:enrollment_id', action: 'feedback_edit', as: 'assignment_feedback'
   end
 
   # return a page not found for other routes
