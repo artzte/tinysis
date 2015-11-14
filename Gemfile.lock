@@ -55,10 +55,18 @@ GEM
     cssmin (1.0.3)
     enum_column3 (0.1.4)
     erubis (2.7.0)
+    exception_notification (4.1.1)
+      actionmailer (>= 3.0.4)
+      activesupport (>= 3.0.4)
     fastercsv (1.5.5)
     ffi (1.9.10)
     haml (4.0.7)
       tilt
+    haml-rails (0.4)
+      actionpack (>= 3.1, < 4.1)
+      activesupport (>= 3.1, < 4.1)
+      haml (>= 3.1, < 4.1)
+      railties (>= 3.1, < 4.1)
     hashie (3.4.3)
     hike (1.2.3)
     i18n (0.7.0)
@@ -154,8 +162,10 @@ DEPENDENCIES
   compass-rails
   config_spartan
   enum_column3
+  exception_notification
   fastercsv
-  haml
+  haml (~> 4.0.5)
+  haml-rails (~> 0.4.0)
   iconv
   jammit
   mysql

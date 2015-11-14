@@ -3,7 +3,8 @@ gem "rails", "~> 3.2"
 
 gem "sass-rails"
 gem "compass-rails"
-gem "haml"
+gem 'haml', '~> 4.0.5'
+gem "haml-rails", "~> 0.4.0"
 gem "sass"
 gem "fastercsv"
 gem "mysql"
@@ -13,6 +14,7 @@ gem 'config_spartan'
 gem 'jammit'
 gem 'iconv'
 gem 'enum_column3'
+gem 'exception_notification'
 
 # bundler requires these gems in all environments
 # gem "nokogiri", "1.4.2"

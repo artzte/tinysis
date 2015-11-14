@@ -20,7 +20,7 @@ TinySIS::Application.routes.draw do
 
   # notes
   resources :note do
-    post '/note/new/:notable_class/:notable_id', action: 'create', :conditions => {:method => :post}
+    post '/note/new/:notable_class/:notable_id', action: 'create'
     get '/note/:id/edit', action: 'edit', as: 'edit_note'
     post '/note/:id', action: 'update', as: 'update_note'
     post '/note/:id/revert', action: 'revert', as: 'revert_note'
@@ -82,7 +82,7 @@ TinySIS::Application.routes.draw do
   resources :learning_plan do
     get '/students/:id/learning/:year', action: 'show', :year => /current|\d\d\d\d/, :defaults => { :year => 'current'}, as: 'learning'
     get '/students/:id/learning/edit/:year', action: 'edit', :year => /current|\d\d\d\d/, :defaults => { :year => 'current'}, as: 'edit_learning'
-    get '/students/:id/learning/:plan_id', action: 'update', :conditions => {:method => :post}, as: 'update_learning'
+    get '/students/:id/learning/:plan_id', action: 'update', as: 'update_learning'
   end
 
   resources :graduation_plan do
