@@ -31,4 +31,4 @@ config/environments/production.yml
 config/environments/test.yml
 *.mysql
 latest
-
+junk/*
