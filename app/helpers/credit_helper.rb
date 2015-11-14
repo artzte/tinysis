@@ -10,15 +10,15 @@ module CreditHelper
     end
   end
 
-	def credits_formatted(object)
+  def credits_formatted(object)
 
-	  credits = object.credit_assignments.collect{|c| c.credit_string }
-	  if credits.blank?
-	    "No credits assigned."
-	  else
-	    credits.join('; ')
-	  end
+    credits = object.credit_assignments.collect{|c| c.credit_string }
+    if credits.blank?
+      "No credits assigned."
+    else
+      credits.join('; ')
+    end
 
-	end
+  end
 
 end

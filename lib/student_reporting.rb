@@ -206,18 +206,18 @@ class StudentReporting
                 SELECT user_id, ROUND(SUM(credit_hours),2) AS credit_hours FROM 
                 (
                   (
-                  	SELECT users.id  AS user_id, credit_assignments.credit_hours
-                  	FROM credit_assignments
-                  	INNER JOIN users ON credit_assignments.creditable_id  = users.id
-                  	WHERE creditable_type = 'User' AND credit_assignments.enrollment_finalized_on >= '#{sql_date(start_date)}' AND credit_assignments.enrollment_finalized_on < '#{sql_date(end_date)}' AND credit_assignments.parent_credit_assignment_id IS NULL
+                    SELECT users.id  AS user_id, credit_assignments.credit_hours
+                    FROM credit_assignments
+                    INNER JOIN users ON credit_assignments.creditable_id  = users.id
+                    WHERE creditable_type = 'User' AND credit_assignments.enrollment_finalized_on >= '#{sql_date(start_date)}' AND credit_assignments.enrollment_finalized_on < '#{sql_date(end_date)}' AND credit_assignments.parent_credit_assignment_id IS NULL
                   )
                 UNION
                   (
-                  	SELECT users.id AS user_id, credit_assignments.credit_hours
-                  	FROM credit_assignments
-                  	INNER JOIN enrollments ON enrollments.id = credit_assignments.creditable_id AND credit_assignments.creditable_type = 'Enrollment'
-                  	INNER JOIN users ON enrollments.participant_id = users.id
-                  	WHERE creditable_type = 'Enrollment' AND enrollments.finalized_on >= '#{sql_date(start_date)}' AND enrollments. finalized_on < '#{sql_date(end_date)}'
+                    SELECT users.id AS user_id, credit_assignments.credit_hours
+                    FROM credit_assignments
+                    INNER JOIN enrollments ON enrollments.id = credit_assignments.creditable_id AND credit_assignments.creditable_type = 'Enrollment'
+                    INNER JOIN users ON enrollments.participant_id = users.id
+                    WHERE creditable_type = 'Enrollment' AND enrollments.finalized_on >= '#{sql_date(start_date)}' AND enrollments. finalized_on < '#{sql_date(end_date)}'
                   ) 
                 ) AS credits
                 GROUP BY user_id
@@ -243,10 +243,10 @@ class StudentReporting
         ) AS old_credits ON old_credits.user_id = users.id
         LEFT JOIN 
         (
-              	SELECT creditable_id AS user_id, COUNT(id) AS count, ROUND(SUM(credit_hours),2) AS total, ROUND(AVG(credit_hours),2) AS average
-              	FROM credit_assignments
-              	WHERE creditable_type = 'User' AND credit_transmittal_batch_id IS NULL AND parent_credit_assignment_id IS NULL AND credit_hours > 0
-              	GROUP BY creditable_id
+                SELECT creditable_id AS user_id, COUNT(id) AS count, ROUND(SUM(credit_hours),2) AS total, ROUND(AVG(credit_hours),2) AS average
+                FROM credit_assignments
+                WHERE creditable_type = 'User' AND credit_transmittal_batch_id IS NULL AND parent_credit_assignment_id IS NULL AND credit_hours > 0
+                GROUP BY creditable_id
         ) AS unbatched_credits ON unbatched_credits.user_id = users.id
         LEFT JOIN users coor ON users.coordinator_id = coor.id
         WHERE users.status = 1 AND users.privilege = 1

@@ -11,18 +11,18 @@ protected
   end
 
   def get_account
-	  @account = User.find(params[:id])
+    @account = User.find(params[:id])
 
-	  init_fp
+    init_fp
   end
 
   def init_fp
     @fp = {:n => params[:n], :p => params[:p], :pg => params[:pg], :c => params[:c]}
-	end
+  end
 
 public
   def index
-  	get_session_pager('account')
+    get_session_pager('account')
 
     conditions = []
     arguments = []
@@ -68,39 +68,39 @@ public
 
     @accounts = User.find(:all, :include => [:coordinator], :conditions => cond, :order => 'users.last_name, users.first_name')
 
-  	setup_page_variables @accounts, 20
+    setup_page_variables @accounts, 20
 
     @fp = {:n => @name_filter, :p => @priv_filter, :s => @status_filter, :pg => @page, :c=> @coor_filter}
 
-  	store_session_pager('account')
+    store_session_pager('account')
   end
 
   def edit
-	end
+  end
 
   def new
-	  @account = User.new
+    @account = User.new
   end
 
   def create
-	  @account = User.new
-	  if @account.update_from_params params[:account], @user
-	    flash[:notice] = "Thank you for updating account settings for #{@account.full_name}."
-	    redirect_to accounts_path(@fp)
-	  else
-	    flash[:notice] = "Please update the settings and try again."
-	    render :action => 'new'
-	  end
+    @account = User.new
+    if @account.update_from_params params[:account], @user
+      flash[:notice] = "Thank you for updating account settings for #{@account.full_name}."
+      redirect_to accounts_path(@fp)
+    else
+      flash[:notice] = "Please update the settings and try again."
+      render :action => 'new'
+    end
   end
 
   def update
-	  if @account.update_from_params params[:account], @user
-	    flash[:notice] = "Thank you for updating account settings for #{@account.full_name}."
-	    redirect_to accounts_path(@fp)
-	  else
-	    flash[:notice] = "Please update the settings and try again."
-	    render :action => 'edit'
-	  end
+    if @account.update_from_params params[:account], @user
+      flash[:notice] = "Thank you for updating account settings for #{@account.full_name}."
+      redirect_to accounts_path(@fp)
+    else
+      flash[:notice] = "Please update the settings and try again."
+      render :action => 'edit'
+    end
   end
 
   def destroy
@@ -109,8 +109,8 @@ public
     user = User.find(params[:id])
     user.destroy
 
-	  @fp = {:n => params[:n], :p => params[:p], :pg => params[:pg], :c => params[:c]}
-	  flash[:notice] = 'Account deleted'
+    @fp = {:n => params[:n], :p => params[:p], :pg => params[:pg], :c => params[:c]}
+    flash[:notice] = 'Account deleted'
 
     redirect_to url_for({:action => 'account'}.update(@fp))
   end
@@ -122,30 +122,30 @@ public
     end
 
     # privilege
-  	if params[:p].blank?
-  	  @priv_filter = @fp[:p] || 0
-  	else
-  	  @priv_filter = params[:p].to_i
-  	end
+    if params[:p].blank?
+      @priv_filter = @fp[:p] || 0
+    else
+      @priv_filter = params[:p].to_i
+    end
 
     # coor
-  	if params[:c].blank?
-  	  @coor_filter = @fp[:c] || -1
-  	else
-  	  @coor_filter = params[:c].to_i
-  	end
+    if params[:c].blank?
+      @coor_filter = @fp[:c] || -1
+    else
+      @coor_filter = params[:c].to_i
+    end
 
     # status
-  	if params[:s].blank?
-  	  @status_filter = @fp[:s] || 0
-  	else
-  	  @status_filter = params[:s].to_i
-  	end
+    if params[:s].blank?
+      @status_filter = @fp[:s] || 0
+    else
+      @status_filter = params[:s].to_i
+    end
 
-  	# if selections changed, reset the pager variable to 1
-  	if @priv_filter != @fp[:p] or @name_filter != @fp[:n] or @coor_filter != @fp[:c] or @status_filter != @fp[:s]
-  	  @page = 1
-  	end
+    # if selections changed, reset the pager variable to 1
+    if @priv_filter != @fp[:p] or @name_filter != @fp[:n] or @coor_filter != @fp[:c] or @status_filter != @fp[:s]
+      @page = 1
+    end
 
   end
 end

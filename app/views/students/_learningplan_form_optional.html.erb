@@ -1,7 +1,7 @@
 <% 
-	goal = learning_plan_form_optional 
-	checked = @lp.learning_plan_goals.collect.find{|g| g.id == goal.id}	
+  goal = learning_plan_form_optional 
+  checked = @lp.learning_plan_goals.collect.find{|g| g.id == goal.id}  
 -%>
 <li>
-	<%= check_box_tag "optional[#{goal.id}]", goal.id, checked %>&nbsp;<%= content_tag "label", goal.description, :for => "optional[#{goal.id}]" %>
+  <%= check_box_tag "optional[#{goal.id}]", goal.id, checked %>&nbsp;<%= content_tag "label", goal.description, :for => "optional[#{goal.id}]" %>
 </li>

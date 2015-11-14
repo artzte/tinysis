@@ -52,43 +52,43 @@ task :merge_students => :environment do
   
   FasterCSV.foreach(ENV['FILE']) do |s|
     line += 1
-  	unless s.length == 5
-  		raise(ArgumentError, "CSV parse failed on line #{line} of students.csv:\nFound: #{s.join(',')}\nNeeds: last_name,first_name,DistrictID,Grade,Homeroom")
-  	end
-  	
-  	last_name = s[0].strip
-  	first_name = s[1].strip
-  	district_id = s[2].strip
-  	district_grade = s[3].strip.to_i
-  	homeroom = s[4].strip
-  	
-  	# try to find by district ID
-  	
-  	user = User.find_by_district_id district_id
+    unless s.length == 5
+      raise(ArgumentError, "CSV parse failed on line #{line} of students.csv:\nFound: #{s.join(',')}\nNeeds: last_name,first_name,DistrictID,Grade,Homeroom")
+    end
+    
+    last_name = s[0].strip
+    first_name = s[1].strip
+    district_id = s[2].strip
+    district_grade = s[3].strip.to_i
+    homeroom = s[4].strip
+    
+    # try to find by district ID
+    
+    user = User.find_by_district_id district_id
     user ||= User.find_by_last_name_and_first_name last_name, first_name
-  	
-  	unless user
-  	  user = User.new
-  	  user.login = User.unique_login(last_name, first_name)
-  	  user.password = User.random_password
-  	  user.login_status = User::LOGIN_NONE
-  	  user.privilege = User::PRIVILEGE_STUDENT
-  	  
-  	  # user active date should be day before first reporting month
-  	  user.date_active = Date.new(2009,8,31)
-  	end
-  	
-  	# set active new / existing students
-	  user.last_name = last_name
-	  user.first_name = first_name
-	  user.district_id = district_id
-	  user.district_grade = district_grade
-	  user.status = User::STATUS_ACTIVE
-	  user.date_inactive = nil
- 	  
-  	user.coordinator = coordinators[homeroom]
+    
+    unless user
+      user = User.new
+      user.login = User.unique_login(last_name, first_name)
+      user.password = User.random_password
+      user.login_status = User::LOGIN_NONE
+      user.privilege = User::PRIVILEGE_STUDENT
+      
+      # user active date should be day before first reporting month
+      user.date_active = Date.new(2009,8,31)
+    end
+    
+    # set active new / existing students
+    user.last_name = last_name
+    user.first_name = first_name
+    user.district_id = district_id
+    user.district_grade = district_grade
+    user.status = User::STATUS_ACTIVE
+    user.date_inactive = nil
+     
+    user.coordinator = coordinators[homeroom]
     puts "User #{last_name} line #{line} homeroom #{homeroom} into the bucket" if user.coordinator.last_name == "Bucket"
-  	puts "Error saving user #{last_name}, #{first_name}; line #{line}; errors:\n#{user.errors.inspect}" if !user.save
+    puts "Error saving user #{last_name}, #{first_name}; line #{line}; errors:\n#{user.errors.inspect}" if !user.save
   end
 
 end

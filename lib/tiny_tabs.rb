@@ -1,10 +1,10 @@
 module TinyTabs
   # The tab setup consists of two pieces. One describes the privileges, the other 
-	# Create a hash that indicates which toolbar items to render
-	# Returned hash has keys set to TRUE if that main item exists
-	# If the main item is current its value is an array indicating
-	# subtab items that are active
-	
+  # Create a hash that indicates which toolbar items to render
+  # Returned hash has keys set to TRUE if that main item exists
+  # If the main item is current its value is an array indicating
+  # subtab items that are active
+  
   def setup_tabs
   
     tab_data = {
@@ -109,49 +109,49 @@ module TinyTabs
     # be overridden on a specific action that might hide under another action's tab.
     
     @cur_tab ||= {}
-	  @cur_tab[:tab1] ||= controller.controller_name.to_sym
-	  @cur_tab[:tab2] ||= controller.action_name.to_sym
+    @cur_tab[:tab1] ||= controller.controller_name.to_sym
+    @cur_tab[:tab2] ||= controller.action_name.to_sym
 
-	  @tabs = []
-	  @subtabs = []
-	  
-	  tab_data[:order].each do |k|
+    @tabs = []
+    @subtabs = []
+    
+    tab_data[:order].each do |k|
 
       tab = tab_data[k]
       
-	    # reject the top-level tab if user is not privileged
-	    next unless privileged_for? tab
+      # reject the top-level tab if user is not privileged
+      next unless privileged_for? tab
 
       tab[:path] ||= "/#{k.to_s}"
       tab[:title] ||= k.to_s.humanize
       
       # Add the tab to the list
-	    @tabs << tab
-	    
-	    # If current tab, scan the subtabs and add
-	    if @cur_tab[:tab1]==k
-  	    @tab1 = tab
+      @tabs << tab
+      
+      # If current tab, scan the subtabs and add
+      if @cur_tab[:tab1]==k
+        @tab1 = tab
 
-  	    tab[:order].each do |l|
+        tab[:order].each do |l|
 
-  	      subtab = tab[:tabs][l]
-  	      
-  	      raise ArgumentError, "Subtab #{l} not found" unless subtab
+          subtab = tab[:tabs][l]
+          
+          raise ArgumentError, "Subtab #{l} not found" unless subtab
 
-  	      next unless privileged_for? subtab
+          next unless privileged_for? subtab
 
           subtab[:title] ||= l.to_s.humanize
 
-  	      @tab2 = subtab if l==@cur_tab[:tab2]
+          @tab2 = subtab if l==@cur_tab[:tab2]
 
-  	      @subtabs << subtab
-  	    end
+          @subtabs << subtab
+        end
       end
-	  end
-	  
-	  raise ArgumentError, "Tab 1 not found from #{@cur_tab.inspect}" unless @tab1
-	  raise ArgumentError, "Tab 2 not found from #{@cur_tab.inspect}" unless @tab2
-	  
+    end
+    
+    raise ArgumentError, "Tab 1 not found from #{@cur_tab.inspect}" unless @tab1
+    raise ArgumentError, "Tab 2 not found from #{@cur_tab.inspect}" unless @tab2
+    
   end
   
   # returns true if the logged in user should see this tab
@@ -167,12 +167,12 @@ module TinyTabs
     tab[:if].each do |i|
       case i
       when :contract
-	      return false if @contract.nil? || @contract.new_record?
-	    when :student
-	      return false if @student.nil?
-	    when nil
-	    else
-	      return false unless self.send(i)
+        return false if @contract.nil? || @contract.new_record?
+      when :student
+        return false if @student.nil?
+      when nil
+      else
+        return false unless self.send(i)
       end
     end
     return true    
@@ -211,9 +211,9 @@ module TinyTabs
   end
   
   def new_contract?
-	  @contract && @contract.new_record?
-	end
-	
+    @contract && @contract.new_record?
+  end
+  
   def enrolled_user?
     @contract && @user && @user.enrolled_in?(@contract)
   end

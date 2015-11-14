@@ -14,7 +14,7 @@ protected
 
 public
   def index
-  	@credits = Credit.admin_credit_report
+    @credits = Credit.admin_credit_report
   end
 
   def new

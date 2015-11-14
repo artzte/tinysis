@@ -51,33 +51,33 @@ task :migrate_credits => :environment do
   ActiveRecord::Base.establish_connection
 
   enrollments = Enrollment.find(:all)
-	enrollments.each do |e|
-	  next if e.credits.nil?
-	  
-	  e.credits.each do |c|
-	    next if c.empty?
-	    next if c[:hours] == 0
-	    credit = Credit.find(c[:id])
-	    raise ArgumentError, "Credit code #{c[:id]} not found: #{e.participant.last_name_f} / #{e.contract.name}" unless credit
+  enrollments.each do |e|
+    next if e.credits.nil?
+    
+    e.credits.each do |c|
+      next if c.empty?
+      next if c[:hours] == 0
+      credit = Credit.find(c[:id])
+      raise ArgumentError, "Credit code #{c[:id]} not found: #{e.participant.last_name_f} / #{e.contract.name}" unless credit
 
-	    cred = CreditAssignment.new(:credit => credit, :credit_hours => c[:hours], :district_finalized => false)
-	    e.credit_assignments << cred
-	  end		  
-	end
+      cred = CreditAssignment.new(:credit => credit, :credit_hours => c[:hours], :district_finalized => false)
+      e.credit_assignments << cred
+    end      
+  end
 
-	contracts = Contract.find(:all)
-	contracts.each do |e|
-	  next if e.credits.nil?
-	  e.credits.each do |c|
-	    next if c.empty?
-	    next if c[:hours] == 0
-	    credit = Credit.find(c[:id])
-	    raise ArgumentError, "Credit code #{c[:id]} not found #{contract.name}" unless credit
+  contracts = Contract.find(:all)
+  contracts.each do |e|
+    next if e.credits.nil?
+    e.credits.each do |c|
+      next if c.empty?
+      next if c[:hours] == 0
+      credit = Credit.find(c[:id])
+      raise ArgumentError, "Credit code #{c[:id]} not found #{contract.name}" unless credit
 
-	    cred = CreditAssignment.new(:credit => credit, :credit_hours => c[:hours], :district_finalized => false)
-	    e.credit_assignments << cred
-	  end		  
-	end
+      cred = CreditAssignment.new(:credit => credit, :credit_hours => c[:hours], :district_finalized => false)
+      e.credit_assignments << cred
+    end      
+  end
 
 end
 
@@ -86,19 +86,19 @@ task :migrate_categories => :environment do
   ActiveRecord::Base.establish_connection
 
   categories = Category.find(:all)
-	categories.each do |c|
-	  c.public = !['COOR', 'Independent'].include?(c.category_name)
-	  c.publicly_enrollable = false == ['COOR', 'IEP', 'Seminar', 'Independent'].include?(c.category_name)
-	  
-	  if ['Committee','COOR'].include? c.category_name
-	    c.statusable = Category::STATUSABLE_END
+  categories.each do |c|
+    c.public = !['COOR', 'Independent'].include?(c.category_name)
+    c.publicly_enrollable = false == ['COOR', 'IEP', 'Seminar', 'Independent'].include?(c.category_name)
+    
+    if ['Committee','COOR'].include? c.category_name
+      c.statusable = Category::STATUSABLE_END
     else
       c.statusable = Category::STATUSABLE_MONTHLY
-	  end
-	  
-	  c.save
-	  
-	end
+    end
+    
+    c.save
+    
+  end
   unless c = Category.find_by_category_name('Independent')
     c = Category.create(:category_name => 'Independent', :statusable => Category::STATUSABLE_MONTHLY, :public => false, :publicly_enrollable => false)
   end

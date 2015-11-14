@@ -1,36 +1,36 @@
 <%
   m = contract_detail_item_month
-	s = @statuses[m]
+  s = @statuses[m]
 
-	if @this_month < m
+  if @this_month < m
     val = image_tag('dash.gif')
   elsif s.nil?
     val = link_to(image_tag('question.gif'), {:action => 'contract_report', :id => @enrollment, :m => m.to_s})
   else
 
-		case s[0].academic_status
-		when Status::STATUS_UNACCEPTABLE
-    	aca = image_tag('redex.gif')
-		when Status::STATUS_ACCEPTABLE
-			aca = image_tag('check.gif')
-		when Status::STATUS_PARTICIPATING
-			aca = image_tag('check_dim.gif')
-		end
+    case s[0].academic_status
+    when Status::STATUS_UNACCEPTABLE
+      aca = image_tag('redex.gif')
+    when Status::STATUS_ACCEPTABLE
+      aca = image_tag('check.gif')
+    when Status::STATUS_PARTICIPATING
+      aca = image_tag('check_dim.gif')
+    end
 
-		case s[0].attendance_status
-		when Status::STATUS_UNACCEPTABLE
-    	att = image_tag('redex.gif')
-		when Status::STATUS_ACCEPTABLE
-			att = image_tag('check.gif')
-		end
+    case s[0].attendance_status
+    when Status::STATUS_UNACCEPTABLE
+      att = image_tag('redex.gif')
+    when Status::STATUS_ACCEPTABLE
+      att = image_tag('check.gif')
+    end
 
-		if s[0].met_fte_requirements
-			ale = image_tag('fte.gif')
-		else
-			ale = image_tag('fte_not.gif')
-		end
+    if s[0].met_fte_requirements
+      ale = image_tag('fte.gif')
+    else
+      ale = image_tag('fte_not.gif')
+    end
 
-		val = link_to([aca,att,ale], :action => 'contract_report', :id => @enrollment, :m => m.to_s)
+    val = link_to([aca,att,ale], :action => 'contract_report', :id => @enrollment, :m => m.to_s)
   end 
 %>
 <%= content_tag 'td', val, :class=>'month' %>

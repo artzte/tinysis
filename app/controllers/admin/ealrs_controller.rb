@@ -19,9 +19,9 @@ public
   def index
     @categories = Ealr.categories
     @category = params[:category] if params[:category] && @categories.include?(params[:category])
-  	@category ||= @categories.first
+    @category ||= @categories.first
 
-  	@ealrs = Ealr.ealrs_for_category(@category)
+    @ealrs = Ealr.ealrs_for_category(@category)
   end
 
   def new

@@ -1,10 +1,10 @@
 require 'helpers/credit_helper'
 class CreditController < ApplicationController
 
-	include CreditHelper
+  include CreditHelper
 
-	before_filter :login_required
-	before_filter :get_student, :only => [:index, :combine, :combiner, :admin_destroy]
+  before_filter :login_required
+  before_filter :get_student, :only => [:index, :combine, :combiner, :admin_destroy]
 
   def index
     set_meta :tab1 => :students, :tab2 => :credits, :title => "#{@student.name} - Credits Worksheet"
@@ -16,93 +16,93 @@ class CreditController < ApplicationController
     @credit_notes = Note.notes_hash(@credit_assignments+@finalized_credit_assignments)
   end
 
-	# displays the add credit form
-	def editor
+  # displays the add credit form
+  def editor
 
-	  if params[:parent_type]
-	    @parent_class = params[:parent_type]
-	    @parent_id = params[:parent_id]
-	    @parent = eval(@parent_class).find(@parent_id)
+    if params[:parent_type]
+      @parent_class = params[:parent_type]
+      @parent_id = params[:parent_id]
+      @parent = eval(@parent_class).find(@parent_id)
 
-  	  @credit = CreditAssignment.new(:credit => Credit.find(:first, :conditions => "course_type = 0"), :credit_hours => 0.5)
-  	  @add = true
-	  else
-	    @credit = CreditAssignment.find(params[:id])
-	    @parent = @credit.primary_parent
-	  end
+      @credit = CreditAssignment.new(:credit => Credit.find(:first, :conditions => "course_type = 0"), :credit_hours => 0.5)
+      @add = true
+    else
+      @credit = CreditAssignment.find(params[:id])
+      @parent = @credit.primary_parent
+    end
 
-	  @privs = @parent.privileges(@user)
+    @privs = @parent.privileges(@user)
     return redir_error(TinyException::SECURITYHACK, @user) unless @privs[:edit]
 
-	  if @parent.is_a?(User)
-	    current_year = Setting.current_year
-	    @title = @parent.last_name_f
-	    @credit_options = Credit.options(true)
-	    render :partial => "worksheet_form"
-	  elsif @parent.is_a?(Contract)
-	    @title = @parent.name
-	    @credit_options = Credit.options
-	    render :partial => "credit_form"
-	  elsif @parent.is_a?(Enrollment)
-	    @title = @parent.participant.last_name_f
-	    @credit_options = Credit.options
-	    render :partial => "credit_form"
-	  elsif @parent.is_a?(GraduationPlan)
-	    @title = @parent.user.last_name_f
-	    @credit_options = Credit.options
-	    render :partial => "placeholder_form"
-	  end
-	end
+    if @parent.is_a?(User)
+      current_year = Setting.current_year
+      @title = @parent.last_name_f
+      @credit_options = Credit.options(true)
+      render :partial => "worksheet_form"
+    elsif @parent.is_a?(Contract)
+      @title = @parent.name
+      @credit_options = Credit.options
+      render :partial => "credit_form"
+    elsif @parent.is_a?(Enrollment)
+      @title = @parent.participant.last_name_f
+      @credit_options = Credit.options
+      render :partial => "credit_form"
+    elsif @parent.is_a?(GraduationPlan)
+      @title = @parent.user.last_name_f
+      @credit_options = Credit.options
+      render :partial => "placeholder_form"
+    end
+  end
 
-	def add
-	  @parent_type = eval(params[:parent_type])
-	  @parent_id = params[:parent_id]
+  def add
+    @parent_type = eval(params[:parent_type])
+    @parent_id = params[:parent_id]
 
-	  @parent = @parent_type.find(@parent_id)
-	  @privs = @parent.privileges(@user)
+    @parent = @parent_type.find(@parent_id)
+    @privs = @parent.privileges(@user)
     return redir_error(TinyException::SECURITYHACK, @user) unless @privs[:edit]
 
-	  course = Credit.find(params[:course])
-	  credits = params[:credits]
+    course = Credit.find(params[:course])
+    credits = params[:credits]
 
-	  credit = CreditAssignment.create(:credit => course, :credit_hours => credits, :contract_term_id => params[:term])
-	  @parent.credit_assignments << credit
+    credit = CreditAssignment.create(:credit => course, :credit_hours => credits, :contract_term_id => params[:term])
+    @parent.credit_assignments << credit
 
-	  unless params[:notes].blank?
-	    credit.notes << Note.new(:note => params[:notes].strip, :author => @user)
-	  end
+    unless params[:notes].blank?
+      credit.notes << Note.new(:note => params[:notes].strip, :author => @user)
+    end
 
-	  render :partial => 'credit/credits', :object => @parent	    
-	end
+    render :partial => 'credit/credits', :object => @parent      
+  end
 
-	def update
-	  @credit = CreditAssignment.find(params[:id])
+  def update
+    @credit = CreditAssignment.find(params[:id])
 
-	  @privs = @credit.privileges(@user)
+    @privs = @credit.privileges(@user)
     return redir_error(TinyException::SECURITYHACK, @user) unless @privs[:edit]
 
-	  # set the hours if they are passed
-	  @credit.credit_hours = params[:credits] unless params[:credits].blank?
+    # set the hours if they are passed
+    @credit.credit_hours = params[:credits] unless params[:credits].blank?
 
-	  # if override hours passed, set them, otherwise clear override
-	  @credit.override params[:credits_override], @user
+    # if override hours passed, set them, otherwise clear override
+    @credit.override params[:credits_override], @user
 
-	  @credit.contract_term = Term.find(params[:term]) if params[:term]
+    @credit.contract_term = Term.find(params[:term]) if params[:term]
 
-	  @parent = @credit.primary_parent
+    @parent = @credit.primary_parent
 
-	  raise "not yet implemented" if @parent.is_a? GraduationPlan
+    raise "not yet implemented" if @parent.is_a? GraduationPlan
 
-	  # @credit.contract_name = @credit.credit.course_name if @parent.is_a? GraduationPlan
+    # @credit.contract_name = @credit.credit.course_name if @parent.is_a? GraduationPlan
 
-	  @credit.assign_credit( @user, Credit.find(params[:course]) )
+    @credit.assign_credit( @user, Credit.find(params[:course]) )
 
-	  if @credit.user?
-	    render :partial => 'credit/credits', :object => @credit, :locals => {:expanded => true, :closed=>false}
-	  else
-	    render :partial => 'credit/credits', :object => @parent
-	  end
-	end
+    if @credit.user?
+      render :partial => 'credit/credits', :object => @credit, :locals => {:expanded => true, :closed=>false}
+    else
+      render :partial => 'credit/credits', :object => @parent
+    end
+  end
 
   def combiner
 
@@ -119,9 +119,9 @@ class CreditController < ApplicationController
     @credit_assignments.each{|c| hours += c.credit_hours }
 
     @credit_options = Credit.transmittable_credits.collect{|c| [c.credit_string, c.id]}
-	  @credit = CreditAssignment.new(:credit_hours => hours)
+    @credit = CreditAssignment.new(:credit_hours => hours)
 
-	  render :partial => 'combine_form', :layout => false
+    render :partial => 'combine_form', :layout => false
   end
 
   def combine
@@ -136,19 +136,19 @@ class CreditController < ApplicationController
     redirect_to credit_assignments_path(@student)    
   end
 
-	# removes a credit from the parent
+  # removes a credit from the parent
 
-	def destroy
-	  @credit = CreditAssignment.find(params[:id])
-	  @parent = @credit.primary_parent
+  def destroy
+    @credit = CreditAssignment.find(params[:id])
+    @parent = @credit.primary_parent
 
-	  @privs = @credit.privileges(@user)
-	  return redir_error(TinyException::SECURITYHACK, @user) unless @privs[:edit]
+    @privs = @credit.privileges(@user)
+    return redir_error(TinyException::SECURITYHACK, @user) unless @privs[:edit]
 
-	  @credit.destroy
+    @credit.destroy
 
-	  render :nothing => true
-	end
+    render :nothing => true
+  end
 
   # Deletes one or more finalized credits from the worksheet
   def admin_destroy

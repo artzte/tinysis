@@ -4,57 +4,57 @@
 <tr class="<%= cycle_stripes %>">
 <% unless ca.parent_credit_assignment -%>
 <td class="select">
-	<%
-	 	# transmitted? checkmark.
-		if ca.transmitted? 
-	-%>
-		<%= image_tag('check.gif') %>
-	<%
-	 	# part of a batch? not transmitted yet? hyphen.
-		elsif ca.credit_transmittal_batch_id? 
-	%>
-		-
-	<%
-	 	# no privileges? blank.
-		elsif @privs[:edit] == false 
-	%>
-		&nbsp;
-	<% 
-		# not part of a batch - no child credits - allow selection for joining
-		elsif ca.child_credit_assignments.empty?
-	-%>
-		<%= check_box_tag("ca_#{ca.id}", 1, false, :id => "ca_#{ca.id}", :class=>'select_credit') %>
-	<%
-		# not part of a batch - child credits - allow splitting
-		else
-	-%>
-		<%= link_to_function('split', "Credit.split(#{ca.id})") %>
-	<% 
-		end 
-	-%>
+  <%
+     # transmitted? checkmark.
+    if ca.transmitted? 
+  -%>
+    <%= image_tag('check.gif') %>
+  <%
+     # part of a batch? not transmitted yet? hyphen.
+    elsif ca.credit_transmittal_batch_id? 
+  %>
+    -
+  <%
+     # no privileges? blank.
+    elsif @privs[:edit] == false 
+  %>
+    &nbsp;
+  <% 
+    # not part of a batch - no child credits - allow selection for joining
+    elsif ca.child_credit_assignments.empty?
+  -%>
+    <%= check_box_tag("ca_#{ca.id}", 1, false, :id => "ca_#{ca.id}", :class=>'select_credit') %>
+  <%
+    # not part of a batch - child credits - allow splitting
+    else
+  -%>
+    <%= link_to_function('split', "Credit.split(#{ca.id})") %>
+  <% 
+    end 
+  -%>
 </td>
 <% end -%>
 <td>
-	<%= render :partial => 'credit/credits', :object => ca, :locals => {:expanded => true } %>
+  <%= render :partial => 'credit/credits', :object => ca, :locals => {:expanded => true } %>
 </td>
 <td class="date">
-	<%= d(ca.enrollment_finalized_on, true) %>
+  <%= d(ca.enrollment_finalized_on, true) %>
 </td>
 <td class="approve">
-<% 	
-	if ca.batched_for_transmit?
+<%   
+  if ca.batched_for_transmit?
 %>
-	<%= [
-		d(ca.district_finalize_approved_on, true),
-		tag('br'),
-		ca.district_finalize_approved_by.sub(/(, \w).+$/,'\1')
-	] %>
+  <%= [
+    d(ca.district_finalize_approved_on, true),
+    tag('br'),
+    ca.district_finalize_approved_by.sub(/(, \w).+$/,'\1')
+  ] %>
 <% 
-	elsif @privs[:edit] and ca.parent_credit_assignment.nil?
+  elsif @privs[:edit] and ca.parent_credit_assignment.nil?
 %>
-	<%= 
-		check_box_tag("approve[#{ca.id}]", 1, ca.district_finalize_approved, :id => "approve_#{ca.id}", :onclick=>"Credit.approve(#{ca.id})")
-	%>
+  <%= 
+    check_box_tag("approve[#{ca.id}]", 1, ca.district_finalize_approved, :id => "approve_#{ca.id}", :onclick=>"Credit.approve(#{ca.id})")
+  %>
 <% end -%>
 </td>
 </tr>

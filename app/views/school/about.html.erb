@@ -1,54 +1,54 @@
 <h1>About tinySIS</h1>
 <p>
-	In Spring of 2006, we undertook an effort to understand Nova's status reporting requirements under Washington WAC 392-121-182  / Public School Alternative Learning Experience Programs (ALE for short). We sought to transition Nova from a paper-based status reporting process to one that would better serve the Nova community. Our first step was to determine how Nova might use Seattle School District information systems to improve its processes. During our investigation, we concluded that critical aspects of Nova's pedagogy were not supported by District systems. Working together, we built tinySIS. The system has evolved since its initial deployment in November 2006 and continues to evolve as we work together to improve our process and practice. 
+  In Spring of 2006, we undertook an effort to understand Nova's status reporting requirements under Washington WAC 392-121-182  / Public School Alternative Learning Experience Programs (ALE for short). We sought to transition Nova from a paper-based status reporting process to one that would better serve the Nova community. Our first step was to determine how Nova might use Seattle School District information systems to improve its processes. During our investigation, we concluded that critical aspects of Nova's pedagogy were not supported by District systems. Working together, we built tinySIS. The system has evolved since its initial deployment in November 2006 and continues to evolve as we work together to improve our process and practice. 
 </p>
 <p>
-	First, some statistics:
+  First, some statistics:
 </p>
 <ul>
-	<li><%= number_with_delimiter(Contract.count) %> classes and learning contracts tracked</li>
-	<li><%= number_with_delimiter(User.count) %> students and staff members served</li>
-	<li><%= number_with_delimiter(Assignment.count) %> assignments with <%= number_with_delimiter(Turnin.count) %> turnins</li>
-	<li><%= number_with_delimiter(Status.count) %> status reports</li>
-	<li><%= number_with_delimiter(Note.count) %> qualitative notes recorded about student progress and work</li>
+  <li><%= number_with_delimiter(Contract.count) %> classes and learning contracts tracked</li>
+  <li><%= number_with_delimiter(User.count) %> students and staff members served</li>
+  <li><%= number_with_delimiter(Assignment.count) %> assignments with <%= number_with_delimiter(Turnin.count) %> turnins</li>
+  <li><%= number_with_delimiter(Status.count) %> status reports</li>
+  <li><%= number_with_delimiter(Note.count) %> qualitative notes recorded about student progress and work</li>
 </ul>
 <p>
-	tinySIS is a web application developed using Ruby on Rails. Nova status data is stored in a mySQL database and presented to Nova staff members through the screens of this website. The current version of tinySIS supports the following features:</p>
-	<ul>
-		<li>Contracts and classroom courses, and contract/class enrollment</li>
-		<li>Class/contract status reports</li>
-		<li>COOR/homeroom status reports</li>
-		<li>Student status pages</li>
-		<li>Student learning plans / schedules</li>
-		<li>Flexible tracking and awarding of credits</li>
-		<li>School-wide status reports and administrative functions</li>
-	</ul>
+  tinySIS is a web application developed using Ruby on Rails. Nova status data is stored in a mySQL database and presented to Nova staff members through the screens of this website. The current version of tinySIS supports the following features:</p>
+  <ul>
+    <li>Contracts and classroom courses, and contract/class enrollment</li>
+    <li>Class/contract status reports</li>
+    <li>COOR/homeroom status reports</li>
+    <li>Student status pages</li>
+    <li>Student learning plans / schedules</li>
+    <li>Flexible tracking and awarding of credits</li>
+    <li>School-wide status reports and administrative functions</li>
+  </ul>
 <h2>Contracts</h2>
-	<p>Staff members can create educational contracts as classes or as independent study activities. Each contract has a staff facilitator, one or more students, and associated lists of assignments and absence records. Both classes and independents use the same setup screens and data; the main difference is that independents are not shown in the course catalog.</p>
+  <p>Staff members can create educational contracts as classes or as independent study activities. Each contract has a staff facilitator, one or more students, and associated lists of assignments and absence records. Both classes and independents use the same setup screens and data; the main difference is that independents are not shown in the course catalog.</p>
 <p>
-	There are several categories of contracts. The category determines things like the visibility of a contract (whether it appears in the course catalog) and the status reporting requirements (monthly, once per term, or none). 
-</p>	
+  There are several categories of contracts. The category determines things like the visibility of a contract (whether it appears in the course catalog) and the status reporting requirements (monthly, once per term, or none). 
+</p>  
 <p>
-	Staff members set up the contract with syllabus information such as the instructional purpose, materials, methods of evaluation, base credits, and a list of EALRs (Essential Academic Learning Requirements). The contract is assigned to a school term. Staff members can record absences and assignment turn-ins using screens in the contract area.
+  Staff members set up the contract with syllabus information such as the instructional purpose, materials, methods of evaluation, base credits, and a list of EALRs (Essential Academic Learning Requirements). The contract is assigned to a school term. Staff members can record absences and assignment turn-ins using screens in the contract area.
 </p>
 <h2>Status Reporting</h2>
-	<p>There are two main areas of status reporting:</p>
-	<ul>
-		<li>Contract reports</li>
-		<li>COOR reports</li>
-	</ul>
-	<p>Contract facilitators report status on a schedule determined by the contract category. Generally, facilitators report monthly about each student enrolled in a contract. The system keeps track of which status reports are required for a given type of contract and provides reminder pages for staff members. Staff members can log three academic flags for a status report - Acceptable, Participating, and Unacceptable - and two attendance flags - Acceptable and Unacceptable. Staff members can also log free-form notes on status reports.</p>
+  <p>There are two main areas of status reporting:</p>
+  <ul>
+    <li>Contract reports</li>
+    <li>COOR reports</li>
+  </ul>
+  <p>Contract facilitators report status on a schedule determined by the contract category. Generally, facilitators report monthly about each student enrolled in a contract. The system keeps track of which status reports are required for a given type of contract and provides reminder pages for staff members. Staff members can log three academic flags for a status report - Acceptable, Participating, and Unacceptable - and two attendance flags - Acceptable and Unacceptable. Staff members can also log free-form notes on status reports.</p>
 
-	<p>COOR reports provide an overall picture of student academic progress according to ALE regulations. Each Nova student has an assigned coordinator who monitors monthly progress against a learning plan. Coordinators review the monthly contract reports and create an overall report indicating academic progress and attendance hours. </p>
+  <p>COOR reports provide an overall picture of student academic progress according to ALE regulations. Each Nova student has an assigned coordinator who monitors monthly progress against a learning plan. Coordinators review the monthly contract reports and create an overall report indicating academic progress and attendance hours. </p>
 
 <h2>Student Information</h2>
 
 <p>Nova staff members can view student progress in three ways:</p>
 
 <ul>
-	<li>A status page, which lists COOR reports for the full year, and contract reports for the active term.</li>
-	<li>Student learning plan, which summarizes learning goals for the student.</li>
-	<li>Credits, which lists credits earned from previous terms.</li>
+  <li>A status page, which lists COOR reports for the full year, and contract reports for the active term.</li>
+  <li>Student learning plan, which summarizes learning goals for the student.</li>
+  <li>Credits, which lists credits earned from previous terms.</li>
 </ul>
 
 <p>There is also an overall ALE report listing Nova students, their COOR progress ratings, and their FTE hours month-by-month.

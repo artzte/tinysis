@@ -18,8 +18,8 @@ protected
 
 public
   def index
-		@terms = Term.all
-		@base_month = Setting.reporting_base_month
+    @terms = Term.all
+    @base_month = Setting.reporting_base_month
   end
 
   def edit

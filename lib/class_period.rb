@@ -11,14 +11,14 @@ class ClassPeriod
     
   end
   
-	# creates a text representation of the period
+  # creates a text representation of the period
 
   def timeslot_string
 
-		ret = ""
-		self.weekdays.each{|w| ret << WEEKDAYS[w].slice(0,3) << "/" }
-		ret.chomp! "/"
-		ret << " #{period_string}"
+    ret = ""
+    self.weekdays.each{|w| ret << WEEKDAYS[w].slice(0,3) << "/" }
+    ret.chomp! "/"
+    ret << " #{period_string}"
     
   end
   
@@ -32,7 +32,7 @@ class ClassPeriod
     
     period = self.new(p[:start], p[:end])
     period.weekdays = p[:weekdays].split("").collect{|i| i.to_i}
-	  
+    
     period
     
   end

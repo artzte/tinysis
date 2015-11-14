@@ -20,45 +20,45 @@ class LearningPlanController < ApplicationController
     @year_options = (@year_options.first..@year_options.last).to_a
     @year_options = @year_options.reverse
 
-		@plan = learning_plans.detect{|p| p.year==@year}
+    @plan = learning_plans.detect{|p| p.year==@year}
 
-		@goals = @plan.learning_plan_goals.collect{|g| g.id} if @plan
-		@enrollments = @student.enrollments_report(:school_year => @year)
+    @goals = @plan.learning_plan_goals.collect{|g| g.id} if @plan
+    @enrollments = @student.enrollments_report(:school_year => @year)
 
-		@active_enrollments = @enrollments.select{|e| e.enrollment_status != Enrollment::STATUS_FINALIZED}
-		@finalized_enrollments = @enrollments.select{|e| e.enrollment_status == Enrollment::STATUS_FINALIZED}
+    @active_enrollments = @enrollments.select{|e| e.enrollment_status != Enrollment::STATUS_FINALIZED}
+    @finalized_enrollments = @enrollments.select{|e| e.enrollment_status == Enrollment::STATUS_FINALIZED}
 
-		@active_terms = @active_enrollments.group_by{|e| Term.find(e.term_id)}
-		@finalized_terms = @finalized_enrollments.group_by{|e| Term.find(e.term_id)}
+    @active_terms = @active_enrollments.group_by{|e| Term.find(e.term_id)}
+    @finalized_terms = @finalized_enrollments.group_by{|e| Term.find(e.term_id)}
   end
 
   def edit
     @year = year_from_params
     @plan = @student.learning_plan(@year) || @student.learning_plans.create(:year => @year, :weekly_hours => AppConfig.fte_hours)
-		@goals = @plan.learning_plan_goals
+    @goals = @plan.learning_plan_goals
   end
 
   def update
-		@plan.learning_plan_goals.clear
+    @plan.learning_plan_goals.clear
 
     @plan.learning_plan_goals += LearningPlanGoal.required
 
-		params[:goal].each do |k,v|
-		  @plan.learning_plan_goals << LearningPlanGoal.find(k)
-		end if params[:goal]
+    params[:goal].each do |k,v|
+      @plan.learning_plan_goals << LearningPlanGoal.find(k)
+    end if params[:goal]
 
-		if @plan.update_attributes(params[:plan])
-		  flash[:notice] = "Learning plan saved"
+    if @plan.update_attributes(params[:plan])
+      flash[:notice] = "Learning plan saved"
 
       # update the current student status report to the new FTE hours
       status = @student.statuses.current
       status.update_attributes(:fte_hours => @plan.weekly_hours) if status
 
-		  redirect_to learning_path(@student)
-		else
-		  edit
-		  render :action => 'edit'
-		end
+      redirect_to learning_path(@student)
+    else
+      edit
+      render :action => 'edit'
+    end
   end
 
 protected

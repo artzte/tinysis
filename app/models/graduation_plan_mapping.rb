@@ -6,7 +6,7 @@ class GraduationPlanMapping < ActiveRecord::Base
 
   validates_presence_of :graduation_plan, :graduation_plan_requirement
 
-	has_many :notes, :as => :notable, :dependent => :destroy
+  has_many :notes, :as => :notable, :dependent => :destroy
 
   def before_save 
     if credit_assignment

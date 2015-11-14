@@ -14,7 +14,7 @@ protected
 
 public
   def index
-  	@learning_plan_goals = LearningPlanGoal.all
+    @learning_plan_goals = LearningPlanGoal.all
   end
 
   def new

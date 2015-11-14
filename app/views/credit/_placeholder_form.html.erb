@@ -3,6 +3,6 @@
 <% else -%>
 <form onsubmit="return Credit.save(<%= @credit.id %>, '<%= @credit.primary_parent.class.class_name %>', <%= @credit.primary_parent.id %>);" id="credit_form">
 <% end -%>
-	<%= render :partial => 'credit/credit_form_fields', :locals => { :placeholder_version => true }%>
-	<%= submit_and_cancel_buttons %>
+  <%= render :partial => 'credit/credit_form_fields', :locals => { :placeholder_version => true }%>
+  <%= submit_and_cancel_buttons %>
 </form>

@@ -4,14 +4,14 @@ module NoteHelper
     "notes_#{parent_element.class}_#{parent_element.id}"
   end
 
-	def note_container(note)
-		"note_#{note.id}"	
-	end
+  def note_container(note)
+    "note_#{note.id}"  
+  end
 
-	def note_title(note)
-		note_author = note.author ? note.author.name.downcase : 'Anonymous'
-  	"#{note_author} - #{d(note.updated_at, true).downcase}"
-	end
+  def note_title(note)
+    note_author = note.author ? note.author.name.downcase : 'Anonymous'
+    "#{note_author} - #{d(note.updated_at, true).downcase}"
+  end
 
   # renders notes for an object with the following parameters
   #

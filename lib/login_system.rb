@@ -28,7 +28,7 @@ module LoginSystem
   #   def authorize?(user)
   # 
   def auth_required(privlevel = nil)
-		u = get_user 
+    u = get_user 
     if u and authorize?(u, privlevel)
       return true
     end
@@ -61,7 +61,7 @@ module LoginSystem
   # a popup window might just close itself for instance
   def access_denied
     if @user.nil?
-			store_location
+      store_location
       redir_login
     else
       redir_error TinyException::SECURITYHACK, @user
@@ -86,9 +86,9 @@ module LoginSystem
   end
 
   def get_user
-		return nil if session[:user_id].nil?
+    return nil if session[:user_id].nil?
 
-		User.find(session[:user_id])
+    User.find(session[:user_id])
   end
   
   def is_admin
@@ -99,8 +99,8 @@ module LoginSystem
   def has_priv(priv)
     
     if @user.nil?
-			return false
-		end
+      return false
+    end
     @user.privilege >= priv
 
   end

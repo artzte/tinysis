@@ -77,7 +77,7 @@ public
 protected
   def init_students_list
     get_session_pager('student')
-  	students_index_init
+    students_index_init
 
     @students = students_find(@fp)
   end

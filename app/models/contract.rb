@@ -1,212 +1,212 @@
 class Contract < ActiveRecord::Base
 
-	include StripTagsValidator
+  include StripTagsValidator
 
   has_many :meetings, :order => "meeting_date", :dependent => :destroy
-	has_many :assignments, :order =>  "due_date, CONVERT(name,decimal), name", :dependent => :destroy do
+  has_many :assignments, :order =>  "due_date, CONVERT(name,decimal), name", :dependent => :destroy do
 
-	  def weight_total
-	    sum(:weighting)
-	  end
+    def weight_total
+      sum(:weighting)
+    end
 
-	  def weight_current
-	    sum(:weighting, :conditions => 'due_date <= NOW()')
-	  end
+    def weight_current
+      sum(:weighting, :conditions => 'due_date <= NOW()')
+    end
 
-	end
+  end
 
-	has_many :enrollments, :include => :participant, :dependent => :destroy do
+  has_many :enrollments, :include => :participant, :dependent => :destroy do
 
-  	# returns a list of all non-facilitator participants ever 
-  	# with active enrollments in this class	
-	  def all
-  		find(:all, :order => "enrollments.finalized_on, enrollments.enrollment_status, enrollments.completion_status DESC, enrollments.role DESC, users.last_name, users.first_name", 
-  			:include => [:participant, {:credit_assignments=>:credit}] )
-  	end
+    # returns a list of all non-facilitator participants ever 
+    # with active enrollments in this class  
+    def all
+      find(:all, :order => "enrollments.finalized_on, enrollments.enrollment_status, enrollments.completion_status DESC, enrollments.role DESC, users.last_name, users.first_name", 
+        :include => [:participant, {:credit_assignments=>:credit}] )
+    end
 
-  	# returns a list of statusable enrollments
-  	def statusable(shallow = false)
-  	  Enrollment.statusable(proxy_owner.id, shallow)
-  	end	
-	end
+    # returns a list of statusable enrollments
+    def statusable(shallow = false)
+      Enrollment.statusable(proxy_owner.id, shallow)
+    end  
+  end
 
-	has_many :notes, :as => :notable
-	has_many :absences, :through => :enrollments
-	has_many :statuses, :through => :enrollments
-	belongs_to :facilitator, :foreign_key => 'facilitator_id', :class_name => 'User'
-	attr_protected :facilitator
+  has_many :notes, :as => :notable
+  has_many :absences, :through => :enrollments
+  has_many :statuses, :through => :enrollments
+  belongs_to :facilitator, :foreign_key => 'facilitator_id', :class_name => 'User'
+  attr_protected :facilitator
 
-	has_and_belongs_to_many :ealrs, :join_table => 'contract_ealrs'
+  has_and_belongs_to_many :ealrs, :join_table => 'contract_ealrs'
 
-	belongs_to :category
-	belongs_to :term
-	belongs_to :creator, :foreign_key => 'creator_id', :class_name => 'User'
+  belongs_to :category
+  belongs_to :term
+  belongs_to :creator, :foreign_key => 'creator_id', :class_name => 'User'
 
   has_many :credit_assignments
 
-	serialize :timeslots, Array
+  serialize :timeslots, Array
 
-	validates_length_of :name, :within => MIN_TITLE..MAX_TITLE
+  validates_length_of :name, :within => MIN_TITLE..MAX_TITLE
 
-	validates_presence_of :term,  :message => "must be specified."
-	validates_presence_of :category, :message => "must be specified."
+  validates_presence_of :term,  :message => "must be specified."
+  validates_presence_of :category, :message => "must be specified."
 
-	acts_as_textiled :learning_objectives, :competencies, :evaluation_methods, :instructional_materials
+  acts_as_textiled :learning_objectives, :competencies, :evaluation_methods, :instructional_materials
 
-	STATUS_PROPOSED = 0
-	STATUS_ACTIVE = 1
-	STATUS_CLOSED = 2
-	STATUS_NAMES = { STATUS_PROPOSED => "Proposed",
-		STATUS_ACTIVE => "Approved",
-		STATUS_CLOSED => "Closed" }
+  STATUS_PROPOSED = 0
+  STATUS_ACTIVE = 1
+  STATUS_CLOSED = 2
+  STATUS_NAMES = { STATUS_PROPOSED => "Proposed",
+    STATUS_ACTIVE => "Approved",
+    STATUS_CLOSED => "Closed" }
 
-	def status_name
-	  STATUS_NAMES[self.contract_status]
-	end
+  def status_name
+    STATUS_NAMES[self.contract_status]
+  end
 
   def homeroom?
     category.homeroom? 
   end
 
-	def before_save
-	  self.timeslots ||= []
-	end
-
-	def closed?
-	  self.contract_status==STATUS_CLOSED
-	end
-
-	def active?
-	  self.contract_status==STATUS_ACTIVE
+  def before_save
+    self.timeslots ||= []
   end
 
-	def activate
-	  update_attribute(:contract_status, STATUS_ACTIVE)
-	end
+  def closed?
+    self.contract_status==STATUS_CLOSED
+  end
 
-	def close
-	  update_attribute(:contract_status, STATUS_CLOSED)
-	end
+  def active?
+    self.contract_status==STATUS_ACTIVE
+  end
+
+  def activate
+    update_attribute(:contract_status, STATUS_ACTIVE)
+  end
+
+  def close
+    update_attribute(:contract_status, STATUS_CLOSED)
+  end
 
 ##########################################################################
 # Functions for getting and setting associated model objects
 
-	# Return a hash describing privileges of the specified user
+  # Return a hash describing privileges of the specified user
 
-	def Contract.privileges(user)
+  def Contract.privileges(user)
 
-		# new privs object with no grants
-		p = TinyPrivileges.new
+    # new privs object with no grants
+    p = TinyPrivileges.new
 
-		# user must be specified
-		return p if user.nil?
+    # user must be specified
+    return p if user.nil?
 
-		# allow create/view privileges if it's at least a student
-		p[:create] = 
-		p[:view] = 
-		p[:browse] = (user.privilege >= User::PRIVILEGE_STUDENT)
+    # allow create/view privileges if it's at least a student
+    p[:create] = 
+    p[:view] = 
+    p[:browse] = (user.privilege >= User::PRIVILEGE_STUDENT)
 
-		# edit privileges connote full privs to assign facilitator, set status, etc.
-		# which is only staff or above
-		p[:edit] = (user.privilege >= User::PRIVILEGE_STAFF)
+    # edit privileges connote full privs to assign facilitator, set status, etc.
+    # which is only staff or above
+    p[:edit] = (user.privilege >= User::PRIVILEGE_STAFF)
 
-		return p
-	end
+    return p
+  end
 
-	# Return a hash describing privileges of the specified user
-	# on this contract
+  # Return a hash describing privileges of the specified user
+  # on this contract
 
-	def privileges(user)
+  def privileges(user)
 
-		# if this is being called on an unsaved record, call back
-		# to the class privileges.
-		return Contract.privileges(user) if @new_record
+    # if this is being called on an unsaved record, call back
+    # to the class privileges.
+    return Contract.privileges(user) if @new_record
 
-		# create a new privileges object with no rights
-		p = TinyPrivileges.new
+    # create a new privileges object with no rights
+    p = TinyPrivileges.new
 
-		# user must be specified otherwise no privileges
-		return p if user.nil?
+    # user must be specified otherwise no privileges
+    return p if user.nil?
 
-		# an admin or facilitator has full privileges
-		return p.grant_all if user.admin?
-		return p.grant_all if facilitator == user
+    # an admin or facilitator has full privileges
+    return p.grant_all if user.admin?
+    return p.grant_all if facilitator == user
 
-		##########################################
-		# see if the user has an enrollment role here
-		user_role = role_of(user)
+    ##########################################
+    # see if the user has an enrollment role here
+    user_role = role_of(user)
 
-		##########################################
-		# USER IS NOT ENROLLED
-		# if no role, then check for staff privileges
-		if user_role.nil?
+    ##########################################
+    # USER IS NOT ENROLLED
+    # if no role, then check for staff privileges
+    if user_role.nil?
 
-			# staff members can view and do notes
-			case user.privilege
-			when User::PRIVILEGE_STAFF
-				p[:view] = 
-				p[:browse] = 
-				p[:create_note] = 
-				p[:view_students] = 
-				p[:view_note] = true
+      # staff members can view and do notes
+      case user.privilege
+      when User::PRIVILEGE_STAFF
+        p[:view] = 
+        p[:browse] = 
+        p[:create_note] = 
+        p[:view_students] = 
+        p[:view_note] = true
 
-				# any staff member can edit an unsupervised contract
-				p[:edit] = unsupervised
+        # any staff member can edit an unsupervised contract
+        p[:edit] = unsupervised
 
-			when User::PRIVILEGE_STUDENT
+      when User::PRIVILEGE_STUDENT
 
-				# if the user is the creator of the contract and no facilitator has
-				# been assigned, he gets various privileges
+        # if the user is the creator of the contract and no facilitator has
+        # been assigned, he gets various privileges
 
-				if unsupervised and (user.id == creator.id)
+        if unsupervised and (user.id == creator.id)
 
-					p[:browse] = 
-					p[:view] = 
-					p[:edit] = 
-					p[:create_note] = 
-					p[:view_note] = true
+          p[:browse] = 
+          p[:view] = 
+          p[:edit] = 
+          p[:create_note] = 
+          p[:view_note] = true
 
-				else
+        else
 
-				# browse is the weakest privilege --- you can view minimal contract
-				# details if the contract is public
-					p[:browse] = (category.public)
-				end
-			end
+        # browse is the weakest privilege --- you can view minimal contract
+        # details if the contract is public
+          p[:browse] = (category.public)
+        end
+      end
 
-			return p
-		end
+      return p
+    end
 
-		##########################################
-		# USER IS ENROLLED
-		# FOR EDIT PRIVILEGES,
-		# user must be the facilitator, or the creator of an unassigned
-		# contract
-		return p.grant_all if user_role >= Enrollment::ROLE_INSTRUCTOR || (unsupervised && user.id == self.creator_id)
+    ##########################################
+    # USER IS ENROLLED
+    # FOR EDIT PRIVILEGES,
+    # user must be the facilitator, or the creator of an unassigned
+    # contract
+    return p.grant_all if user_role >= Enrollment::ROLE_INSTRUCTOR || (unsupervised && user.id == self.creator_id)
 
-		# FOR VIEW/BROWSE/NOTE PRIVILEGES,
-		# user must be enrolled. we have already ascertained that.
-		p[:view] = 
-		p[:browse] = 
-		p[:create_note] = 
-		p[:view_note] = true
+    # FOR VIEW/BROWSE/NOTE PRIVILEGES,
+    # user must be enrolled. we have already ascertained that.
+    p[:view] = 
+    p[:browse] = 
+    p[:create_note] = 
+    p[:view_note] = true
 
-		# an instructor or supervisor can edit a note / view student info
+    # an instructor or supervisor can edit a note / view student info
 
-		p[:view_students] =  
-		p[:edit_note] =  (user_role >= Enrollment::ROLE_INSTRUCTOR)
+    p[:view_students] =  
+    p[:edit_note] =  (user_role >= Enrollment::ROLE_INSTRUCTOR)
 
-		return p
-	end
+    return p
+  end
 
-	##########################################################################
-	# How contracts are sorted
+  ##########################################################################
+  # How contracts are sorted
 
-	def <=>(contract)
+  def <=>(contract)
 
-		return category.sequence <=> contract.category.sequence if category.sequence != contract.category.sequence
-		return name <=> contract.name
-  end	
+    return category.sequence <=> contract.category.sequence if category.sequence != contract.category.sequence
+    return name <=> contract.name
+  end  
 
   def copy(params)
 
@@ -236,10 +236,10 @@ class Contract < ActiveRecord::Base
 
   end
 
-	##########################################################################
-	# Functions for getting lists of different types of contracts 
+  ##########################################################################
+  # Functions for getting lists of different types of contracts 
 
-	def Contract.catalog(options = {})
+  def Contract.catalog(options = {})
 
     q = []
     q << "SELECT" 
@@ -263,8 +263,8 @@ class Contract < ActiveRecord::Base
     Contract.find_by_sql(q.join(' '))
   end
 
-	##########################################################################
-	# Months options
+  ##########################################################################
+  # Months options
 
   def statusable_months
     case category.statusable
@@ -277,45 +277,45 @@ class Contract < ActiveRecord::Base
     end
   end
 
-	##########################################################################
-	# Functions for getting various lists of enrollments on a contract
+  ##########################################################################
+  # Functions for getting various lists of enrollments on a contract
 
-	# get a list of all the students who are active and not already enrolled
-	# in this contract
+  # get a list of all the students who are active and not already enrolled
+  # in this contract
 
-	def users_open_for_enrollment
-		User.find_by_sql "select u.* from users u 
-			where u.status = #{User::STATUS_ACTIVE} and 
-						u.id not in 
-							(select e.participant_id from enrollments e where contract_id = #{id})
-			order by last_name, first_name;"
-	end
+  def users_open_for_enrollment
+    User.find_by_sql "select u.* from users u 
+      where u.status = #{User::STATUS_ACTIVE} and 
+            u.id not in 
+              (select e.participant_id from enrollments e where contract_id = #{id})
+      order by last_name, first_name;"
+  end
 
-	# returns the enrollment record for a user, or nil if the user
-	# is not actively enrolled
-	def participant_enrollment(user)
-		enrollments.find(:first, 
-			:conditions => ["enrollment_status >= ? and participant_id = ?", 
-												Enrollment::STATUS_ENROLLED, user.id])
-	end
+  # returns the enrollment record for a user, or nil if the user
+  # is not actively enrolled
+  def participant_enrollment(user)
+    enrollments.find(:first, 
+      :conditions => ["enrollment_status >= ? and participant_id = ?", 
+                        Enrollment::STATUS_ENROLLED, user.id])
+  end
 
-	# returns the role of the specified active user or nil if none
-	def role_of(user)
-	  return Enrollment::ROLE_FACILITATOR if user == facilitator
+  # returns the role of the specified active user or nil if none
+  def role_of(user)
+    return Enrollment::ROLE_FACILITATOR if user == facilitator
 
-		e = participant_enrollment(user)
-		return nil if e.nil?
-		e.role
-	end
+    e = participant_enrollment(user)
+    return nil if e.nil?
+    e.role
+  end
 
-	# contract is not assigned to a staff facilitator
-	def unsupervised
-		facilitator.nil? or facilitator.unassigned?
-	end
+  # contract is not assigned to a staff facilitator
+  def unsupervised
+    facilitator.nil? or facilitator.unassigned?
+  end
 
-	# attendance queries
+  # attendance queries
 
-	def attendance_stats
+  def attendance_stats
 
     # get meeting count -- will assign as absent any "missing" records
     meeting_count = meetings.count
@@ -359,32 +359,32 @@ class Contract < ActiveRecord::Base
     init
   end
 
-	def attendance_hash(options = {})
+  def attendance_hash(options = {})
 
-	  q = []
-	  q << "SELECT * FROM meeting_participants"
-	  q << "INNER JOIN enrollments ON enrollments.id = meeting_participants.enrollment_id"
-	  q << "INNER JOIN meetings ON meetings.id = meeting_participants.meeting_id" if options[:first] || options[:last]
+    q = []
+    q << "SELECT * FROM meeting_participants"
+    q << "INNER JOIN enrollments ON enrollments.id = meeting_participants.enrollment_id"
+    q << "INNER JOIN meetings ON meetings.id = meeting_participants.meeting_id" if options[:first] || options[:last]
     q << "WHERE enrollments.contract_id = #{self.id} AND enrollments.completion_status != #{Enrollment::COMPLETION_CANCELED}"
     q << "AND meetings.meeting_date >= '#{options[:first]}'" if options[:first]
     q << "AND meetings.meeting_date <= '#{options[:last]}'" if options[:last]
 
     participants = MeetingParticipant.find_by_sql(q.join(' '))
-	  participants = participants.group_by{|p| p.enrollment_id}
-	  participants.each do |k,v|
-	    participants[k] = participants[k].group_by{|p| p.meeting_id}
-	  end
-	  participants
+    participants = participants.group_by{|p| p.enrollment_id}
+    participants.each do |k,v|
+      participants[k] = participants[k].group_by{|p| p.meeting_id}
+    end
+    participants
 
-	end
+  end
 
-	def after_initialize
+  def after_initialize
 
-		# set the helper attributes for a contract on add
-		self.timeslots ||= [{}]
-		#@contract.credits = Credit.empty_credits
+    # set the helper attributes for a contract on add
+    self.timeslots ||= [{}]
+    #@contract.credits = Credit.empty_credits
 
-		self.contract_status ||= Contract::STATUS_PROPOSED
+    self.contract_status ||= Contract::STATUS_PROPOSED
 
   end
 

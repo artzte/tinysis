@@ -1,10 +1,10 @@
 <% 
-	@enrollment = contract_detail_item
-	@statuses = @enrollment.statuses.group_by{|s| s.month}
+  @enrollment = contract_detail_item
+  @statuses = @enrollment.statuses.group_by{|s| s.month}
 -%>
 <%= content_tag('tr', [
       content_tag('td', link_to(@enrollment.participant.last_name_f, :action => detail_action, :id=>@enrollment)),
       content_tag('td', content_tag('div', @enrollment.status_text, :class=> @enrollment.status_text.downcase), :class=>'cel'),
-			render(:partial => 'contract_detail_item_month', :collection=> @months)
+      render(:partial => 'contract_detail_item_month', :collection=> @months)
   ], :class=>cycle_stripes ) 
 %>

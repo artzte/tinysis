@@ -24,20 +24,20 @@ public
 
     return unless request.method==:post
 
-		# this is a backdoor for spoofing a user - the first login needs to
-		# authenticate against the password and be a system admin, and
-		# and the second name needs to be a valid login.
-		if params[:user][:login] =~ /^(\w+)_as_(\w+)$/
-			u = User.authenticate($1, params[:user][:password])
-			s = User.find_by_login($2)
-			if (u and s and u.admin?)
-				u = s
-			else
-				u = nil
-			end
-		else
-			u = User.authenticate(params[:user][:login], params[:user][:password])
-		end
+    # this is a backdoor for spoofing a user - the first login needs to
+    # authenticate against the password and be a system admin, and
+    # and the second name needs to be a valid login.
+    if params[:user][:login] =~ /^(\w+)_as_(\w+)$/
+      u = User.authenticate($1, params[:user][:password])
+      s = User.find_by_login($2)
+      if (u and s and u.admin?)
+        u = s
+      else
+        u = nil
+      end
+    else
+      u = User.authenticate(params[:user][:login], params[:user][:password])
+    end
 
     if u
       # you can whitelist IDs through the app config...
@@ -55,7 +55,7 @@ public
       end
     else
       flash[:notice]   = "Could not match login name and/or password."
-		end
+    end
 
   end
 
@@ -64,36 +64,36 @@ public
     redir_home "You've been logged out."
   end
 
-	def reset
+  def reset
 
-	  return if request.method==:get
+    return if request.method==:get
 
-		email = params[:user][:email]
-		unless email =~ User::REGEX_EMAIL
-			flash[:notice] = "Please enter a valid email address."
-			return
-		end
+    email = params[:user][:email]
+    unless email =~ User::REGEX_EMAIL
+      flash[:notice] = "Please enter a valid email address."
+      return
+    end
 
-		u = User.authorized_email(email)
-		if u.nil?
-		  flash[:notice] = "Could not find an active account with that email address."
-			return				
-		end
+    u = User.authorized_email(email)
+    if u.nil?
+      flash[:notice] = "Could not find an active account with that email address."
+      return        
+    end
 
-		password = u.reset_password
+    password = u.reset_password
 
-		UserMailer::deliver_password_reset(u, password)
+    UserMailer::deliver_password_reset(u, password)
 
-	  flash[:notice] = "Your login ID and new password have been emailed to you. Please change your password after logging in."
+    flash[:notice] = "Your login ID and new password have been emailed to you. Please change your password after logging in."
 
-		redirect_to login_path
+    redirect_to login_path
 
-	end
+  end
 
-	def blackboard
-	  set_meta :tab1 => :my, :title => "#{@user.full_name} &ndash; Blackboard"
-	  render :text => 'coming soon', :layout => true
-	end
+  def blackboard
+    set_meta :tab1 => :my, :title => "#{@user.full_name} &ndash; Blackboard"
+    render :text => 'coming soon', :layout => true
+  end
 
   before_filter :set_no_admin, :only => [:edit, :update]
   def set_no_admin 
@@ -101,9 +101,9 @@ public
   end
   hide_action :set_no_admin
 
-	def edit
-	  if @user.student?
-	    set_meta :tab1 => :my, :tab2 => :account, :title => "#{@user.full_name} Settings"
+  def edit
+    if @user.student?
+      set_meta :tab1 => :my, :tab2 => :account, :title => "#{@user.full_name} Settings"
     else
       set_meta :tab1 => :status, :tab2 => :account, :title => "#{@user.full_name} Settings"
     end 

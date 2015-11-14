@@ -1,45 +1,45 @@
 class Status < ActiveRecord::Base
-	belongs_to :author, :foreign_key => 'creator_id', :class_name => 'User'
-	belongs_to :statusable, :polymorphic => true
-	has_many :notes, :as => :notable
+  belongs_to :author, :foreign_key => 'creator_id', :class_name => 'User'
+  belongs_to :statusable, :polymorphic => true
+  has_many :notes, :as => :notable
 
-	validates_uniqueness_of :month, :scope => [:statusable_id, :statusable_type]
+  validates_uniqueness_of :month, :scope => [:statusable_id, :statusable_type]
 
-	STATUS_ACCEPTABLE = 0
-	STATUS_UNACCEPTABLE = 1
-	STATUS_PARTICIPATING = 2
+  STATUS_ACCEPTABLE = 0
+  STATUS_UNACCEPTABLE = 1
+  STATUS_PARTICIPATING = 2
 
-	STATUS_NAMES = {
-		STATUS_ACCEPTABLE => "Satisfactory",
-		STATUS_UNACCEPTABLE => "Unsatisfactory",
-		STATUS_PARTICIPATING => "Participating" }
+  STATUS_NAMES = {
+    STATUS_ACCEPTABLE => "Satisfactory",
+    STATUS_UNACCEPTABLE => "Unsatisfactory",
+    STATUS_PARTICIPATING => "Participating" }
 
-	def self.make(month, statusable, user)
-	  raise ArgumentError, "Invalid date value for status report" unless month.day == 1
+  def self.make(month, statusable, user)
+    raise ArgumentError, "Invalid date value for status report" unless month.day == 1
     ActiveRecord::Base.connection.execute("INSERT INTO statuses(month, creator_id, created_at, updated_at, statusable_id, statusable_type, met_fte_requirements) 
         VALUES ('#{month.strftime('%Y-%m-%d')}', #{user.id}, NOW(), NOW(), #{statusable.id}, '#{statusable.class.to_s}', #{statusable.is_a?(Enrollment)?1:'NULL'}) 
         ON DUPLICATE KEY UPDATE updated_at = NOW()")
   end
 
-	def privileges(user)
-		return statusable.privileges(user)
-	end
-
-	def unacceptable?
-	  (self.academic_status==Status::STATUS_UNACCEPTABLE) || 
-	  (self.attendance_status&&self.attendance_status != STATUS_ACCEPTABLE) || 
-	  (self.statusable_type=='User'&&self.held_periodic_checkins==false) || 
-	  (self.statusable_type=='Enrollment'&&self.met_fte_requirements==false)
+  def privileges(user)
+    return statusable.privileges(user)
   end
 
-	def self.coor_months_missing(options = {})
+  def unacceptable?
+    (self.academic_status==Status::STATUS_UNACCEPTABLE) || 
+    (self.attendance_status&&self.attendance_status != STATUS_ACCEPTABLE) || 
+    (self.statusable_type=='User'&&self.held_periodic_checkins==false) || 
+    (self.statusable_type=='Enrollment'&&self.met_fte_requirements==false)
+  end
+
+  def self.coor_months_missing(options = {})
 
     # first create basis of the reports hash - a hash of staff members keyed by
     # user.id, values are hashes keyed by months.
 
-	  staff=User.coordinators
-	  return {} if staff.empty?
-	  report = Hash[*staff.collect{|v| [v.id,nil]}.flatten]
+    staff=User.coordinators
+    return {} if staff.empty?
+    report = Hash[*staff.collect{|v| [v.id,nil]}.flatten]
 
     options[:coor_term] ||= Term.coor
     term = options[:coor_term]
@@ -54,7 +54,7 @@ class Status < ActiveRecord::Base
     end
 
     # grab a list of students who are active with their coordinator ids
-  	students = User.find(:all, :order => "last_name,first_name", :conditions => ["privilege = ? AND (status = ? OR (date_active > ? AND date_inactive <= ?))", User::PRIVILEGE_STUDENT, User::STATUS_ACTIVE,  term.months.first, Time.mktime(term.months.last.year, term.months.last.day).end_of_month])
+    students = User.find(:all, :order => "last_name,first_name", :conditions => ["privilege = ? AND (status = ? OR (date_active > ? AND date_inactive <= ?))", User::PRIVILEGE_STUDENT, User::STATUS_ACTIVE,  term.months.first, Time.mktime(term.months.last.year, term.months.last.day).end_of_month])
 
     # pull the status reports
     q = []
@@ -89,11 +89,11 @@ class Status < ActiveRecord::Base
     report[:coordinators] = staff
     report
 
-	end
+  end
 
-	# creates a report listing contract status reports missing for a range of 
-	# students
-	def self.contracts_months_missing(options = {})
+  # creates a report listing contract status reports missing for a range of 
+  # students
+  def self.contracts_months_missing(options = {})
     # construct a query to get the list of status reports for the range
     conditions = []
     parameters = []

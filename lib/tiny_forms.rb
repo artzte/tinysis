@@ -61,20 +61,20 @@ module TinyForms
              &proc)
   end
   
-	#####################################################################
-	# Form helpers
-	
-	def label_for(theField, theLabel, theHelpstring = nil)
-		"<label for=\"#{theField}\">#{theLabel}</label>"
-	end
-
-
-	def error_messages_for(object_name)
-    object = instance_variable_get("@#{object_name}")
-		error_messages_formatted object
+  #####################################################################
+  # Form helpers
+  
+  def label_for(theField, theLabel, theHelpstring = nil)
+    "<label for=\"#{theField}\">#{theLabel}</label>"
   end
 
-	def error_messages_formatted(object)
+
+  def error_messages_for(object_name)
+    object = instance_variable_get("@#{object_name}")
+    error_messages_formatted object
+  end
+
+  def error_messages_formatted(object)
     if object && !object.errors.empty?
       content_tag("div",
         content_tag("h2",
@@ -86,67 +86,67 @@ module TinyForms
     else
       ""
     end
-	end
+  end
 
-	# override link to remote -- we always use the progress indicator.
-	def tiny_link_to_remote(name, options = {}, html_options = {})
-	
-		options.update({ :complete => "Element.hide('progress')",
-										 :before => "Element.show('progress')" })
+  # override link to remote -- we always use the progress indicator.
+  def tiny_link_to_remote(name, options = {}, html_options = {})
+  
+    options.update({ :complete => "Element.hide('progress')",
+                     :before => "Element.show('progress')" })
 
-		link_to_remote(name, options, html_options)
-	end
+    link_to_remote(name, options, html_options)
+  end
 
-	def tiny_observe_field(field_id, options = {})
-		options.update({ :complete => "Element.hide('progress')",
-										 :before => "Element.show('progress')" })
+  def tiny_observe_field(field_id, options = {})
+    options.update({ :complete => "Element.hide('progress')",
+                     :before => "Element.show('progress')" })
 
-		observe_field(field_id, options)	
-	
-	end
-	
-	def tiny_observe_form(field_id, options = {})
-		options.update({ :complete => "Element.hide('progress')",
-										 :before => "Element.show('progress')" })
+    observe_field(field_id, options)  
+  
+  end
+  
+  def tiny_observe_form(field_id, options = {})
+    options.update({ :complete => "Element.hide('progress')",
+                     :before => "Element.show('progress')" })
 
-		observe_form(field_id, options)	
-	end
-	
-	def tiny_sortable_element(field_id, options = {})
-		options.update({ :complete => "Element.hide('progress')",
-										 :before => "Element.show('progress')" })
+    observe_form(field_id, options)  
+  end
+  
+  def tiny_sortable_element(field_id, options = {})
+    options.update({ :complete => "Element.hide('progress')",
+                     :before => "Element.show('progress')" })
 
-		sortable_element(field_id, options)	
-	
-	end
-	
-	def submit_button(caption, options = {})
-	  klass = 'btn'
-	  klass << '_small' if options[:small]
+    sortable_element(field_id, options)  
+  
+  end
+  
+  def submit_button(caption, options = {})
+    klass = 'btn'
+    klass << '_small' if options[:small]
     "<input type='submit' value='#{caption}' class='#{klass}' />"
-	end
-	
-	def cancel_button(url, options = {})
+  end
+  
+  def cancel_button(url, options = {})
     url_button 'Cancel', url, options.merge({:class=>'cancel'})
-	end
-	
-	def url_button(caption, url, options = {})
-	  klass = 'btn'
-	  klass << '_small' if options[:small]
-	  klass << ' ' << options[:class] if options[:class]
-	  id = ''
-	  id = " id='#{options[:id]}'" if options[:id]
+  end
+  
+  def url_button(caption, url, options = {})
+    klass = 'btn'
+    klass << '_small' if options[:small]
+    klass << ' ' << options[:class] if options[:class]
+    id = ''
+    id = " id='#{options[:id]}'" if options[:id]
     "<a href='#{url}' class='#{klass}'#{id}>#{caption}</a>"
-	end
-	
-	def fn_button(caption, fn, options = {})
-	  klass = 'btn'
-	  klass << '_small' if options[:small]
+  end
+  
+  def fn_button(caption, fn, options = {})
+    klass = 'btn'
+    klass << '_small' if options[:small]
     "<a href='\#' class='#{klass}' onclick='#{fn}; return false;'><span>#{caption}</span></a>"
-	end
+  end
 
-	def submit_and_cancel_buttons(submit_label = "Save")
-	  render :partial => 'shared/submit', :locals => {:submit_name => submit_label}
-	end
+  def submit_and_cancel_buttons(submit_label = "Save")
+    render :partial => 'shared/submit', :locals => {:submit_name => submit_label}
+  end
 
 end

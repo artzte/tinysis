@@ -32,8 +32,8 @@ class CreditTransmittalBatch < ActiveRecord::Base
 
   def self.credits_approved_for_transmittal
 
-	  CreditAssignment.find(:all, :include => [:credit], :conditions => APPROVED_CONDITIONS)
+    CreditAssignment.find(:all, :include => [:credit], :conditions => APPROVED_CONDITIONS)
 
-	end
+  end
 
 end

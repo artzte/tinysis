@@ -4,42 +4,42 @@ class AssignmentController < ApplicationController
 
   helper :note, :contract, :status
 
-	before_filter :login_required
-	before_filter :get_contract, :only => [:index, :edit, :create, :update, :new, :destroy, :record, :feedback_edit, :feedback_update, :student, :report]
-	before_filter :get_assignment, :only=>[:edit, :update, :destroy, :feedback_edit]
-	before_filter :validate_editable, :only=>[:update, :destroy, :feedback_edit]
-	before_filter :validate_viewable, :only=>[:edit]
-	before_filter Proc.new{|controller| controller.set_meta :tab1 => :contracts, :tab2 => :assignments, :javascripts => :assignments}, :only => [:index, :new, :edit, :update, :create, :student, :report]
-	before_filter :fix_due_date, :only => [:create, :update]
+  before_filter :login_required
+  before_filter :get_contract, :only => [:index, :edit, :create, :update, :new, :destroy, :record, :feedback_edit, :feedback_update, :student, :report]
+  before_filter :get_assignment, :only=>[:edit, :update, :destroy, :feedback_edit]
+  before_filter :validate_editable, :only=>[:update, :destroy, :feedback_edit]
+  before_filter :validate_viewable, :only=>[:edit]
+  before_filter Proc.new{|controller| controller.set_meta :tab1 => :contracts, :tab2 => :assignments, :javascripts => :assignments}, :only => [:index, :new, :edit, :update, :create, :student, :report]
+  before_filter :fix_due_date, :only => [:create, :update]
 
-	AJAX_METHODS = [:expand, :expand_all]
+  AJAX_METHODS = [:expand, :expand_all]
 
-	verify :xhr => true, :only => AJAX_METHODS
+  verify :xhr => true, :only => AJAX_METHODS
 
-protected	
-	def get_assignment
-	  @assignment = @contract.assignments.find(params[:id])
-	end
+protected  
+  def get_assignment
+    @assignment = @contract.assignments.find(params[:id])
+  end
 
-	def validate_editable
-	  validate_permissions(:edit)
-	end
+  def validate_editable
+    validate_permissions(:edit)
+  end
 
-	def validate_viewable
-	  validate_permissions(:view)
-	end
+  def validate_viewable
+    validate_permissions(:view)
+  end
 
-	def validate_permissions(permission)
-	  if @assignment.new_record?
-	    @privs = @contract.privileges(@user)
-	  else
-	    @privs = @assignment.privileges(@user)
-	  end
-		if !@privs[permission]
-			redir_error(TinyException::NOPRIVILEGES, @user)
-			return
-		end
-	end
+  def validate_permissions(permission)
+    if @assignment.new_record?
+      @privs = @contract.privileges(@user)
+    else
+      @privs = @assignment.privileges(@user)
+    end
+    if !@privs[permission]
+      redir_error(TinyException::NOPRIVILEGES, @user)
+      return
+    end
+  end
 
 public
   def index
@@ -53,13 +53,13 @@ public
     @turnin_missing = Turnin.new
 
     q = <<END
-  	  SELECT turnins.*, notes.id IS NOT NULL AS has_note, UCASE(LEFT(turnins.status,1)) AS scode FROM turnins 
+      SELECT turnins.*, notes.id IS NOT NULL AS has_note, UCASE(LEFT(turnins.status,1)) AS scode FROM turnins 
       INNER JOIN assignments ON turnins.assignment_id = assignments.id
       INNER JOIN enrollments ON turnins.enrollment_id = enrollments.id
       LEFT OUTER JOIN (SELECT notes.id, notable_id FROM notes WHERE notable_type = 'Turnin' GROUP BY notable_id) AS notes ON notes.notable_id = turnins.id
       WHERE assignments.contract_id = #{@contract.id}
 END
-  	@turnins = Turnin.find_by_sql(q).group_by{|t| t.enrollment_id}
+    @turnins = Turnin.find_by_sql(q).group_by{|t| t.enrollment_id}
 
     render :layout => 'tiny'
   end
@@ -83,7 +83,7 @@ END
     redir_error(TinyException::SECURITYHACK, @user) and return unless @privs[:view] && @student_privs[:view]
 
     # make the turnins
-	  @assignments = @contract.assignments
+    @assignments = @contract.assignments
     @enrollment.turnins.make(@assignments) if @privs[:edit]
     @turnins = @enrollment.turnins.find(:all)
 
@@ -99,22 +99,22 @@ END
 
     @assignment = Assignment.new(:creator => @user, :contract => @contract)
 
-		validate_editable
+    validate_editable
   end
 
   def create
-		if !@privs[:edit]
-			redir_error(TinyException::NOPRIVILEGES, @user)
-			return
-		end
+    if !@privs[:edit]
+      redir_error(TinyException::NOPRIVILEGES, @user)
+      return
+    end
 
-		# on success, we just return success code and the JS redirects
+    # on success, we just return success code and the JS redirects
     @assignment = @contract.assignments.create(params[:assignment])
-		if @assignment.valid?
-		  flash[:notice] = "Thanks for adding your assignment."
+    if @assignment.valid?
+      flash[:notice] = "Thanks for adding your assignment."
       redirect_to assignments_path(@contract)
     else
-		  flash[:notice] = "Your assignment could not be added. Please fix the errors noted and try again."
+      flash[:notice] = "Your assignment could not be added. Please fix the errors noted and try again."
       set_meta :title => "#{@contract.name} - Assignments - New"
       render :action => 'new'
     end
@@ -127,12 +127,12 @@ END
 
   def update
 
-		if @assignment.update_attributes(params[:assignment])
-		  flash[:notice] = "Your assignment has been updated."
+    if @assignment.update_attributes(params[:assignment])
+      flash[:notice] = "Your assignment has been updated."
       redirect_to assignments_path(@contract)
     else
       set_meta :title => "#{@contract.name} - #{@assignment.name.blank? ? 'Assignment' : @assignment.name}"
-		  flash[:notice] = "Your assignment could not be updated. Please fix the errors noted and try again."
+      flash[:notice] = "Your assignment could not be updated. Please fix the errors noted and try again."
       render :action => 'edit'
     end
   end
@@ -202,72 +202,72 @@ protected
 
 public
 
-	# deletes an assignment and re-renders the assignment views
-	def destroy
-		@assignment.destroy
+  # deletes an assignment and re-renders the assignment views
+  def destroy
+    @assignment.destroy
 
     flash[:notice] = "Your assignment has been deleted."
 
     redirect_to assignments_path(@contract)
-	end
+  end
 
-	def expand
-	  @expand = true
-	  render :partial => 'description', :object => @assignment
-	end
+  def expand
+    @expand = true
+    render :partial => 'description', :object => @assignment
+  end
 
-	def expand_all
-	  get_contract
-	  @expand = true
+  def expand_all
+    get_contract
+    @expand = true
     @assignments = @contract.assignments
-	  render :partial => 'assignments_table'
-	end
+    render :partial => 'assignments_table'
+  end
 
-	DIMENSIONS = {
-	  :print => {
+  DIMENSIONS = {
+    :print => {
       :width => 220,
       :height => 50,
       :background_color => '#ffffff',
       :name => {
         :size => 12,
-	      :width => 200,
-	      :height => 30,
-	      :x => 5,
-	      :y => 0,
+        :width => 200,
+        :height => 30,
+        :x => 5,
+        :y => 0,
         },
       :date => {
         :size => 11,
-	      :width => 200,
-	      :height => 20,
-	      :x => 5,
-	      :y => 25,
+        :width => 200,
+        :height => 20,
+        :x => 5,
+        :y => 25,
         }
-	    },
+      },
 
-	  :screen => {
+    :screen => {
       :width => 98,
       :height => 40,
       :background_color => '#ffffcc',
       :name => {
         :size => 10,
-	      :width => 100,
-	      :height => 25,
-	      :x => 5,
-	      :y => 0,
+        :width => 100,
+        :height => 25,
+        :x => 5,
+        :y => 0,
         },
       :date => {
         :size => 9,
-	      :width => 100,
-	      :height => 10,
-	      :x => 5,
-	      :y => 25,
+        :width => 100,
+        :height => 10,
+        :x => 5,
+        :y => 25,
         }
-	    }
-	  }
+      }
+    }
 
-  	require 'RMagick'
-  	def header
-  	  params[:filename] =~ Assignment::HEADER_GRAPHIC_FILTER
+    require 'RMagick'
+    def header
+      params[:filename] =~ Assignment::HEADER_GRAPHIC_FILTER
       @assignment = Assignment.find_by_id $1 if $1
 
       print = $2=='p'
@@ -315,6 +315,6 @@ public
       mark.write(path)
 
       send_file(path, :type => 'image/gif', :disposition => 'inline', :stream => true)
-  	end
+    end
 
 end
