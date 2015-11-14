@@ -15,7 +15,7 @@
   = contract.select 'facilitator_id', User.staff_users.collect {|p| [ p.full_name, p.id ] }
 
 = contract.select 'term_id', Term.active.collect{|p| [ p.long_name, p.id] }
-  
+
 %ul.tiny{:style=>"width: 500px"}
   %li.th Schedule
   - @contract.timeslots.each do |t| 

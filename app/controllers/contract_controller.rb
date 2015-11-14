@@ -9,7 +9,7 @@ class ContractController < ApplicationController
   before_filter :get_contract_filter, :except => [:new]
   before_filter :contract_meta, :only => PUBLIC_METHODS
   before_filter :require_contract, :only => [:show, :roll, :participant]
-  
+
   verify :xhr => true, :only => [:edit, :update, :cancel]
 
 public
@@ -76,9 +76,9 @@ public
 	
 		# clear the contract instance in the controller and in the session
     clear_contract
-    
+
     set_meta :tab2=>:new
-    
+
 		# check for create privileges
 		privs = Contract.privileges(@user)
 		if privs[:create] == false
@@ -90,11 +90,11 @@ public
 		@contract = Contract.new :term => Setting.new_contract_term_default
 
   end
-  
+
   def create
-    
+
     set_meta :tab2 => :new
-    
+
 		# create a new contract
 		@contract = Contract.new params[:contract]
 
@@ -230,7 +230,7 @@ public
       return
     when :post
       copy = @contract.copy(params[:contract])
-      
+
       if copy and copy.valid?
         render :text => copy.id
         return
@@ -267,12 +267,12 @@ protected
   			contract.timeslots << eval(v)
   		end
     end
-    
+
     if params[:ealr]
       contract.ealrs.clear
       contract.ealrs << Ealr.find(:all, :conditions => ["id in (?)", params[:ealr].values.collect{|e| e.to_i}])
     end
-    
+
 		## SECOND we store the form parameters
 		return contract.update_attributes(params[:contract])
 	end

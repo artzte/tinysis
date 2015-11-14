@@ -1,7 +1,7 @@
 class Admin::EnrollmentsController < AdminBaseController
 
   before_filter :set_meta
-  
+
 protected
   def set_meta
     super :tab1 => :admin, :tab2 => :enrollments, :title => "Admin - Finalize Enrollments"
@@ -11,7 +11,7 @@ public
   def index
     @terms = Term.enrollments_report
   end
-  
+
   def edit
 
     @term = Term.find(params[:id]) rescue
@@ -45,7 +45,7 @@ public
     @contracts[0] ||= []
     @contracts[1] ||= []
   end
-  
+
   def update
     @term = Term.find(params[:id])
 
@@ -76,7 +76,7 @@ public
   def show
 
     @term = Term.find(params[:id]) if params[:id]
-    
+
     redirect_to admin_enrollments_index_path and return unless @term
 
     @open = @term.contracts_active.find(:all, :include => :facilitator, :order => 'users.last_name, users.first_name, contracts.name')

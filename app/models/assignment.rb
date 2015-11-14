@@ -39,5 +39,5 @@ class Assignment < ActiveRecord::Base
 	  fn << 'p' if print
 	  File.join(RAILS_ROOT,'public','assets','gradesheet',"#{fn}.gif")
   end
-  
+
 end

@@ -18,7 +18,7 @@ class Term < ActiveRecord::Base
   def school_year_date
     Date.new self.school_year
   end
-  
+
   def school_year_date= date
     self.school_year= date.year
   end
@@ -127,9 +127,9 @@ END
   def get_reporting_months
     @@reporting_base_month ||= Setting.reporting_base_month
     @@reporting_end_month ||= Setting.reporting_end_month
-    
+
 	  self.base_month ||= @@reporting_base_month
 	  self.end_month ||= @@reporting_end_month
   end
-  
+
 end

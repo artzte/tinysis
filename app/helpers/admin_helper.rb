@@ -1,7 +1,7 @@
 module AdminHelper
   include SearchHelper
   include NoteHelper
-  
+
 	def years_options
 		cur_year = Time.now.gmtime.year
 		years_list = []

@@ -2,13 +2,13 @@ class StudentsController < ApplicationController
   include ApplicationHelper
   include StudentsSearchHelper
   include StudentReport
-  
+
   helper :note, :status
-  
+
   before_filter :login_required
   before_filter :get_student, :only => [:status]
   before_filter :set_meta, :only => [:index, :status]
-  
+
   def index
   	get_session_pager('student')
   	
@@ -19,9 +19,9 @@ class StudentsController < ApplicationController
   	
   	store_session_pager('student')
   end
-  
+
   def status
-    
+
     # get a list of school years to which terms are assigned
     @term_years = Term.find_by_sql('SELECT DISTINCT school_year FROM terms ORDER BY school_year DESC')
 		@this_year = coor_term.school_year
@@ -34,5 +34,5 @@ class StudentsController < ApplicationController
 
     set_meta :title => @student.name
   end
-  
+
 end

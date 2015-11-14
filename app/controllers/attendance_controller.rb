@@ -119,18 +119,18 @@ class AttendanceController < ApplicationController
 	    
 	    participant = update_attendance_for_enrollment(@meeting, @enrollment, params)
 	  end
-    
+
     render :json => {:id => participant.id}.to_json
 	end
 	
 	# updates all participants
 	def update_all
- 
+
 	  @meeting = Meeting.find(params[:id], :include => [:contract])
 	  if @meeting
 	    privs = @meeting.contract.privileges(@user)
 	    render :text => "You don't have privileges to do this.", :status=>500 and return unless privs[:edit]
- 
+
 	    @meeting.contract.enrollments.statusable.each do |enrollment|
 	      update_attendance_for_enrollment(@meeting, enrollment, params)
 	    end

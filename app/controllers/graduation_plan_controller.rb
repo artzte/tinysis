@@ -6,21 +6,21 @@ class GraduationPlanController < ApplicationController
 
   helper :credit
   layout 'tiny', :only => [:index, :report, :placeholders]
-  
+
   def index
     @unassigned_credits = my_unassigned
-    
+
     @requirements = GraduationPlanRequirement.requirements_hash 
-    
+
     @credit_requirements = @requirements[:credit]||[]
     @general_requirements = @requirements[:general]||[]
     @service_requirements = @requirements[:service]||[]
-    
+
     @assigned = @graduation_plan.mappings_hash
-    
+
     @report = true unless @privs[:edit]
   end
-  
+
   def report
     index
     @report = true
@@ -51,7 +51,7 @@ class GraduationPlanController < ApplicationController
       render :action => 'new'
     end
   end
-  
+
   def show
     @mapping = @graduation_plan.graduation_plan_mappings.find(params[:mapping_id], :include => :graduation_plan_requirement)
     render :partial => "#{@mapping.graduation_plan_requirement.requirement_type}_mapping", :object => @mapping
@@ -65,18 +65,18 @@ class GraduationPlanController < ApplicationController
       render :action => 'edit', :status => 500
     end
   end
-  
+
   def assign
     req = GraduationPlanRequirement.find(params[:graduation_requirement_id])
     ca = CreditAssignment.find(params[:credit_assignment_id])
-    
+
     @graduation_plan.map_credit_assignment(req, ca)
-    
+
     hash = @graduation_plan.mappings_hash req
-    
+
     render :partial => 'mapping', :collection => hash[req.id][:mappings]
   end
-  
+
   def unassign
     mapping = @graduation_plan.graduation_plan_mappings.find(params[:mapping_id])
     mapping.destroy
@@ -90,7 +90,7 @@ class GraduationPlanController < ApplicationController
 
     render :nothing => true
   end
-  
+
 protected
   def set_meta
     super :tab1 => :students, :tab2 => :graduation, :title => "#{@student.name} - Graduation Plan"
@@ -99,7 +99,7 @@ protected
   def get_graduation_plan
     @graduation_plan = @student.graduation_plan
   end
-  
+
   def my_unassigned
     # (@student.unassigned_credits + @graduation_plan.unassigned_credits).sort{|x,y| x.credit.course_name<=>y.credit.course_name}
     (@student.unassigned_credits).sort{|x,y| x.credit_course_name<=>y.credit_course_name}

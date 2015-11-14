@@ -1,7 +1,7 @@
 module CreditHelper
-  
+
   include NoteHelper
-  
+
   def credit_container_id(parent)
     if parent.is_a? CreditAssignment
       "ca_user_#{parent.id}"

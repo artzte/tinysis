@@ -1,9 +1,9 @@
 class AssignmentController < ApplicationController
-  
+
   include StudentReport
-  
+
   helper :note, :contract, :status
-  
+
 	before_filter :login_required
 	before_filter :get_contract, :only => [:index, :edit, :create, :update, :new, :destroy, :record, :feedback_edit, :feedback_update, :student, :report]
 	before_filter :get_assignment, :only=>[:edit, :update, :destroy, :feedback_edit]
@@ -46,7 +46,7 @@ public
     redirect_to contracts_path and return unless @contract
 
     set_meta :title => "#{@contract.name} - Assignments"
-    
+
     @enrollments = @contract.enrollments.statusable true
     @assignments = @contract.assignments
 
@@ -63,38 +63,38 @@ END
 
     render :layout => 'tiny'
   end
-  
+
   def report
     index
   end
-  
-  
+
+
   def student
-    
+
     # check for valid contract and enrollment
     redir_error(TinyException::SECURITYHACK, @user) and return unless @contract
-    
+
     @enrollment = @contract.enrollments.find_by_id(params[:id], :include => [:participant])
-    
+
     redir_error(TinyException::SECURITYHACK, @user) and return unless @enrollment
-    
+
     @student = @enrollment.participant
     @student_privs = @student.privileges(@user)
-    
+
     redir_error(TinyException::SECURITYHACK, @user) and return unless @privs[:view] && @student_privs[:view]
-    
+
     # make the turnins
 	  @assignments = @contract.assignments
     @enrollment.turnins.make(@assignments) if @privs[:edit]
     @turnins = @enrollment.turnins.find(:all)
-    
+
     # get the notes
     @turnin_notes = Note.notes_hash @enrollment.turnins
-    
+
     set_meta :title => "#{help.truncate(@contract.name, :length=> 20)} - #{@student.full_name}"
 
   end
-  
+
 
   def new
     set_meta :title => "#{@contract.name} - Assignments - New"
@@ -103,7 +103,7 @@ END
 
 		validate_editable
   end
-  
+
   def create
 		if !@privs[:edit]
 			redir_error(TinyException::NOPRIVILEGES, @user)
@@ -121,12 +121,12 @@ END
       render :action => 'new'
     end
   end
-  
+
   def edit
     set_meta :title => "#{@contract.name} - #{@assignment.name}"
-    
+
   end
-    
+
   def update
 
 		if @assignment.update_attributes(params[:assignment])
@@ -138,27 +138,27 @@ END
       render :action => 'edit'
     end
   end
-  
+
   def record
     redir_error(TinyException::NOPRIVILEGES, @user) and return unless @privs[:edit]
 
     turnin = find_or_create_turnin(params)
-    
+
     render :nothing => true
   end
-  
+
   def feedback_edit
     @turnin = find_or_create_turnin(params)
     @enrollment = Enrollment.find_by_id(@turnin.enrollment_id, :include => :participant) 
     @notes = @turnin.notes
     render :layout => 'modalbox'
   end
-  
+
   def feedback_update
     turnin = find_or_create_turnin
     render :text => turnin.status.to_s[0,1]
   end
-  
+
 protected
   def status_from_value value
     case value
@@ -176,7 +176,7 @@ protected
       return :missing
     end
   end
-  
+
   def find_or_create_turnin params
     turnin = Turnin.find_by_assignment_id_and_enrollment_id(params[:id], params[:enrollment_id])
     if(turnin)
@@ -186,8 +186,8 @@ protected
     end
     turnin
   end
-  
-  
+
+
   def fix_due_date
     year = params[:assignment]['due_date(1i)'].to_i
     month = params[:assignment]['due_date(2i)'].to_i
@@ -202,16 +202,16 @@ protected
     params[:assignment]['due_date(2i)'] = date.month.to_s
     params[:assignment]['due_date(3i)'] = date.day.to_s
   end
-  
-  
+
+
 public
-  
+
 	# deletes an assignment and re-renders the assignment views
 	def destroy
 		@assignment.destroy
 
     flash[:notice] = "Your assignment has been deleted."
-    
+
     redirect_to assignments_path(@contract)
 	end
 	
@@ -280,12 +280,12 @@ public
       else
         @o = DIMENSIONS[:screen]
       end
-      
+
       render :nothing => true, :status => 404 unless @assignment
 
       path = @assignment.path_to_header_graphic($2=='p')
       font = File.join(RAILS_ROOT,'assets','fonts','LucidaGrande.ttf')
-      
+
       if print
         mark = Magick::Image.new(@o[:width], @o[:height]) do 
           self.background_color = '#ffffff'
@@ -302,7 +302,7 @@ public
       gc.font = font
       gc.fill = "Black"
       gc.stroke = "none"
-      
+
       gc.pointsize = @o[:name][:size]
       if print
         text = @assignment.name
@@ -313,7 +313,7 @@ public
 
       gc.pointsize = @o[:date][:size]
       gc.annotate(mark, @o[:date][:width], @o[:date][:height], @o[:date][:x], @o[:date][:y], @assignment.due_date.strftime("%d %B"))
-      
+
       mark.rotate!(-90)
 
       mark.write(path)

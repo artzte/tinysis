@@ -21,4 +21,3 @@
         %tr
           = render :partial => 'students/student_columns', :object => student
           = render :partial => 'ale_student', :locals => {:student => student, :statuses => @data[student.id]||[]}
-  

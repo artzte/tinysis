@@ -1,5 +1,5 @@
 class Turnin < ActiveRecord::Base
-  
+
   STATUS_TYPES = [
     :missing,
     :incomplete,

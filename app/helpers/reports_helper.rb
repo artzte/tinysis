@@ -1,6 +1,6 @@
 module ReportsHelper
   include SearchHelper
-  
+
   def csv_month_columns(student, statuses, month, this_month)
     status = statuses.find{|s| s.month == month}
     if month > @this_month

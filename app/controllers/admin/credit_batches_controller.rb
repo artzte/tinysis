@@ -1,15 +1,15 @@
 class Admin::CreditBatchesController < AdminBaseController
-  
+
   before_filter :set_meta
   helper :note
-  
+
 protected
   def set_meta title = nil
     super :tab1 => :admin, :tab2 => :credit_batches, :title => title || 'Credit Batches'
   end
 
 public
-  
+
   def index
 
     @approved = CreditTransmittalBatch.credits_approved_for_transmittal
@@ -34,9 +34,9 @@ public
 
   # Create a credits transmittal batch
   def create
-    
+
     @batch = CreditTransmittalBatch.create_batch(@user)
-    
+
     unless @batch
       flash[:notice] = "There were no credits to finalize at this time."
       redirect_to :action => 'index'
@@ -72,5 +72,5 @@ protected
     @credit_assignments_count = @credit_assignments.length
     @credit_assignments = @credit_assignments.group_by(&:user_id)
   end
-  
+
 end

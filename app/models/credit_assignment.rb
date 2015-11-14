@@ -1,18 +1,18 @@
 class CreditAssignment < ActiveRecord::Base
-  
+
   belongs_to :credit
   belongs_to :legacy_creditable, :polymorphic => true
-  
+
   belongs_to :enrollment
   belongs_to :user
   belongs_to :contract
-  
+
   belongs_to :credit_transmittal_batch
   belongs_to :contract_term, :class_name => 'Term', :foreign_key => :contract_term_id
   belongs_to :contract_facilitator, :class_name => 'User', :foreign_key => :contract_facilitator_id
-  
+
 	has_many :notes, :as => :notable, :dependent => :destroy
-  
+
 	validates_presence_of :credit_id
 	belongs_to :parent_credit_assignment, :class_name => 'CreditAssignment', :foreign_key => :parent_credit_assignment_id
 	has_many :child_credit_assignments, :class_name  => 'CreditAssignment', :foreign_key => :parent_credit_assignment_id
@@ -27,11 +27,11 @@ class CreditAssignment < ActiveRecord::Base
   def privileges(user)
     primary_parent.privileges(user)
   end
-  
+
   def placeholder?
     false #self.creditable_type == 'GraduationPlan'
   end
-  
+
   def assign_credit(user, new_credit)
     raise "User does not have privileges to assign credit" unless privileges(user)[:edit]
     raise "Credit is off limits" if batched_for_transmit?
@@ -41,8 +41,8 @@ class CreditAssignment < ActiveRecord::Base
 
     district_unapprove if coordinator_approved?
   end
-    
-  
+
+
 	def enrollment_finalize(completion_status, participant, contract, date)
     # set finalized_on date
 	  self.enrollment_finalized_on = date
@@ -52,7 +52,7 @@ class CreditAssignment < ActiveRecord::Base
 	  self.contract_facilitator_name = contract.facilitator.last_name_first
 	  self.contract_facilitator_id = contract.facilitator_id
 	  self.contract_term_id = contract.term_id
-    
+
 	  # assign to student if fulfilled
 	  case completion_status
 	  when Enrollment::COMPLETION_FULFILLED
@@ -71,25 +71,25 @@ class CreditAssignment < ActiveRecord::Base
     self.enrollment_finalized_on = nil
     save!
   end
-  
+
   def normalize_credit
     return false unless self.credit_id
-    
+
 	  self.credit_course_name = nil
 	  self.credit_course_id = nil
 	  
 	  return true
   end
-  
+
   def denormalize_credit
     return false unless self.credit_id
-    
+
 	  self.credit_course_name = credit.course_name
 	  self.credit_course_id = credit.course_id
 	  
 	  return true
   end
-  
+
   # facilitator has approved the credit for transmittal to the district. 
   # move the credit course names over and record who approved the credit for transmittal to district
 	def district_approve(user, date)
@@ -101,7 +101,7 @@ class CreditAssignment < ActiveRecord::Base
 
     # set denormalized credits info
     denormalize_credit
-    
+
     save!
 
     self.child_credit_assignments.each do |ca|
@@ -124,12 +124,12 @@ class CreditAssignment < ActiveRecord::Base
     self.district_finalize_approved = false
     self.district_finalize_approved_by = nil
     self.district_finalize_approved_on = nil
-    
+
     # ensure a credit
     self.credit = Credit.find(:first) unless self.credit
 
     normalize_credit
-    
+
 	  save!
 
     self.child_credit_assignments.each do |ca|
@@ -209,17 +209,17 @@ class CreditAssignment < ActiveRecord::Base
 	
 	def self.combine(student, credit_id, term_id, override, credit_assignments, user)
     ca_term = credit_assignments[0]
-    
+
     # scan and get the most recent term and the cumulative hours
     hours = credit_assignments.sum(&:credit_hours)
-    
+
     # create the new credit
     now = Time.now.gmtime
     year = Setting.current_year
-    
+
     parent = CreditAssignment.new(:credit_id => credit_id, :credit_hours => hours, :contract_name => "Combined", :contract_facilitator_id => user.id, :contract_facilitator_name => user.last_name_first, :enrollment_finalized_on => now, :contract_term => Term.find_by_id(term_id))
     parent.override(override, user)
-    
+
     credit_assignments.each do |ca|
       ca.graduation_plan_mapping.destroy if ca.graduation_plan_mapping
       ca.parent_credit_assignment = parent

@@ -1,5 +1,5 @@
 class GraduationPlanRequirement < ActiveRecord::Base
-  
+
   REQUIREMENT_TYPES = [
     :credit,
     :general,
@@ -11,7 +11,7 @@ class GraduationPlanRequirement < ActiveRecord::Base
 
   validates_length_of :name, :minimum => 5
   validates_uniqueness_of :name, :scope => :requirement_type
-  
+
   def privileges(user)
 
 		# create a new privileges object with no rights
@@ -27,7 +27,7 @@ class GraduationPlanRequirement < ActiveRecord::Base
 	def self.requirements_hash options = {}
 	  options = {:hide_children => false}.merge(options)
     requirements = find :all, :include => :child_requirements, :conditions => options[:hide_children] ? 'graduation_plan_requirements.parent_id IS NULL' : nil, :order => 'graduation_plan_requirements.position'
-      
+
     requirements = requirements.grouped_hash(&:requirement_type)
     requirements
   end

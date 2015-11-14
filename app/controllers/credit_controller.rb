@@ -105,28 +105,28 @@ class CreditController < ApplicationController
 	end
 	
   def combiner
-    
+
     # split and rejoin credit numbers just to validate
     ca = (params[:c]||'').split(',')
     render :nothing => true and return if ca.length < 2
-        
+
     @title = @student.last_name_f
 
     @credit_assignments = @student.credit_assignments.find(:all, :conditions => ["credit_assignments.id in (?)", ca], :include => :contract_term, :order => 'terms.credit_date DESC')
     hours = 0
-    
+
     # use original hours to calculate, not the override hours
     @credit_assignments.each{|c| hours += c.credit_hours }
-    
+
     @credit_options = Credit.transmittable_credits.collect{|c| [c.credit_string, c.id]}
 	  @credit = CreditAssignment.new(:credit_hours => hours)
 	  
 	  render :partial => 'combine_form', :layout => false
   end
-  
+
   def combine
     ca = params[:c]||[]
-    
+
     raise ArgumentError, "No credits submittted to combine" and return unless ca.length>=2
 
     @credit_assignments = @student.credit_assignments.find(:all, :conditions => ["id in (?)", ca])
@@ -135,7 +135,7 @@ class CreditController < ApplicationController
 
     redirect_to credit_assignments_path(@student)    
   end
-  
+
 	# removes a credit from the parent
 	
 	def destroy
@@ -144,7 +144,7 @@ class CreditController < ApplicationController
 	  
 	  @privs = @credit.privileges(@user)
 	  return redir_error(TinyException::SECURITYHACK, @user) unless @privs[:edit]
-    
+
 	  @credit.destroy
 	  
 	  render :nothing => true
@@ -153,7 +153,7 @@ class CreditController < ApplicationController
   # Deletes one or more finalized credits from the worksheet
   def admin_destroy
     return redir_error(TinyException::SECURITYHACK, @user) unless @user.admin?
-    
+
     if params[:c]
       @credit_assignments = @student.credit_assignments.find(:all, :conditions => "id in (#{params[:c]})")
       @credit_assignments.each do |ca|
@@ -164,25 +164,25 @@ class CreditController < ApplicationController
     @credit_assignments = @student.unfinalized_credits
 
     flash[:notice] = "The credits were deleted."
-    
+
     redirect_to credit_assignments_path(@student) 
   end
-  
+
   def split
-    
+
     @credit_assignment = CreditAssignment.find(params[:id])
     @student = @credit_assignment.user
     @privs = @student.privileges(@user)
-    
+
     return redir_error(TinyException::SECURITYHACK, @user) unless @student.is_a? User and @privs[:edit]
 
     @credit_assignment.uncombine
-    
+
     @credit_assignments = @student.unfinalized_credits
-    
+
     redirect_to credit_assignments_path(@student)    
   end
-  
+
   def approve
     credit_assignment = CreditAssignment.find(params[:id])
     @privs = credit_assignment.privileges(@user)
@@ -197,6 +197,6 @@ class CreditController < ApplicationController
     render :nothing => true
   end
 
-  
+
 	
 end

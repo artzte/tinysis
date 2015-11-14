@@ -22,7 +22,7 @@ public
     @category_id = filters[:category_id]
     @term_id = filters[:term_id]
     @facilitator_id = filters[:facilitator_id]
-    
+
 		@courses = Contract.catalog(filters)
     @categories = Category.all_public
     @groups = @courses.group_by{|c| c.category_id}
@@ -31,7 +31,7 @@ public
 	def unknown_request
 	  render :template => "shared/404", :layout => false, :status => 404
   end
-  
+
   def boom 
     render :text => 1/0
 	end

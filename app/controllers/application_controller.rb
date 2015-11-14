@@ -15,7 +15,7 @@ class ApplicationController < ActionController::Base
   class Helper
     include Singleton
     include ActionView::Helpers::TextHelper
-    
+
     def trunc_middle(str, count)
       excerpt = (count-3)/2
 
@@ -41,7 +41,7 @@ protected
 	def init_globals(action_tabs = nil)
 
 		@user = get_user
-    
+
     session[:school_year] ||= Setting.current_year
 
 	  @this_month = Date.new(Date.today.year, Date.today.month)
@@ -108,7 +108,7 @@ protected
 	  @contract = nil
 	  session[:contract_id] = nil
   end
-  
+
   def get_student
 
     id = (params[:id] || params[:student_id] || session[:student_id])
@@ -129,7 +129,7 @@ protected
   def has_student?
     @student.nil? == false
   end
-  
+
 	# This method sets up the contract editing tabs; it is called with an ID 
 	# and provides a tabbed editing interface for the contract object
 
@@ -147,7 +147,7 @@ protected
 	  else
 	    redirect_to login_path
     end
-    
+
 	end
 
 	def redir_error(id, user)
@@ -180,13 +180,13 @@ protected
 	
 	
   # debug helper
-  
+
   def show_params
     render :update do |page|
       page.alert params.inspect
     end
   end
-  
+
 protected
   def d(aDate, zoned = false)
 	  return '-' unless aDate
@@ -194,5 +194,5 @@ protected
 		aDate.strftime(FORMAT_DATE)
 	end
 	helper_method :d
-  
+
 end

@@ -20,7 +20,7 @@
   Found 
   = @accounts.length
   accounts.
-  
+
 %p= link_to_add 'Add a new account', 'new'
 
 %table.tiny.fixed
@@ -45,5 +45,4 @@
         %td.coordinator= a.coordinator.blank? ? "-" : a.coordinator.last_name_f
         %td.active= a.active? ? 'A' : '&ndash;'
         %td.login= a.login_status==User::LOGIN_ALLOWED ? 'Y': '&ndash;'
-    
-      
+

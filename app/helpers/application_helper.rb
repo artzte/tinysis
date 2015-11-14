@@ -1,9 +1,9 @@
 # Methods added to this helper will be available to all templates in the application.
 module ApplicationHelper
-  
+
   include TinyForms
   include TinyTabs
-  
+
 	# Convert a hash to a string that can be round-tripped back
 	# to a hash. Works with hashes in which the value is a string
 	# or a simple type such as an integer or float

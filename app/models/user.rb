@@ -9,7 +9,7 @@ class User < ActiveRecord::Base
 
   before_save :encrypt_password
   before_save :null_inactive_date_if_set_active
-  
+
 	include StripTagsValidator
 	include Statusable
 	include UnassignedCredits
@@ -40,7 +40,7 @@ class User < ActiveRecord::Base
   # SIS object validations etc.
 	
 	has_many :facilitated_contracts, :class_name => 'Contract', :foreign_key => 'facilitator_id'
-  
+
 	# contracts created under this user's login
 	has_many :contracts_created,  :class_name => 'Contract', :foreign_key  =>'creator_id'
 
@@ -82,7 +82,7 @@ class User < ActiveRecord::Base
 	validates_presence_of :status, :privilege
 	validates_presence_of :date_inactive, :if => Proc.new{|user| user.status == User::STATUS_INACTIVE}, :message => 'required if status is INACTIVE'
   validates_presence_of :coordinator, :if => Proc.new{|user| user.privilege == PRIVILEGE_STUDENT}, :message => 'student accounts must have an assigned coordinator.'
-  
+
   has_many :credit_assignments, :conditions => 'credit_assignments.parent_credit_assignment_id IS NULL'
   has_many :facilitated_credit_assignments, :class_name => 'CreditAssignment', :foreign_key => :contract_facilitator_id
 
@@ -91,30 +91,30 @@ class User < ActiveRecord::Base
 # this user
 
   def last_name_first
-    
+
     name = self.last_name + ", " + self.first_name
     name += " (#{self.nickname})" unless self.nickname.blank?
     name
-    
+
   end
-  
+
   def full_name
-    
+
     self.first_name + " " + self.last_name
-    
+
   end
-  
+
   def name
-    
+
     if self.nickname and !self.nickname.empty? 
       self.nickname + ' ' + self.last_name
     else
       self.first_name + ' ' + self.last_name
     end
   end
-  
+
   def given_name
-    
+
     unless self.nickname.blank? 
       self.nickname
     else
@@ -125,11 +125,11 @@ class User < ActiveRecord::Base
 
 
   def last_name_f
-    
+
     "#{self.last_name}, #{self.first_name[0..0]}"
-    
+
   end
-  
+
 	# Return a hash describing privileges of the specified user
 	# on this contract
 
@@ -211,7 +211,7 @@ class User < ActiveRecord::Base
 	def active?
 	  self.status == User::STATUS_ACTIVE
   end
-  
+
   def can_login?
     active? && self.login_status == LOGIN_ALLOWED
   end
@@ -245,10 +245,10 @@ class User < ActiveRecord::Base
       return self._graduation_plan
     end
   end
-  
+
   #########################################################
   # Coordinatees
-  
+
 	# returns whether this user is a coordinator
 	
 	def coor? 
@@ -286,7 +286,7 @@ END
   # Enrollments report shows all enrollments for the current school year
   # :school_year => filter by year
   # :fulfilled => true/false to show / not show fulfilled enrollments
-  
+
 	def enrollments_report(options = {})
 	  
 	  q = []
@@ -319,13 +319,13 @@ END
     end
     q << "GROUP BY enrollments.id"
     q << "ORDER BY enrollments.completion_status, term_credit_date DESC, term_name, contract_name"
-    
+
     enrollments = Enrollment.find_by_sql([q.join(' ')]+params)
     enrollments.each do |e|
       e.timeslots = ClassPeriod.timeslot_strings(YAML::load(e[:timeslots]))
     end
     enrollments
-    
+
 	end
 	
   # active enrollments
@@ -396,7 +396,7 @@ END
 
     conditions << "(enrollments.participant_id = ?)"
     parameters << self.id
-    
+
 		Enrollment.find(:all, 
 				:conditions => [conditions.join(' and ')] + parameters, 
 				:include => [{:contract => :category}], 
@@ -418,7 +418,7 @@ END
     # set enrollee ID
     conditions << "enrollments.participant_id = ?"
     arguments << self.id
-    
+
     # set school_year
 	  conditions << "terms.school_year = ?"
 	  arguments << options[:school_year]
@@ -461,21 +461,21 @@ END
 	def unfinalized_credits
 	  credit_assignments.find(:all, :conditions => "credit_assignments.credit_transmittal_batch_id is null", :include => [:credit, :child_credit_assignments, :contract_term], :order => 'credits.course_name')
   end
-  
+
   def finalized_credits
 	  credit_assignments.find(:all, :conditions => "credit_assignments.credit_transmittal_batch_id is not null", :include => [:credit, :child_credit_assignments, :contract_term], :order => 'credits.course_name')
   end	
 	
   #####################################################################################
   # Password and Login validations and constants
-  
+
 	MINPASSWORDLENGTH = 5
 	DEFAULTPASSWORDLENGTH = 6
 	MAXPASSWORDLENGTH = 40
   REGEX_EMAIL = /^[a-z][\w\d_\-\.\+]+\@[\w\d\.]+$/i
   REGEX_VALIDLOGIN =  /^[\w\-]{5,40}$/
   REGEX_CLEANLOGIN =  /[^\w\-]/
-  
+
 	validates_presence_of :email, :if => Proc.new { |user| user.can_login? }
 	validates_format_of :email, :with => REGEX_EMAIL, :if => Proc.new { |user| !user.email.blank? }
   validates_uniqueness_of :email, :if => Proc.new { |user| !user.email.blank? }
@@ -491,9 +491,9 @@ END
   validates_presence_of :password, :if => Proc.new{|user| user.can_login? && (user.password_hash.blank?) }
   validates_length_of :password, :in => User::MINPASSWORDLENGTH..User::MAXPASSWORDLENGTH, :if => Proc.new{|user| user.can_login? && (user.password_hash.blank?)}
   validates_confirmation_of :password
-  
+
   attr_protected :status, :login_status, :privilege, :coordinator_id, :date_inactive, :date_active
-  
+
 	LOGIN_NONE = 0
 	LOGIN_REQUESTED = 1
 	LOGIN_ALLOWED = 2
@@ -507,7 +507,7 @@ END
   #########################################################
   #
   # PASSWORD SETTING
-  
+
 	# Encrypts the password attribute and saves the record
   def encrypt_password
     return if self.password.blank?
@@ -550,7 +550,7 @@ END
 
     last = String.new(last)
     first = String.new(first)
-    
+
     [first,last].each{|n| n.gsub!(REGEX_CLEANLOGIN,'')}
     raise ArgumentError, "Invalid characters in name #{first} #{last}" if (last+first).empty?
     for i in (0..first.length-1)
@@ -582,7 +582,7 @@ END
       Digest::SHA256.hexdigest(password+user.password_salt) != user.password_hash
     user
   end
-  
+
 
   # Update an account record given a parameter set and a user to confirm permissions on
   def update_from_params user_params, user
@@ -611,7 +611,7 @@ END
     else
       self.coordinator = User.find(user_params[:coordinator_id]) 
     end if user_params[:coordinator_id]
-    
+
     # clean out these items we just set manually
     [:login_status, :status, :date_inactive, :date_active, :coordinator_id, :privilege].each do |a|
       user_params.delete a
@@ -621,17 +621,17 @@ END
 
     save
   end
-  
+
   # make sure inactive date is killed if the user has been set active
   def null_inactive_date_if_set_active
     if self.status == STATUS_ACTIVE
       self.date_inactive = nil
     end
   end
-  
-  
+
+
   # Update the student roster with a CSV import
-  
+
   def self.merge_students(csv_file, active_date, inactive_date)
 	
     raise(ArgumentError, "specify FILE=filename") unless ENV['FILE']

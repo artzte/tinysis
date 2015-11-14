@@ -32,7 +32,7 @@ class Status < ActiveRecord::Base
 	  (self.statusable_type=='User'&&self.held_periodic_checkins==false) || 
 	  (self.statusable_type=='Enrollment'&&self.met_fte_requirements==false)
   end
-  
+
 	def self.coor_months_missing(options = {})
 
     # first create basis of the reports hash - a hash of staff members keyed by
@@ -41,22 +41,22 @@ class Status < ActiveRecord::Base
 	  staff=User.coordinators
 	  return {} if staff.empty?
 	  report = Hash[*staff.collect{|v| [v.id,nil]}.flatten]
-    
+
     options[:coor_term] ||= Term.coor
     term = options[:coor_term]
-    
+
     now = Date.new(Date.today.year, Date.today.month)
 
     term_months = term.months.dup
     term_months.reject{|m| m < now}
-    
+
     report.each do |k,v|
       report[k] = Hash[*term_months.collect{|v| [v,nil]}.flatten]
     end
-    
+
     # grab a list of students who are active with their coordinator ids
   	students = User.find(:all, :order => "last_name,first_name", :conditions => ["privilege = ? AND (status = ? OR (date_active > ? AND date_inactive <= ?))", User::PRIVILEGE_STUDENT, User::STATUS_ACTIVE,  term.months.first, Time.mktime(term.months.last.year, term.months.last.day).end_of_month])
-    
+
     # pull the status reports
     q = []
     params = []
@@ -70,14 +70,14 @@ class Status < ActiveRecord::Base
     q << "WHERE statuses.month <= ? AND statuses.month >= ?"
     q << "AND statuses.held_periodic_checkins IS NOT NULL AND statuses.held_periodic_checkins = true"
     q << "ORDER BY coordinator_id, statusable_id, month"
-    
+
     params << now
     params << term.months.last
     params << term.months.first
-    
+
     statuses = Status.find_by_sql([q.join(' ')]+params)
     statuses = statuses.group_by{|s| s.statusable_id}
-    
+
     students.each do |student|
       months = statuses[student.id].blank? ? [] : statuses[student.id].collect{|st| st.month}
       target = term_months.reject{|m| student.date_active > m || (student.date_inactive? && (student.date_inactive < m)) }
@@ -98,32 +98,32 @@ class Status < ActiveRecord::Base
     # construct a query to get the list of status reports for the range
     conditions = []
     parameters = []
-    
+
     if options[:facilitator_id]
       conditions << "contracts.facilitator_id = ?"
       parameters << options[:facilitator_id]
     end
-    
+
     if options[:school_year]
       conditions << "terms.school_year = ?"
       parameters << options[:school_year]
     end
-    
+
     if options[:term_id]
       conditions << "terms.id = ?"
       parameters << options[:term_id]
     end
-    
+
     if options[:category_id]
       conditions << "contracts.category_id = ?"
       parameters << options[:category_id]
     end
-    
+
     if options[:closed] != 1
       conditions << "contracts.contract_status = ?"
       parameters << Contract::STATUS_ACTIVE
     end
-    
+
     # grab the set of contracts with the term objects needed to generate the 
     # statusable months list
     unless conditions.empty?
@@ -141,14 +141,14 @@ class Status < ActiveRecord::Base
       q << conditions.join(' AND ')
     end
     statuses = Status.find_by_sql([q.join(' ')]+parameters )
-    
+
     # now construct a separate query to get the full enrollments list
     q = []
     q << "SELECT enrollments.id, enrollments.participant_id, contract_id, contracts.name as contract_name FROM enrollments"
     q << "INNER JOIN contracts ON enrollments.contract_id = contracts.id AND enrollments.completion_status <> #{Enrollment::COMPLETION_CANCELED} AND enrollments.role = #{Enrollment::ROLE_STUDENT}"
     q << "INNER JOIN terms ON contracts.term_id = terms.id"
     q << "INNER JOIN users ON enrollments.participant_id = users.id AND users.privilege = #{User::PRIVILEGE_STUDENT}"
-    
+
     # exclude dropped students
     conditions << "(NOT (enrollments.enrollment_status = #{Enrollment::STATUS_CLOSED} AND enrollments.completion_status = #{Enrollment::COMPLETION_CANCELED}))"
     q << "WHERE "
@@ -161,7 +161,7 @@ class Status < ActiveRecord::Base
     status_hash.keys.each do |i|
       status_hash[i] = status_hash[i].collect{|s| s.month}
     end
-    
+
     # each contract - construct a report hash
     this_month = Date.today.beginning_of_month
     report = {:contracts=>contracts}
@@ -169,7 +169,7 @@ class Status < ActiveRecord::Base
       report[c.id] = {}
       report[c.id][:months] = c.statusable_months
       report[c.id][:months].delete_if{|m| m > this_month}
-      
+
       # create a missing hash with the key being the month - will compile lists under here
       report[c.id][:missing] = Hash[*report[c.id][:months].collect{|m| [m, 0]}.flatten]
     end
@@ -177,14 +177,14 @@ class Status < ActiveRecord::Base
     enrollments.each do |enrollment|
       k = enrollment.contract_id
       months_done = status_hash[enrollment.id] || []
-      
+
       missing = report[k][:months] - months_done
 
       missing.each do |m|
         report[k][:missing][m] += 1
       end 
     end
-    
+
     report[:months_range] = contracts.collect{|c| c.term.months}.flatten.uniq.sort
     report
   end

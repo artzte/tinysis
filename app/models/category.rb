@@ -38,7 +38,7 @@ protected
     q << "WHERE categories.public = true" if options[:public]
     q << "WHERE categories.public = false" if options[:public] == false
     q << "ORDER BY categories.name"
-    
+
     Category.find_by_sql(q.join(' '))
   end
 	

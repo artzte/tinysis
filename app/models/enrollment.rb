@@ -1,6 +1,6 @@
 class Enrollment < ActiveRecord::Base
-  
-  
+
+
   # Enrollments have four possible states. The state transitions are as follows.
   #
   # Proposed - Active, Drop (destroy)
@@ -78,7 +78,7 @@ class Enrollment < ActiveRecord::Base
       })
       meetings_count = Meeting.count(:conditions => "contract_id = #{proxy_owner.contract_id}")
       stats_hash = Hash[ *stats_results.collect{|v| v["participation"] ? [ v["participation"].to_i, v["count"].to_i] : nil }.reject(&:nil?).flatten ]
-      
+
       stats_hash[ MeetingParticipant::ABSENT ] ||= 0
       stats_hash[ MeetingParticipant::ABSENT ] += (meetings_count - stats_hash.values.sum)
       stats_hash[ :total_meetings ] = meetings_count
@@ -89,12 +89,12 @@ class Enrollment < ActiveRecord::Base
 	end
 	
   has_many :credit_assignments, :dependent => :destroy, :conditions => " ((user_id IS NOT NULL) OR ((user_id IS NULL) AND (enrollment_finalized_on IS NULL)))"
-  
+
   # so contract timeslots can be set on enrollment report queries
   attr_accessor :timeslots
 
 public
-  
+
 	ROLE_STUDENT = 0
 	ROLE_INSTRUCTOR = 1
 	ROLE_FACILITATOR = 2
@@ -447,7 +447,7 @@ public
 			:conditions => [conditions.join(' and ')]+parameters,
 			:include =>  includes)
   end
-  
+
   def self.with_extras(enrollments)
     q = []
     q << "("
@@ -467,5 +467,5 @@ public
     ids.collect{|e| e.id}
   	
   end
-  
+
 end

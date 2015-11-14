@@ -11,7 +11,7 @@ protected
       redirect_to terms_path
     end
   end
-  
+
   def set_meta
     super :tab1 => :settings, :tab2 => :terms, :title => 'Settings - Terms'
   end
@@ -21,7 +21,7 @@ public
 		@terms = Term.all
 		@base_month = Setting.reporting_base_month
   end
-  
+
   def edit
   end
 

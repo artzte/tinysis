@@ -1,15 +1,15 @@
 class Admin::AccountsController < AdminBaseController
-  
+
   before_filter :accounts_meta
   before_filter :get_account, :except => [:new,:index, :create]
   before_filter :init_fp, :only => [:new, :create]
 
 protected
-  
+
   def accounts_meta
     set_meta :tab1 => :admin, :tab2 => :accounts, :title => 'Accounts'
   end
-  
+
   def get_account
 	  @account = User.find(params[:id])
 	  
@@ -26,14 +26,14 @@ public
   	
     conditions = []
     arguments = []
-    
+
     init_account_params
-    
+
     if @name_filter
       conditions << "((users.last_name like ?) or (users.first_name like ?) or (users.nickname like ?))"
       3.times{ arguments << "%#{@name_filter}%"}
     end
-    
+
     case @coor_filter
     when 0
       conditions << "(users.coordinator_id is null or users.coordinator_id = 0)"
@@ -42,7 +42,7 @@ public
       conditions << "(users.coordinator_id = ?)"
       arguments << @coor_filter
     end
-    
+
     case @priv_filter
     when User::PRIVILEGE_NONE
     when User::PRIVILEGE_STUDENT
@@ -52,14 +52,14 @@ public
       conditions << "(users.privilege >= ?)"
       arguments << @priv_filter
     end
-    
+
     case @status_filter
     when 0
     when User::STATUS_ACTIVE,User::STATUS_INACTIVE
       conditions << "(users.status = ?)"
       arguments << @status_filter
     end
-    
+
     if conditions.empty?
       cond = nil
     else
@@ -71,13 +71,13 @@ public
   	setup_page_variables @accounts, 20
   	
     @fp = {:n => @name_filter, :p => @priv_filter, :s => @status_filter, :pg => @page, :c=> @coor_filter}
-    
+
   	store_session_pager('account')
   end
 
   def edit
 	end
-  
+
   def new
 	  @account = User.new
   end
@@ -108,8 +108,8 @@ public
     raise ArgumentError, "Insufficient security measures here!!!"
     user = User.find(params[:id])
     user.destroy
-    
-    
+
+
 	  @fp = {:n => params[:n], :p => params[:p], :pg => params[:pg], :c => params[:c]}
 	  flash[:notice] = 'Account deleted'
 	  
@@ -117,11 +117,11 @@ public
   end
 
   def init_account_params
-    
+
     unless params[:n].blank?
       @name_filter = params[:n]
     end
-    
+
     # privilege
   	if params[:p].blank?
   	  @priv_filter = @fp[:p] || 0

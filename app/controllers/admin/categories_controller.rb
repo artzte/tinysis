@@ -2,7 +2,7 @@ class Admin::CategoriesController < AdminBaseController
 
   before_filter :get_category, :only => [:edit, :update, :destroy, :assign_group]
   before_filter :set_meta
-  
+
   layout 'tiny', :only => :index
 
 protected  
@@ -19,11 +19,11 @@ public
     @categories = Category.all
     @groups = @categories.group_by{|c| c.sequence}
   end
-  
+
   def new
     @category = Category.new :sequence => 1
   end
-  
+
   def edit
   end
 

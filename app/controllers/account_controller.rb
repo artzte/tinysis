@@ -1,29 +1,29 @@
 class AccountController < ApplicationController
 
   helper 'admin/accounts'
-  
+
   before_filter :login_required, :except => [:login, :reset]
   before_filter :login_meta, :only => [:login, :reset]
-  
+
   filter_parameter_logging :password
 
 protected
   def login_meta
     set_meta :tab1=> :school, :tab2 => :login, :title => 'Log In'
   end
-  
+
   # fill out the below array with entity IDs if you want to put the site into maintenance
   # mode and only allow certain users access
   def whitelist
     AppConfig.whitelisted_users
   end
-  
+
 public
   def login
     redir_home and return unless @user.nil?
-    
+
     return unless request.method==:post
-    
+
 		# this is a backdoor for spoofing a user - the first login needs to
 		# authenticate against the password and be a system admin, and
 		# and the second name needs to be a valid login.
@@ -45,7 +45,7 @@ public
         redir_home "I'm sorry, but the site is currently in maintenance mode. Please try again later."
         return
       end
-      
+
       session[:user_id] = u.id
       flash[:notice]  =  "Hi, #{u.given_name}, and welcome to tinySIS."
       if u.privilege>User::PRIVILEGE_STUDENT
@@ -58,7 +58,7 @@ public
 		end
 
   end
-    
+
   def logout
     reset_tiny_sessionvars
     redir_home "You've been logged out."
@@ -100,7 +100,7 @@ public
     @noadmin = true
   end
   hide_action :set_no_admin
-  
+
 	def edit
 	  if @user.student?
 	    set_meta :tab1 => :my, :tab2 => :account, :title => "#{@user.full_name} Settings"
@@ -109,7 +109,7 @@ public
     end 
     @account = User.find_by_id @user.id
   end
-  
+
   def update
     @account = User.find_by_id @user.id
     if @account.update_from_params(params[:account], @user)

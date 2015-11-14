@@ -43,7 +43,7 @@ class Contract < ActiveRecord::Base
 	belongs_to :creator, :foreign_key => 'creator_id', :class_name => 'User'
 	
   has_many :credit_assignments
-  
+
 	serialize :timeslots, Array
 	
 	validates_length_of :name, :within => MIN_TITLE..MAX_TITLE
@@ -207,15 +207,15 @@ class Contract < ActiveRecord::Base
 		return category.sequence <=> contract.category.sequence if category.sequence != contract.category.sequence
 		return name <=> contract.name
   end	
-  
+
   def copy(params)
-    
+
     attribs = {}
     attributes.each do |k,v|
       attribs[k] = v if ['name','timeslots','learning_objectives','category_id','evaluation_methods','competencies','location','instructional_materials'].include?(k)
     end
     return nil if Contract.find(:first, :conditions => ["name = ? and term_id = ? and facilitator_id = ?", params[:name], params[:term_id], params[:facilitator_id]])
-    
+
     c = Contract.new(attribs)
     c.name = params[:name]
     c.facilitator_id = params[:facilitator_id]
@@ -231,9 +231,9 @@ class Contract < ActiveRecord::Base
         c.credit_assignments << CreditAssignment.new(:credit_id => ca.credit_id, :credit_hours => ca.credit_hours)
       end
     end
-    
+
     c
-        
+
   end
 	
 	
@@ -260,10 +260,10 @@ class Contract < ActiveRecord::Base
     q << "AND (contracts.category_id = #{options[:category_id]})" if options[:category_id]
     q << "GROUP BY contracts.id"
     q << "ORDER BY categories.sequence, contracts.name"
-    
+
     Contract.find_by_sql(q.join(' '))
   end
-    
+
 	
 	##########################################################################
 	# Months options
@@ -380,7 +380,7 @@ class Contract < ActiveRecord::Base
 	  participants
 
 	end
- 
+
 	
 	def after_initialize
 	  

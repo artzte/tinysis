@@ -1,5 +1,5 @@
 class Admin::LearningPlansController < AdminBaseController
-  
+
   before_filter :get_goal, :only => [:edit, :update, :destroy]
   before_filter :set_meta
 
@@ -7,11 +7,11 @@ protected
   def get_goal
     @learning_plan_goal = LearningPlanGoal.find(params[:id])
   end
-  
+
   def set_meta
     super :tab1 => :settings, :tab2 => :learning_plans, :title => 'Settings - Learning Plans'
   end
-  
+
 public
   def index
   	@learning_plan_goals = LearningPlanGoal.all
@@ -47,7 +47,7 @@ public
     flash[:notice] = "Thank you for deleting the learning plan goal."
     redirect_to learning_plan_goals_path
   end
-  
+
   def sort
     if params[:goals]
       params[:goals].each_with_index do |goal_id, i|

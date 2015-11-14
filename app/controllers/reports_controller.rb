@@ -2,10 +2,10 @@
 class ReportsController < ApplicationController
   include StudentReport
   include StudentsSearchHelper
-  
+
   before_filter :page_meta
   before_filter :init_students_list
-  
+
 public
   def ale
     respond_to do |format|
@@ -38,20 +38,20 @@ public
       end
     end
   end
-  
+
   def credits
     @students = students_find(@fp)
     params[:span] ||= 1
     params[:span] = params[:span].to_i
-    
+
     respond_to do |format|
       format.html
         setup_page_variables @students, 50
         @data, @years = credits_data(@page_items, :span => params[:span].to_i)
-        
+
       format.csv do
         @data, @years = credits_data(@students, :span => params[:span].to_i)
-        
+
         csv_string = FasterCSV.generate do |csv|
           csv << ["Student","Coordinator","Grade","Status","Active Date","Inactive Date"] + @years + ["Total"]
           @students.each do |student|
@@ -73,7 +73,7 @@ public
       end
     end
   end
-  
+
 protected
   def init_students_list
     get_session_pager('student')
@@ -85,7 +85,7 @@ protected
   def page_meta
     set_meta :tab1 => :students, :tab2 => :index
   end
-  
+
   def csv_month(student, statuses, month, this_month)
     status = statuses.find{|s| s.month == month}
     if month > this_month
@@ -98,6 +98,6 @@ protected
       [status.fte_hours, Status::STATUS_NAMES[status.academic_status][0..0]] 
     end 
   end
-    
-  
+
+
 end

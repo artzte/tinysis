@@ -7,11 +7,11 @@ protected
   def set_meta
     super :tab1 => :settings, :tab2 => :periods, :title => 'Settings - Class Periods'
   end
-  
+
   def get_periods
     @periods = Setting.periods
   end
-  
+
 public  
   def show
     @periods = Setting.periods
@@ -29,7 +29,7 @@ public
       render :action => edit
       return
     end
-    
+
     params[:start].keys.each do |period|
       periods << ClassPeriod.new(params[:start][period], params[:end][period], period)
     end

@@ -48,16 +48,16 @@ public
 # homepage actions
 
   def index
-    
+
     contracts_index
 
     @coordinatees = @user.coordinatees_current
-    
+
     store_session_pager('contract')
 
 	  set_meta :tab2 => :index, :title => 'Home'
   end
-  
+
   # Parameters: {"c"=>"1", "action"=>"contract", "f"=>"5", "controller"=>"status", "g"=>"-1", "t"=>"-2006"}
 	def contract
 	  
@@ -168,12 +168,12 @@ public
 		
 		@month = Date.parse(params[:m]) if params[:m] && params[:m] =~ REG_PARSE_DATE
 		@month = nil if @month.nil? || !@student.was_active?(@month)
-    
+
 		@student.statuses.make(@month, @user) if @month && @privs[:edit]
 
     # set up instance variables for the coor report
 		setup_coor_report :month => @month, :editable => @privs[:edit]
-    
+
 	  @collection = @coor.coordinatees_current
 	  @index = @collection.index(@student)
 	  

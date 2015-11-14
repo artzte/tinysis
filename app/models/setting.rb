@@ -1,5 +1,5 @@
 class Setting < ActiveRecord::Base
-  
+
 	def Setting.periods=(p)
 	
 		setting = Setting.find_by_name("periods")
