@@ -9,7 +9,7 @@ public
 	def index
 	  set_meta :tab2 => :index, :title => 'Welcome'
 	end
-	
+
 	def catalog
 	  set_meta :tab2 => :catalog, :title => "Course Catalog"
     @facilitators = User.teachers
@@ -27,7 +27,7 @@ public
     @categories = Category.all_public
     @groups = @courses.group_by{|c| c.category_id}
 	end
-	
+
 	def unknown_request
 	  render :template => "shared/404", :layout => false, :status => 404
   end

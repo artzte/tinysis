@@ -67,7 +67,6 @@ class Credit < ActiveRecord::Base
 
   end
 
-
   # returns a list of users with a finalized but unapproved credit
   def unapproved_credited_users_report
 

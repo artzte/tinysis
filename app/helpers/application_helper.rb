@@ -21,7 +21,7 @@ module ApplicationHelper
 		end
 		'{ ' << ret.chomp(', ') << ' }'
 	end
-	
+
 	# Override textilize feature
 	def textilize(text) # overriding Rails method to remove hardbreaks
     return "" if text.blank?
@@ -39,16 +39,16 @@ module ApplicationHelper
 	  aDate = Timezone.get('America/Los_Angeles').utc_to_local(aDate) if zoned and aDate.is_a? DateTime
 		aDate.strftime(FORMAT_BIGDATE)
 	end
-	
+
 	def dm(aDate, zoned = false)
 	  return '-' unless aDate
 	  aDate = Timezone.get('America/Los_Angeles').utc_to_local(aDate) if zoned and aDate.is_a? DateTime
 		aDate.strftime("%m/%Y")
 	end
-	
+
 	# encodes a string in hex to obfuscate it to robots
 	def hexencode(s)
-	
+
   	string = ''
 		for i in 0...s.length
 			if s[i,1] =~ /\w/
@@ -58,21 +58,21 @@ module ApplicationHelper
 			end
 		end
 		string
-	
+
 	end
-	
+
 	def cycle_stripes
 	  cycle('alt0','alt1')
 	end
-	
+
 	def classif(condition, string)
 	  string if condition
 	end
-	
+
 	def table_heading_row(columns)
 	  content_tag('tr', columns.collect{|c| content_tag('th', c)}, :class=>'th')
 	end
-	
+
 	def contract_status_graphic(contract)
 	  case contract.contract_status
 	  when Contract::STATUS_PROPOSED
@@ -83,7 +83,7 @@ module ApplicationHelper
 	    image_tag('cancel.gif')
 	  end
 	end
-	
+
 	def enrollment_status_graphic(enrollment)
 	  case enrollment.enrollment_status
 	  when Enrollment::STATUS_FINALIZED
@@ -107,7 +107,7 @@ module ApplicationHelper
 	  end
 	  raise ArgumentError, "No status graphic to match state!"
 	end
-	
+
 	def credit_note(ca)
 	  unless ca.note.blank?
 			return [tag('br'),ca.note]
@@ -115,12 +115,11 @@ module ApplicationHelper
 			return ''
 		end
 	end
-	
-	
+
 	def turnin_for assignment, turnins, missing = Turnin.new(:status => :missing)
 	  turnins.detect(Proc.new{missing}){|t| t.assignment_id == assignment.id}
 	end
-	
+
 	def blank_if_zero(value)
 	  unless value=="0" || value == 0
 	    value

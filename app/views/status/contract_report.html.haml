@@ -73,4 +73,3 @@
           %td.due= d(a.due_date)
           %td.status= t ? t.status.to_s.titleize : a.due_date>today ? 'Missing' : '&ndash;'
           %td.notes= t ? notes_for(t, :notes_hash => turnins_notes_hash, :editable => false) : '&nbsp;'
-

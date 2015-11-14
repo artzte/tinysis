@@ -11,7 +11,7 @@ module CreditHelper
   end
 
 	def credits_formatted(object)
-	  
+
 	  credits = object.credit_assignments.collect{|c| c.credit_string }
 	  if credits.blank?
 	    "No credits assigned."
@@ -20,5 +20,5 @@ module CreditHelper
 	  end
 
 	end
-	
+
 end

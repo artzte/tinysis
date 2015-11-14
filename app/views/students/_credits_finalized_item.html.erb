@@ -9,14 +9,14 @@
 		else
 			rowspan = ca.child_credit_assignments.length+1
 		end
-		
+
 		if ca.transmitted?
 			district_indicator = image_tag('check.gif')
 		else
 			district_indicator = '-'
 		end
 	end
-	
+
 	if ca.district_finalize_approved?
 		approved = [d(ca.district_finalize_approved_on, true),tag('br'),ca.district_finalize_approved_by.sub(/(, \w).+$/,'\1')]
 	else

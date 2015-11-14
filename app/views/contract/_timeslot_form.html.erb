@@ -9,7 +9,7 @@
 	<div class="right">
 	<%= select_tag "timeslot[period]", options_for_select(Setting.periods.collect{|p| p.period_string}) %>
 	</div>
-	
+
 	<p>
 	<% ClassPeriod::WEEKDAYS.each_with_index do |d,i| -%>
 	<%= label_for "timeslot[weekdays][#{i}]", d.slice(0,3) %>

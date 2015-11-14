@@ -29,7 +29,6 @@ public
 
   end
 
-
   # enroll the marked students in the contract
 
   def create

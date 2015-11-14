@@ -11,24 +11,24 @@ class AssignmentController < ApplicationController
 	before_filter :validate_viewable, :only=>[:edit]
 	before_filter Proc.new{|controller| controller.set_meta :tab1 => :contracts, :tab2 => :assignments, :javascripts => :assignments}, :only => [:index, :new, :edit, :update, :create, :student, :report]
 	before_filter :fix_due_date, :only => [:create, :update]
-	
+
 	AJAX_METHODS = [:expand, :expand_all]
-	
+
 	verify :xhr => true, :only => AJAX_METHODS
 
 protected	
 	def get_assignment
 	  @assignment = @contract.assignments.find(params[:id])
 	end
-	
+
 	def validate_editable
 	  validate_permissions(:edit)
 	end
-	
+
 	def validate_viewable
 	  validate_permissions(:view)
 	end
-	
+
 	def validate_permissions(permission)
 	  if @assignment.new_record?
 	    @privs = @contract.privileges(@user)
@@ -68,7 +68,6 @@ END
     index
   end
 
-
   def student
 
     # check for valid contract and enrollment
@@ -95,7 +94,6 @@ END
 
   end
 
-
   def new
     set_meta :title => "#{@contract.name} - Assignments - New"
 
@@ -109,7 +107,7 @@ END
 			redir_error(TinyException::NOPRIVILEGES, @user)
 			return
 		end
-		
+
 		# on success, we just return success code and the JS redirects
     @assignment = @contract.assignments.create(params[:assignment])
 		if @assignment.valid?
@@ -187,7 +185,6 @@ protected
     turnin
   end
 
-
   def fix_due_date
     year = params[:assignment]['due_date(1i)'].to_i
     month = params[:assignment]['due_date(2i)'].to_i
@@ -203,7 +200,6 @@ protected
     params[:assignment]['due_date(3i)'] = date.day.to_s
   end
 
-
 public
 
 	# deletes an assignment and re-renders the assignment views
@@ -214,19 +210,19 @@ public
 
     redirect_to assignments_path(@contract)
 	end
-	
+
 	def expand
 	  @expand = true
 	  render :partial => 'description', :object => @assignment
 	end
-	
+
 	def expand_all
 	  get_contract
 	  @expand = true
     @assignments = @contract.assignments
 	  render :partial => 'assignments_table'
 	end
-	
+
 	DIMENSIONS = {
 	  :print => {
       :width => 220,
@@ -247,7 +243,7 @@ public
 	      :y => 25,
         }
 	    },
-	    
+
 	  :screen => {
       :width => 98,
       :height => 40,
@@ -268,7 +264,7 @@ public
         }
 	    }
 	  }
-	
+
   	require 'RMagick'
   	def header
   	  params[:filename] =~ Assignment::HEADER_GRAPHIC_FILTER

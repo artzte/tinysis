@@ -33,9 +33,9 @@ class Note < ActiveRecord::Base
 		if self.creator_id == user.id
 			return PRIVILEGE_EDIT
 		end
-		
+
 		parent_priv ||= self.notable.privileges(user)
-		
+
 		return PRIVILEGE_EDIT if parent_priv[:edit_note]
 		return PRIVILEGE_VIEW if parent_priv[:view_note]
 		return PRIVILEGE_NONE
@@ -44,12 +44,12 @@ class Note < ActiveRecord::Base
 	def dom_id
 		"view_note_#{id}"
 	end
-	
+
 	def Note.notes_hash(coll)
     result = {}
 
     return result if coll.empty?
-	  
+
 	  notes=Note.find(:all, :conditions => ["notable_type = ? and notable_id in (?)", coll.first.class.to_s, coll.collect{|c| c.id}], :include=>:author)
 	  notes.each do |note|
 	    result[note.notable_id] ||= []
@@ -58,5 +58,5 @@ class Note < ActiveRecord::Base
 	  result.default = []
 	  return result
 	end
-	  
+
 end

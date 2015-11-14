@@ -4,7 +4,7 @@ class AttendanceController < ApplicationController
 
 	before_filter :login_required
 	before_filter :get_contract, :only => [:index, :roll]
-	
+
 	def index
 	  redirect_to contracts_path and return unless @contract
 
@@ -34,7 +34,7 @@ class AttendanceController < ApplicationController
       @meeting_participants = []
     end
 	end
-	
+
 	def roll
 	  redirect_to contracts_path and return unless @contract
 
@@ -44,7 +44,7 @@ class AttendanceController < ApplicationController
 			redir_error(TinyException::SECURITYHACK, @user)
 			return
 		end
-		
+
 		if params[:meeting_id]
 		  @meeting = @contract.meetings.find(params[:meeting_id])
 		else
@@ -55,7 +55,7 @@ class AttendanceController < ApplicationController
 		    @contract.meetings << @meeting
 		  end
 		end
-		  
+
     set_meta :title => "#{@contract.name} - Attendance - #{@meeting.meeting_date.strftime(FORMAT_DATE)}", :tab1 => :contracts, :tab2 => :attendance
 
 		@enrollments = @contract.enrollments.statusable(true)
@@ -63,22 +63,21 @@ class AttendanceController < ApplicationController
 		@notes_hash = Note.notes_hash(@meeting_participants)
 		@meeting_participants_hash = @meeting_participants.index_by(&:enrollment_id)
 	end
-	
 
 	def delete_roll
 	  @meeting = Meeting.find(params[:id], :include => [:contract])
 	  privs = @meeting.contract.privileges(@user) if @meeting
 	  redirect_to :controller => 'contract' and return unless @meeting && privs[:edit]
-	  
+
 	  contract_id = @meeting.contract_id
-	  
+
 	  @meeting.destroy
-	  
+
 	  flash[:notice] = "The attendance roll was removed."
-	  
+
 	  redirect_to attendance_path(:id => contract_id)
 	end
-	
+
 	def pick_roll
 	  if params[:meeting_id]
 	    @meeting = Meeting.find(params[:meeting_id], :include => :contract)
@@ -91,16 +90,16 @@ class AttendanceController < ApplicationController
 
 	  render :template => '/attendance/calendar_form', :layout => false
 	end
-	
+
 	# shows a calendar
 	def show_calendar
 	  @year = params[:year].to_i if params[:year]
 	  @month = params[:month].to_i if params[:month]
-	  
+
 	  now = Time.now
 	  @year ||= now.year
 	  @month ||= now.month
-	  
+
 	  @contract = Contract.find(params[:id])
 	  @meeting = Meeting.find(params[:meeting_id]) if params[:meeting_id]
     @meetings = @contract.meetings
@@ -110,19 +109,19 @@ class AttendanceController < ApplicationController
 
 	# saves the attendance status
 	def update
-	  
+
 	  @enrollment = Enrollment.find(params[:enrollment_id], :include => :contract)
 	  @meeting = Meeting.find(params[:meeting_id])
 	  if @enrollment
 	    privs = @enrollment.contract.privileges(@user)
 	    render :text => "You don't have privileges to do this.", :status=>500 and return unless privs[:edit]
-	    
+
 	    participant = update_attendance_for_enrollment(@meeting, @enrollment, params)
 	  end
 
     render :json => {:id => participant.id}.to_json
 	end
-	
+
 	# updates all participants
 	def update_all
 

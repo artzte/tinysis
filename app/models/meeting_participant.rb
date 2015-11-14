@@ -33,10 +33,9 @@ class MeetingParticipant < ActiveRecord::Base
 	belongs_to :meeting
 
 	has_many :notes, :as => :notable, :dependent => :destroy
-	
+
 	def privileges(user)
 		return meeting.privileges(user)
 	end
-	
 
 end

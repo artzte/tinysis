@@ -2,7 +2,7 @@ require 'helpers/credit_helper'
 class CreditController < ApplicationController
 
 	include CreditHelper
-	
+
 	before_filter :login_required
 	before_filter :get_student, :only => [:index, :combine, :combiner, :admin_destroy]
 
@@ -18,7 +18,7 @@ class CreditController < ApplicationController
 
 	# displays the add credit form
 	def editor
-	  
+
 	  if params[:parent_type]
 	    @parent_class = params[:parent_type]
 	    @parent_id = params[:parent_id]
@@ -30,7 +30,7 @@ class CreditController < ApplicationController
 	    @credit = CreditAssignment.find(params[:id])
 	    @parent = @credit.primary_parent
 	  end
-	  
+
 	  @privs = @parent.privileges(@user)
     return redir_error(TinyException::SECURITYHACK, @user) unless @privs[:edit]
 
@@ -53,28 +53,28 @@ class CreditController < ApplicationController
 	    render :partial => "placeholder_form"
 	  end
 	end
-	
+
 	def add
 	  @parent_type = eval(params[:parent_type])
 	  @parent_id = params[:parent_id]
-	  
+
 	  @parent = @parent_type.find(@parent_id)
 	  @privs = @parent.privileges(@user)
     return redir_error(TinyException::SECURITYHACK, @user) unless @privs[:edit]
-	  
+
 	  course = Credit.find(params[:course])
 	  credits = params[:credits]
-	  
+
 	  credit = CreditAssignment.create(:credit => course, :credit_hours => credits, :contract_term_id => params[:term])
 	  @parent.credit_assignments << credit
-	  
+
 	  unless params[:notes].blank?
 	    credit.notes << Note.new(:note => params[:notes].strip, :author => @user)
 	  end
-	  
+
 	  render :partial => 'credit/credits', :object => @parent	    
 	end
-	
+
 	def update
 	  @credit = CreditAssignment.find(params[:id])
 
@@ -83,18 +83,18 @@ class CreditController < ApplicationController
 
 	  # set the hours if they are passed
 	  @credit.credit_hours = params[:credits] unless params[:credits].blank?
-	  
+
 	  # if override hours passed, set them, otherwise clear override
 	  @credit.override params[:credits_override], @user
-	  
+
 	  @credit.contract_term = Term.find(params[:term]) if params[:term]
-	  
+
 	  @parent = @credit.primary_parent
-	  
+
 	  raise "not yet implemented" if @parent.is_a? GraduationPlan
-	  
+
 	  # @credit.contract_name = @credit.credit.course_name if @parent.is_a? GraduationPlan
-	  
+
 	  @credit.assign_credit( @user, Credit.find(params[:course]) )
 
 	  if @credit.user?
@@ -103,7 +103,7 @@ class CreditController < ApplicationController
 	    render :partial => 'credit/credits', :object => @parent
 	  end
 	end
-	
+
   def combiner
 
     # split and rejoin credit numbers just to validate
@@ -120,7 +120,7 @@ class CreditController < ApplicationController
 
     @credit_options = Credit.transmittable_credits.collect{|c| [c.credit_string, c.id]}
 	  @credit = CreditAssignment.new(:credit_hours => hours)
-	  
+
 	  render :partial => 'combine_form', :layout => false
   end
 
@@ -137,16 +137,16 @@ class CreditController < ApplicationController
   end
 
 	# removes a credit from the parent
-	
+
 	def destroy
 	  @credit = CreditAssignment.find(params[:id])
 	  @parent = @credit.primary_parent
-	  
+
 	  @privs = @credit.privileges(@user)
 	  return redir_error(TinyException::SECURITYHACK, @user) unless @privs[:edit]
 
 	  @credit.destroy
-	  
+
 	  render :nothing => true
 	end
 
@@ -197,6 +197,4 @@ class CreditController < ApplicationController
     render :nothing => true
   end
 
-
-	
 end

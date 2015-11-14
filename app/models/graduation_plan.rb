@@ -7,7 +7,6 @@ class GraduationPlan < ActiveRecord::Base
 
   validates_format_of :class_of, :with => /2\d\d\d/, :if => Proc.new{|gp| !gp.class_of.nil?}, :message => 'must be a valid 4-digit year'
 
-
   # Returns a mappings hash keyed by requirement_id
   # :type => requirement_type
   # :mappings => array of mappings

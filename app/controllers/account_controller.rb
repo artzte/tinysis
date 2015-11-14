@@ -63,38 +63,38 @@ public
     reset_tiny_sessionvars
     redir_home "You've been logged out."
   end
-	
+
 	def reset
 
 	  return if request.method==:get
-	  
+
 		email = params[:user][:email]
 		unless email =~ User::REGEX_EMAIL
 			flash[:notice] = "Please enter a valid email address."
 			return
 		end
-		
+
 		u = User.authorized_email(email)
 		if u.nil?
 		  flash[:notice] = "Could not find an active account with that email address."
 			return				
 		end
-		
+
 		password = u.reset_password
 
 		UserMailer::deliver_password_reset(u, password)
-		
+
 	  flash[:notice] = "Your login ID and new password have been emailed to you. Please change your password after logging in."
 
 		redirect_to login_path
-		
+
 	end
-	
+
 	def blackboard
 	  set_meta :tab1 => :my, :title => "#{@user.full_name} &ndash; Blackboard"
 	  render :text => 'coming soon', :layout => true
 	end
-	
+
   before_filter :set_no_admin, :only => [:edit, :update]
   def set_no_admin 
     @noadmin = true

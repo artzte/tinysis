@@ -37,4 +37,3 @@ class CreditTransmittalBatch < ActiveRecord::Base
 	end
 
 end
-

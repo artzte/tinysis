@@ -1,6 +1,5 @@
 class Enrollment < ActiveRecord::Base
 
-
   # Enrollments have four possible states. The state transitions are as follows.
   #
   # Proposed - Active, Drop (destroy)
@@ -18,7 +17,7 @@ class Enrollment < ActiveRecord::Base
 	    Status.make(month, proxy_owner, user)
 	  end
 	end
-	
+
 	has_many :turnins, :dependent => :destroy, :order => 'assignments.due_date', :include => :assignment do 
 
 	  def weight_total
@@ -28,7 +27,7 @@ class Enrollment < ActiveRecord::Base
 	  def weight_current
 	    inject(0){|sum, turnin| sum + ((turnin.complete? && turnin.assignment.due_date <= Date.today) ? turnin.assignment.weighting : 0)}
 	  end
-	  
+
 	  def stats
 	    assignments = Assignment.find_by_sql(%{
 	      SELECT assignments.due_date, assignments.weighting, IF(turnins.status, assignments.weighting, 0) AS present FROM assignments
@@ -55,7 +54,7 @@ class Enrollment < ActiveRecord::Base
 	      :current_percent_complete => current_points_possible==0 ? 0 : ((current_points_completed.to_f / current_points_possible) * 100),
 	    }
 	  end
-	  
+
 	  def make(assignments = nil)
 	    assignments ||= proxy_owner.contract.assignments
 	    values = assignments.collect{|a| "(#{proxy_owner.id}, #{a.id}, NOW(), NOW())"}
@@ -64,9 +63,9 @@ class Enrollment < ActiveRecord::Base
 	  end
 
 	end
-	
+
 	has_many :meeting_participants, :dependent => :destroy do 
-	  
+
 	  def stats
 	    stats_results = Meeting.connection.select_all(%{
         SELECT participation, COUNT(mp.id) AS count
@@ -85,9 +84,9 @@ class Enrollment < ActiveRecord::Base
       stats_hash[ :total_attended ] = meetings_count - stats_hash[ MeetingParticipant::ABSENT ]
       stats_hash
    end
-	  
+
 	end
-	
+
   has_many :credit_assignments, :dependent => :destroy, :conditions => " ((user_id IS NOT NULL) OR ((user_id IS NULL) AND (enrollment_finalized_on IS NULL)))"
 
   # so contract timeslots can be set on enrollment report queries
@@ -113,7 +112,7 @@ public
 
 	# enrollment completed or canceled
 	STATUS_CLOSED = 2
-	
+
 	# enrollment finalized and off limits to facilitator
 	STATUS_FINALIZED = 3
 
@@ -139,34 +138,33 @@ public
 
   named_scope :uncanceled, :conditions => "completion_status != #{COMPLETION_CANCELED}"
   named_scope :unfinalized, :conditions => "enrollment_status != #{STATUS_FINALIZED}"
-	
+
 	# status methods
-	
+
 	def enrolled?
 	  self.enrollment_status == STATUS_ENROLLED
 	end
-	
+
 	def finalized?
 	  self.enrollment_status == STATUS_FINALIZED
 	end
-	
+
 	def closed?
 	  self.enrollment_status == STATUS_CLOSED
 	end
-	
+
 	def canceled?
 	  (closed? || finalized?) && self.completion_status == COMPLETION_CANCELED
 	end
-	
+
 	def fulfilled?
 	  (finalized?) && self.completion_status == COMPLETION_FULFILLED
 	end
-	
+
 	def finalized_fulfilled?
 	  finalized? && self.completion_status == COMPLETION_FULFILLED
 	end
-	
-	
+
 	def status_description
 	  if [STATUS_FINALIZED,STATUS_CLOSED].include? self.enrollment_status
 	    COMPLETION_NAMES[self.completion_status]
@@ -174,14 +172,14 @@ public
 	    STATUS_NAMES[self.enrollment_status]
 	  end
 	end		
-		
+
 	# activates enrollment
 
 	def set_active(user)
-	  
+
 	  # to set active, user must have privileges, AND enrollment must be either proposed or closed, or, if finalized, must have been canceled, not
 	  # fulfilled.
-	  
+
 		privs = privileges(user)
 		unless privs[:edit] && 
 		  (
@@ -196,21 +194,20 @@ public
 	      ca.enrollment_unfinalize
 	    end 
     end
-		
+
 		self.completion_date = nil
 		self.completion_status = COMPLETION_UNKNOWN
 		self.enrollment_status = STATUS_ENROLLED
     self.finalized_on = nil
 		save!
-		
+
 		true
 	end
-	
-	
+
 	# destroys the enrollment. 
 	# You must have edit privileges, or be a staff member, or be the
 	# student who enrolled himself. 
-	
+
 	def set_dropped(user)
 		privs = privileges(user)
 
@@ -219,12 +216,11 @@ public
 		  (self.enrollment_status == STATUS_CLOSED and privs[:edit])
 			raise TinyException, TinyException::MESSAGES[TinyException::NOPRIVILEGES]
 		end
-		
+
 		destroy
 		true
 	end
-	
-	
+
 	# sets enrollment closed
 
 	def set_closed(completion_status, user, date = Time.now.gmtime)
@@ -239,14 +235,14 @@ public
 		save!
 		true
 	end
-	
+
 	# change to specified role
 	def set_role(role, user)
 		privs = privileges(user)
 		unless privs[:edit]
 			raise TinyException, TinyException::MESSAGES[TinyException::NOPRIVILEGES]
 		end
-		
+
 		case role
 		when "student"
 	    update_attribute(:role, Enrollment::ROLE_STUDENT)
@@ -254,7 +250,7 @@ public
 	    update_attribute(:role, Enrollment::ROLE_INSTRUCTOR)
 	  end
 	end
-	
+
 	def set_finalized(user, date = Time.now.gmtime)
 	  return false if self.enrollment_status != Enrollment::STATUS_CLOSED
 
@@ -273,7 +269,7 @@ public
 
 		return true
 	end
-	
+
 	# performs a student enrollment, setting the enrollment_status 
 	# appropriately depending on the enrolling user's privileges.
 
@@ -288,7 +284,7 @@ public
 		if (nil != student.enrollments.find(:first, :conditions => "contract_id = #{contract.id}"))
 			TinyException.raise_exception(TinyException::ENROLL_DUPLICATE, user) 
 		end
-		
+
 		# get the privs 
 		privs ||= contract.privileges(user)
 
@@ -298,12 +294,12 @@ public
 
 		# Bail out if a student is trying to enroll another student (or staff member)
 		TinyException.raise_exception(TinyException::NOPRIVILEGES, user) if (user.privilege < User::PRIVILEGE_STAFF)
-		
+
 		# Enroll the student with status PROPOSED if the current user is not the owner of
 		# the contract. Otherwise, enroll the student with status ENROLLED.
 		Enrollment.enroll_user( contract, student, user, :role => Enrollment::ROLE_STUDENT, :enrollment_status => contract.facilitator_id == user.id ? Enrollment::STATUS_ENROLLED : nil)
 	end
-	
+
 	def inherit_credits(c = nil)
 	  c ||= contract
 	  credit_assignments.clear
@@ -321,13 +317,13 @@ protected
 												:completion_status => COMPLETION_UNKNOWN)
 		e.enrollment_status = options[:enrollment_status] || Enrollment::STATUS_PROPOSED
 		e.role = options[:role] || Enrollment::ROLE_STUDENT
-		
+
 		e.inherit_credits(contract) unless participant.privilege > User::PRIVILEGE_STUDENT
-		
+
 		contract.enrollments << e
-		
+
 		contract.activate if contract.closed? 
-		  
+
 		return e
 	end
 
@@ -338,18 +334,18 @@ public
   end
 
 	# returns a friendly status string for the enrollment
-	
+
 	def status_text
 	  s = Enrollment::STATUS_NAMES[self.enrollment_status]
-	  
+
 	  if [Enrollment::STATUS_CLOSED,Enrollment::STATUS_FINALIZED].include? self.enrollment_status
 	    s += "-#{Enrollment::COMPLETION_NAMES[self.completion_status]}"
 	  end
 	  s
 	end
-	
+
 	# returns an array of friendly credit strings
-	
+
 	def credit_strings
 	  if credit_assignments.empty? 
 	    ["No credits assigned."]
@@ -357,7 +353,7 @@ public
 	    credit_assignments.collect{|c| c.credit_string}
 	  end
 	end
-	
+
 	# Return a hash describing privileges of the specified user
 
 	def Enrollment.privileges(user)
@@ -413,7 +409,7 @@ public
 		# FOR EDIT PRIVILEGES,
 		# user must be instructor
 		p[:edit] = (user_role >= Enrollment::ROLE_INSTRUCTOR)
-		
+
 		# FOR VIEW, NOTE PRIVILEGES,
 		# user must be an instructor or a supervisor or the enrolled student
 		p[:view] = 
@@ -427,12 +423,11 @@ public
 		p[:edit_note] = user_role >= Enrollment::ROLE_INSTRUCTOR
 		return p
 	end
-	
-	
+
 	def self.statusable(contract_ids, shallow)
     includes = [:participant]
 	  includes += [:contract, :statuses] unless shallow
-	  
+
 	  conditions = ["(users.privilege < ?)","(completion_status <> ?)"]
 	  parameters = [User::PRIVILEGE_STAFF, Enrollment::COMPLETION_CANCELED]
 	  if contract_ids.is_a?(Array)
@@ -465,7 +460,7 @@ public
     q << ")"
     ids = find_by_sql([q.join(' '), enrollments, enrollments])
     ids.collect{|e| e.id}
-  	
+
   end
 
 end

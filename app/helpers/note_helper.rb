@@ -7,12 +7,12 @@ module NoteHelper
 	def note_container(note)
 		"note_#{note.id}"	
 	end
-	
+
 	def note_title(note)
 		note_author = note.author ? note.author.name.downcase : 'Anonymous'
   	"#{note_author} - #{d(note.updated_at, true).downcase}"
 	end
-	
+
   # renders notes for an object with the following parameters
   #
   # object - the object to render notes for

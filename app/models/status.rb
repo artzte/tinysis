@@ -2,30 +2,29 @@ class Status < ActiveRecord::Base
 	belongs_to :author, :foreign_key => 'creator_id', :class_name => 'User'
 	belongs_to :statusable, :polymorphic => true
 	has_many :notes, :as => :notable
-	
+
 	validates_uniqueness_of :month, :scope => [:statusable_id, :statusable_type]
 
 	STATUS_ACCEPTABLE = 0
 	STATUS_UNACCEPTABLE = 1
 	STATUS_PARTICIPATING = 2
-	
+
 	STATUS_NAMES = {
 		STATUS_ACCEPTABLE => "Satisfactory",
 		STATUS_UNACCEPTABLE => "Unsatisfactory",
 		STATUS_PARTICIPATING => "Participating" }
-		
+
 	def self.make(month, statusable, user)
 	  raise ArgumentError, "Invalid date value for status report" unless month.day == 1
     ActiveRecord::Base.connection.execute("INSERT INTO statuses(month, creator_id, created_at, updated_at, statusable_id, statusable_type, met_fte_requirements) 
         VALUES ('#{month.strftime('%Y-%m-%d')}', #{user.id}, NOW(), NOW(), #{statusable.id}, '#{statusable.class.to_s}', #{statusable.is_a?(Enrollment)?1:'NULL'}) 
         ON DUPLICATE KEY UPDATE updated_at = NOW()")
   end
-	  
 
 	def privileges(user)
 		return statusable.privileges(user)
 	end
-	
+
 	def unacceptable?
 	  (self.academic_status==Status::STATUS_UNACCEPTABLE) || 
 	  (self.attendance_status&&self.attendance_status != STATUS_ACCEPTABLE) || 
@@ -89,9 +88,9 @@ class Status < ActiveRecord::Base
     end
     report[:coordinators] = staff
     report
-	  
+
 	end
-	
+
 	# creates a report listing contract status reports missing for a range of 
 	# students
 	def self.contracts_months_missing(options = {})

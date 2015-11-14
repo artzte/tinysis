@@ -8,10 +8,9 @@ class Term < ActiveRecord::Base
 	has_many :contracts_active, :class_name => 'Contract', :foreign_key => 'term_id', :conditions => "contracts.contract_status < #{Contract::STATUS_CLOSED}"
   has_many :contracts_closed, :class_name => 'Contract', :foreign_key => 'term_id', :conditions => "contracts.contract_status = #{Contract::STATUS_CLOSED}"
   has_many :credit_assignments, :class_name => 'CreditAssignment', :foreign_key => 'contract_term_id'
-	
-	
+
 	validates_length_of :name, :in=>5..50
-	
+
 	attr_accessor :base_month
 	attr_accessor :end_month
 
@@ -26,17 +25,17 @@ class Term < ActiveRecord::Base
 	def self.month_name(base_month, i)
 	  Date::MONTHNAMES[(base_month+i) > 12 ? (base_month+i)%12 : base_month+i]  
 	end
-	
+
 	# sets months from an array of strings or integers indicating
 	# the month number offset
-	
+
 	def set_dates(year, m = [])
 	  months_array = []
 	  m = m.uniq.sort
 	  m = m.collect{|i| i.to_i}
 	  self.school_year = year.to_i
 	  get_reporting_months
-	  
+
 	  m.each do |i|
 	    month = self.base_month + i
 	    year = self.school_year
@@ -48,15 +47,15 @@ class Term < ActiveRecord::Base
 	  end
 	  self.months = months_array
 	end
-	    
+
 	def reporting_months_options
 		month_array = self.months.sort
 		month_array.collect{|m| [m.strftime("%b %Y"), m.to_i]}	
 	end
-	
+
 	def months_bool
 	  months_array = []
-	  
+
 	  get_reporting_months
 
     for i in 0..11
@@ -69,9 +68,9 @@ class Term < ActiveRecord::Base
 			end
 			months_array << self.months.include?(Date.new(year, month))
 		end
-		
+
 		months_array
-			  
+
 	end
 
 	def self.all
@@ -79,15 +78,15 @@ class Term < ActiveRecord::Base
 	    LEFT OUTER JOIN (SELECT term_id, COUNT(id) AS contract_count FROM contracts GROUP BY term_id) AS contracts ON contracts.term_id = terms.id
 	    ORDER BY terms.active DESC, terms.school_year DESC, terms.credit_date"
 	end
-	
+
 	def self.active
 	  find_all_by_active(true, :order => 'school_year DESC, credit_date ASC')
 	end
-	
+
 	def self.creditable
 	  find :all, :order => 'school_year DESC, credit_date ASC'
 	end
-	
+
 	def self.enrollments_report
 	  q = <<END
 	    SELECT 
@@ -108,13 +107,13 @@ class Term < ActiveRecord::Base
 END
 	  Term.find_by_sql(q)
   end
-	
+
 	def long_name
 	  name = "#{self.school_year}: #{self.name}"
 	  name << " (inactive)" unless self.active
 	  name 
 	end
-	
+
 	def self.coor(year = nil)
 	  year ||= Setting.current_year
 	  coor = Term.new(:active => true, :name => "COOR #{year}")
@@ -123,7 +122,7 @@ END
 	  coor.set_dates(year, (0..month_count).to_a)
 	  coor
 	end
-	
+
   def get_reporting_months
     @@reporting_base_month ||= Setting.reporting_base_month
     @@reporting_end_month ||= Setting.reporting_end_month

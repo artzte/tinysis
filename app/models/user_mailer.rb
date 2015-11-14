@@ -5,7 +5,7 @@ class UserMailer < ActionMailer::Base
     @subject    = AppConfig.app_domain + ' Password Reset'
     @recipients = user.email
     @from       = AppConfig.app_accounts_email
-		
+
 		# Email body substitutions go here
 		@body["name"] = user.first_name
 		@body["login"] = user.login
@@ -14,7 +14,7 @@ class UserMailer < ActionMailer::Base
 		@body["org"] = AppConfig.app_organization
 		@body["domain"] = AppConfig.app_domain
 		@body["name"] = user.first_name
-		
+
 		# Email body substitutions go here
     @sent_on    = Time.now.gmtime
     @headers    = {}
@@ -36,6 +36,5 @@ class UserMailer < ActionMailer::Base
     @body["data"] = data_hash
     @body["user"] = current_user
   end
-	
-	
+
 end

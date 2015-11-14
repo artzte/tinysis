@@ -40,7 +40,7 @@ class LearningPlanController < ApplicationController
 
   def update
 		@plan.learning_plan_goals.clear
-		
+
     @plan.learning_plan_goals += LearningPlanGoal.required
 
 		params[:goal].each do |k,v|

@@ -16,14 +16,14 @@ class CreditAssignment < ActiveRecord::Base
 	validates_presence_of :credit_id
 	belongs_to :parent_credit_assignment, :class_name => 'CreditAssignment', :foreign_key => :parent_credit_assignment_id
 	has_many :child_credit_assignments, :class_name  => 'CreditAssignment', :foreign_key => :parent_credit_assignment_id
-	
+
 	has_one :graduation_plan_mapping, :dependent => :destroy
-	
+
 	named_scope :user, :conditions => "user_id IS NOT NULL"
 	named_scope :nonzero, :conditions => "credit_hours > 0"
 	named_scope :uncombined, :conditions => "parent_credit_assignment_id IS NULL"
 	named_scope :district_finalize_approved, :conditions => "district_finalize_approved_on IS NOT NULL"
-	
+
   def privileges(user)
     primary_parent.privileges(user)
   end
@@ -42,11 +42,10 @@ class CreditAssignment < ActiveRecord::Base
     district_unapprove if coordinator_approved?
   end
 
-
 	def enrollment_finalize(completion_status, participant, contract, date)
     # set finalized_on date
 	  self.enrollment_finalized_on = date
-	  
+
 	  # set denormalized contract values
 	  self.contract_name = contract.name
 	  self.contract_facilitator_name = contract.facilitator.last_name_first
@@ -57,7 +56,7 @@ class CreditAssignment < ActiveRecord::Base
 	  case completion_status
 	  when Enrollment::COMPLETION_FULFILLED
 	    self.user_id = participant.id
-	    
+
 	  # cache the credit in case this is a left-behind
 	  when Enrollment::COMPLETION_CANCELED
 	    denormalize_credit
@@ -77,7 +76,7 @@ class CreditAssignment < ActiveRecord::Base
 
 	  self.credit_course_name = nil
 	  self.credit_course_id = nil
-	  
+
 	  return true
   end
 
@@ -86,7 +85,7 @@ class CreditAssignment < ActiveRecord::Base
 
 	  self.credit_course_name = credit.course_name
 	  self.credit_course_id = credit.course_id
-	  
+
 	  return true
   end
 
@@ -94,7 +93,7 @@ class CreditAssignment < ActiveRecord::Base
   # move the credit course names over and record who approved the credit for transmittal to district
 	def district_approve(user, date)
 	  raise "Can't approve this, as it has already been approved for recording at the district" if self.credit_transmittal_batch_id
-	  
+
 	  self.district_finalize_approved = true
     self.district_finalize_approved_by = user.last_name_first
     self.district_finalize_approved_on = date
@@ -138,23 +137,23 @@ class CreditAssignment < ActiveRecord::Base
       end
     end
 	end
-	
+
 	def facilitator_approved?
 	  self.enrollment_finalized_on.nil? == false
 	end
-	
+
 	def coordinator_approved?
 	  self.district_finalize_approved_on.nil? == false
 	end
-	
+
 	def batched_for_transmit?
 	  self.credit_transmittal_batch_id.nil? == false
 	end
-	
+
 	def transmitted?
 	  self.district_transmitted_on?
 	end
-	
+
 	# safely retrieve the course ID
 	def credit_course_id
 	  if self.attributes["credit_course_id"].present?
@@ -165,7 +164,7 @@ class CreditAssignment < ActiveRecord::Base
 	    raise "No course ID available"
 	  end
 	end
-	
+
 	# safely retrieve the course name
 	def credit_course_name
 	  if self.attributes["credit_course_name"].present?
@@ -175,9 +174,9 @@ class CreditAssignment < ActiveRecord::Base
 	  else
 	    raise "No course name available"
 	  end
-	  
+
 	end
-	
+
 	# credit_course_name
 	# credit_course_id
 	# 
@@ -192,11 +191,11 @@ class CreditAssignment < ActiveRecord::Base
       self.credit_hours.to_s
     end
 	end
-	
+
 	def credits
 	  self.override_hours || self.credit_hours
 	end
-	
+
 	def override(override, user)
 	  if override.blank?
 	    self.override_hours = nil
@@ -206,7 +205,7 @@ class CreditAssignment < ActiveRecord::Base
 	    self.override_by = user.last_name_f
 	  end
 	end
-	
+
 	def self.combine(student, credit_id, term_id, override, credit_assignments, user)
     ca_term = credit_assignments[0]
 
@@ -237,11 +236,11 @@ class CreditAssignment < ActiveRecord::Base
     end
     destroy
 	end
-	
+
 	def user?
 	  self.user_id?
 	end
-	
+
 	def primary_parent
 	  if user? 
 	    return self.user
@@ -253,6 +252,5 @@ class CreditAssignment < ActiveRecord::Base
 	    raise "Unknown primary parent"
 	  end
 	end
-	
-end
 
+end

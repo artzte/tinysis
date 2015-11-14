@@ -1,14 +1,14 @@
 class Contract < ActiveRecord::Base
 
 	include StripTagsValidator
-	
+
   has_many :meetings, :order => "meeting_date", :dependent => :destroy
 	has_many :assignments, :order =>  "due_date, CONVERT(name,decimal), name", :dependent => :destroy do
-	  
+
 	  def weight_total
 	    sum(:weighting)
 	  end
-	  
+
 	  def weight_current
 	    sum(:weighting, :conditions => 'due_date <= NOW()')
 	  end
@@ -29,7 +29,7 @@ class Contract < ActiveRecord::Base
   	  Enrollment.statusable(proxy_owner.id, shallow)
   	end	
 	end
-	
+
 	has_many :notes, :as => :notable
 	has_many :absences, :through => :enrollments
 	has_many :statuses, :through => :enrollments
@@ -37,20 +37,20 @@ class Contract < ActiveRecord::Base
 	attr_protected :facilitator
 
 	has_and_belongs_to_many :ealrs, :join_table => 'contract_ealrs'
-	
+
 	belongs_to :category
 	belongs_to :term
 	belongs_to :creator, :foreign_key => 'creator_id', :class_name => 'User'
-	
+
   has_many :credit_assignments
 
 	serialize :timeslots, Array
-	
+
 	validates_length_of :name, :within => MIN_TITLE..MAX_TITLE
-	
+
 	validates_presence_of :term,  :message => "must be specified."
 	validates_presence_of :category, :message => "must be specified."
-	
+
 	acts_as_textiled :learning_objectives, :competencies, :evaluation_methods, :instructional_materials
 
 	STATUS_PROPOSED = 0
@@ -59,7 +59,7 @@ class Contract < ActiveRecord::Base
 	STATUS_NAMES = { STATUS_PROPOSED => "Proposed",
 		STATUS_ACTIVE => "Approved",
 		STATUS_CLOSED => "Closed" }
-		
+
 	def status_name
 	  STATUS_NAMES[self.contract_status]
 	end
@@ -67,15 +67,15 @@ class Contract < ActiveRecord::Base
   def homeroom?
     category.homeroom? 
   end
-		
+
 	def before_save
 	  self.timeslots ||= []
 	end
-	
+
 	def closed?
 	  self.contract_status==STATUS_CLOSED
 	end
-	
+
 	def active?
 	  self.contract_status==STATUS_ACTIVE
   end
@@ -83,11 +83,11 @@ class Contract < ActiveRecord::Base
 	def activate
 	  update_attribute(:contract_status, STATUS_ACTIVE)
 	end
-	
+
 	def close
 	  update_attribute(:contract_status, STATUS_CLOSED)
 	end
-	
+
 ##########################################################################
 # Functions for getting and setting associated model objects
 
@@ -105,11 +105,11 @@ class Contract < ActiveRecord::Base
 		p[:create] = 
 		p[:view] = 
 		p[:browse] = (user.privilege >= User::PRIVILEGE_STUDENT)
-		
+
 		# edit privileges connote full privs to assign facilitator, set status, etc.
 		# which is only staff or above
 		p[:edit] = (user.privilege >= User::PRIVILEGE_STAFF)
-		
+
 		return p
 	end
 
@@ -131,7 +131,7 @@ class Contract < ActiveRecord::Base
 		# an admin or facilitator has full privileges
 		return p.grant_all if user.admin?
 		return p.grant_all if facilitator == user
-		
+
 		##########################################
 		# see if the user has an enrollment role here
 		user_role = role_of(user)
@@ -149,15 +149,15 @@ class Contract < ActiveRecord::Base
 				p[:create_note] = 
 				p[:view_students] = 
 				p[:view_note] = true
-				
+
 				# any staff member can edit an unsupervised contract
 				p[:edit] = unsupervised
-				
+
 			when User::PRIVILEGE_STUDENT
-			
+
 				# if the user is the creator of the contract and no facilitator has
 				# been assigned, he gets various privileges
-				
+
 				if unsupervised and (user.id == creator.id)
 
 					p[:browse] = 
@@ -165,15 +165,15 @@ class Contract < ActiveRecord::Base
 					p[:edit] = 
 					p[:create_note] = 
 					p[:view_note] = true
-				
+
 				else
-				
+
 				# browse is the weakest privilege --- you can view minimal contract
 				# details if the contract is public
 					p[:browse] = (category.public)
 				end
 			end
-	
+
 			return p
 		end
 
@@ -183,7 +183,7 @@ class Contract < ActiveRecord::Base
 		# user must be the facilitator, or the creator of an unassigned
 		# contract
 		return p.grant_all if user_role >= Enrollment::ROLE_INSTRUCTOR || (unsupervised && user.id == self.creator_id)
-		
+
 		# FOR VIEW/BROWSE/NOTE PRIVILEGES,
 		# user must be enrolled. we have already ascertained that.
 		p[:view] = 
@@ -192,10 +192,10 @@ class Contract < ActiveRecord::Base
 		p[:view_note] = true
 
 		# an instructor or supervisor can edit a note / view student info
-		
+
 		p[:view_students] =  
 		p[:edit_note] =  (user_role >= Enrollment::ROLE_INSTRUCTOR)
-		
+
 		return p
 	end
 
@@ -203,7 +203,7 @@ class Contract < ActiveRecord::Base
 	# How contracts are sorted
 
 	def <=>(contract)
-		
+
 		return category.sequence <=> contract.category.sequence if category.sequence != contract.category.sequence
 		return name <=> contract.name
   end	
@@ -235,13 +235,12 @@ class Contract < ActiveRecord::Base
     c
 
   end
-	
-	
+
 	##########################################################################
 	# Functions for getting lists of different types of contracts 
-	
+
 	def Contract.catalog(options = {})
-	  
+
     q = []
     q << "SELECT" 
     q << "contracts.*," 
@@ -264,10 +263,9 @@ class Contract < ActiveRecord::Base
     Contract.find_by_sql(q.join(' '))
   end
 
-	
 	##########################################################################
 	# Months options
-	
+
   def statusable_months
     case category.statusable
     when Category::STATUSABLE_NONE
@@ -278,11 +276,10 @@ class Contract < ActiveRecord::Base
       term.months
     end
   end
-	
-	
+
 	##########################################################################
 	# Functions for getting various lists of enrollments on a contract
-	
+
 	# get a list of all the students who are active and not already enrolled
 	# in this contract
 
@@ -305,7 +302,7 @@ class Contract < ActiveRecord::Base
 	# returns the role of the specified active user or nil if none
 	def role_of(user)
 	  return Enrollment::ROLE_FACILITATOR if user == facilitator
-	  
+
 		e = participant_enrollment(user)
 		return nil if e.nil?
 		e.role
@@ -317,7 +314,7 @@ class Contract < ActiveRecord::Base
 	end
 
 	# attendance queries
-	
+
 	def attendance_stats
 
     # get meeting count -- will assign as absent any "missing" records
@@ -381,9 +378,8 @@ class Contract < ActiveRecord::Base
 
 	end
 
-	
 	def after_initialize
-	  
+
 		# set the helper attributes for a contract on add
 		self.timeslots ||= [{}]
 		#@contract.credits = Credit.empty_credits

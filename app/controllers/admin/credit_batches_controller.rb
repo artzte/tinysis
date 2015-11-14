@@ -20,7 +20,6 @@ public
 
   end
 
-
   def show
 
     @batch = CreditTransmittalBatch.find(params[:id])

@@ -10,13 +10,13 @@ class Meeting < ActiveRecord::Base
 	# on this meeting
 
 	def privileges(user)
-	
+
 		return TinyPrivileges.contract_child_object_privileges(user, contract)
 
 	end
-	
+
 	def update_participant(enrollment_id, status)
-	  
+
 	  participant = meeting_participants.find(:first, :conditions => ["enrollment_id = ?", enrollment_id])
     if participant 
       participant.update_attribute(:status => status)
@@ -25,7 +25,7 @@ class Meeting < ActiveRecord::Base
     end
 
 	end	
-	
+
 	def create_participants
 	  q = []
     q << "select enrollments.id from enrollments"
@@ -38,7 +38,7 @@ class Meeting < ActiveRecord::Base
     end
     missing
 	end
-	
+
   def roll
 
     MeetingParticipant.find_by_sql("

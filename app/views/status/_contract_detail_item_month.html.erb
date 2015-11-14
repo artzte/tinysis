@@ -7,7 +7,7 @@
   elsif s.nil?
     val = link_to(image_tag('question.gif'), {:action => 'contract_report', :id => @enrollment, :m => m.to_s})
   else
-		
+
 		case s[0].academic_status
 		when Status::STATUS_UNACCEPTABLE
     	aca = image_tag('redex.gif')
@@ -16,14 +16,14 @@
 		when Status::STATUS_PARTICIPATING
 			aca = image_tag('check_dim.gif')
 		end
-		
+
 		case s[0].attendance_status
 		when Status::STATUS_UNACCEPTABLE
     	att = image_tag('redex.gif')
 		when Status::STATUS_ACCEPTABLE
 			att = image_tag('check.gif')
 		end
-		
+
 		if s[0].met_fte_requirements
 			ale = image_tag('fte.gif')
 		else

@@ -3,5 +3,5 @@ class ContractEalr < ActiveRecord::Base
 
 	belongs_to :contract
 	belongs_to :ealr
-	
+
 end
