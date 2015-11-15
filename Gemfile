@@ -4,6 +4,7 @@ gem "rails", "~> 3.2"
 gem "sass"
 gem 'sass-rails'
 gem "compass-rails"
+gem "compass-blueprint"
 gem 'haml', '~> 4.0.5'
 gem "haml-rails", "~> 0.4.0"
 gem "fastercsv"
