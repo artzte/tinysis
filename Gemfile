@@ -1,11 +1,11 @@
 source 'https://rubygems.org'
 gem "rails", "~> 3.2"
 
-gem "sass-rails"
+gem "sass"
+gem 'sass-rails'
 gem "compass-rails"
 gem 'haml', '~> 4.0.5'
 gem "haml-rails", "~> 0.4.0"
-gem "sass"
 gem "fastercsv"
 gem "mysql"
 gem "RedCloth"
