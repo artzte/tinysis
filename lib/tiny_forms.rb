@@ -28,7 +28,7 @@ module TinyForms
         def #{selector}(field, options = {})
           options[:label_position] = :after
           #{BUILDER_FIELD}
-          @template.content_tag(options[:tag] || 'p', content, :class=>"#{selector}\#{options[:required]?' required':''}", :id => "p_\#{@object_name}_\#{field}")
+          @template.content_tag(options[:tag] || 'p', content.join('').html_safe, :class=>"#{selector}\#{options[:required]?' required':''}", :id => "p_\#{@object_name}_\#{field}")
         end
       END_SRC
       class_eval src, __FILE__, __LINE__
@@ -39,7 +39,7 @@ module TinyForms
       src = <<-END_SRC
         def #{selector}(field, options = {})
           #{BUILDER_FIELD}
-          @template.content_tag(options[:tag] || 'p', content, :class=>"#{selector}\#{options[:required]?' required':''}", :id => "p_\#{@object_name}_\#{field}")
+          @template.content_tag(options[:tag] || 'p', content.join('').html_safe, :class=>"#{selector}\#{options[:required]?' required':''}", :id => "p_\#{@object_name}_\#{field}")
         end
       END_SRC
       class_eval src, __FILE__, __LINE__
@@ -49,15 +49,14 @@ module TinyForms
       content = eval(BUILDER_FIELD)
       klass = "select"
       klass << " required" if options[:required]
-      @template.content_tag(options[:tag] || 'p', content, :class=>klass, :id => "p_#{@object_name}_#{field}")
+      @template.content_tag(options[:tag] || 'p', content.html_safe, :class=>klass, :id => "p_#{@object_name}_#{field}")
     end
   end
 
 
-  def tiny_form_for(name, object = nil, options = nil, &proc)
-    form_for(name, 
-             object, 
-             (options||{}).merge(:builder => TinyForms), 
+  def tiny_form_for(record, options = {}, &proc)
+    form_for(record,
+             (options||{}).merge(:builder => TinyForms),
              &proc)
   end
 
@@ -79,9 +78,9 @@ module TinyForms
       content_tag("div",
         content_tag("h2",
           "Please fix the following:"
-        )
-        content_tag("ul", object.errors.full_messages.collect { |msg| content_tag("li", ">>&nbsp;#{msg}") }),
-        "id" => "errorExplanation", "class" => "errorExplanation"
+        ) +
+        content_tag("ul", object.errors.full_messages.collect{|msg| content_tag("li", ">>&nbsp;#{msg}") },
+                    "id" => "errorExplanation", "class" => "errorExplanation" )
       )
     else
       ""
@@ -123,7 +122,7 @@ module TinyForms
   def submit_button(caption, options = {})
     klass = 'btn'
     klass << '_small' if options[:small]
-    "<input type='submit' value='#{caption}' class='#{klass}' />"
+    "<input type='submit' value='#{caption}' class='#{klass}' />".html_safe
   end
 
   def cancel_button(url, options = {})
@@ -136,13 +135,13 @@ module TinyForms
     klass << ' ' << options[:class] if options[:class]
     id = ''
     id = " id='#{options[:id]}'" if options[:id]
-    "<a href='#{url}' class='#{klass}'#{id}>#{caption}</a>"
+    "<a href='#{url}' class='#{klass}'#{id}>#{caption}</a>".html_safe
   end
 
   def fn_button(caption, fn, options = {})
     klass = 'btn'
     klass << '_small' if options[:small]
-    "<a href='\#' class='#{klass}' onclick='#{fn}; return false;'><span>#{caption}</span></a>"
+    "<a href='\#' class='#{klass}' onclick='#{fn}; return false;'><span>#{caption}</span></a>".html_safe
   end
 
   def submit_and_cancel_buttons(submit_label = "Save")
