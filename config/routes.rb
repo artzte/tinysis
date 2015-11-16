@@ -29,9 +29,11 @@ TinySIS::Application.routes.draw do
   end
 
   # school controller
-  get '/catalog', to: 'school#catalog'
-  get '/about', to: 'school#about'
-  get '/boom', to: 'school#boom'
+  scope module: 'school' do
+    get '/catalog', action: 'catalog'
+    get '/about', action: 'about'
+    get '/boom', action: 'boom'
+  end
 
   # attendance
   resources :attendance do
