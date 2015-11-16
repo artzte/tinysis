@@ -30,7 +30,7 @@ end
 
 group :development do
   # bundler requires these gems in development
-  gem "ruby-debug19"
+  gem "debugger"
   gem "vlad-git", :require => false
   gem "vlad", :require => false
 end
