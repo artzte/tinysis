@@ -49,7 +49,7 @@ module TinyForms
       content = eval(BUILDER_FIELD)
       klass = "select"
       klass << " required" if options[:required]
-      @template.content_tag(options[:tag] || 'p', content.html_safe, :class=>klass, :id => "p_#{@object_name}_#{field}")
+      @template.content_tag(options[:tag] || 'p', content.join('').html_safe, :class=>klass, :id => "p_#{@object_name}_#{field}")
     end
   end
 
@@ -64,7 +64,7 @@ module TinyForms
   # Form helpers
 
   def label_for(theField, theLabel, theHelpstring = nil)
-    "<label for=\"#{theField}\">#{theLabel}</label>"
+    content_tag 'label', theLabel, for: theField, title: theHelpstring
   end
 
 
