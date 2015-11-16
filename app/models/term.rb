@@ -14,6 +14,8 @@ class Term < ActiveRecord::Base
   attr_accessor :base_month
   attr_accessor :end_month
 
+  attr_accessible :name, :active
+
   def school_year_date
     Date.new self.school_year
   end
