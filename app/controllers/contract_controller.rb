@@ -10,7 +10,12 @@ class ContractController < ApplicationController
   before_filter :contract_meta, :only => PUBLIC_METHODS
   before_filter :require_contract, :only => [:show, :roll, :participant]
 
-  verify :xhr => true, :only => [:edit, :update, :cancel]
+  before_filter do
+    if %w{edit update cancel}.include?(action_name)
+      redirect_to home_path unless request.xhr?
+    end
+    return true
+  end
 
 public
 
@@ -159,7 +164,6 @@ public
   #
 
   def add_timeslot
-    valid = true
     notice=""
 
     tparams = params[:timeslot]
