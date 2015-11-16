@@ -18,13 +18,13 @@ class TinyException < Exception
     CONTRACTUPDATEFAILED => "#{AppConfig.app_name} wasn't able to update the contract.",
     NOCONTRACT => "#{AppConfig.app_name} encountered an unexpected error."
   }
-  
+
   attr_accessor :error_code
-  
+
   # This is the stub for a system-wide error handler.
-  # we will funnel system messages through this API. 
+  # we will funnel system messages through this API.
   # Global messages defined in the config file.
-  
+
   def initialize(id)
     @error_code = id
   end
@@ -32,5 +32,5 @@ class TinyException < Exception
   def TinyException.raise_exception(id, user)
     raise TinyException.new(id), MESSAGES[id]
   end
-  
+
 end

@@ -50,13 +50,13 @@ class User < ActiveRecord::Base
   has_many :enrollments, :class_name =>'Enrollment', :foreign_key => 'participant_id'
 
   # the set of classes the student is enrolled in.
-  has_many :contracts, :through => :enrollments 
+  has_many :contracts, :through => :enrollments
 
   # the turnins for this user
   has_many :turnins, :through => :enrollments
 
   # can be status'ed
-  has_many :statuses, :as => :statusable, :dependent => :destroy, :order => 'month DESC' do 
+  has_many :statuses, :as => :statusable, :dependent => :destroy, :order => 'month DESC' do
     def make(month, user)
       Status.make(month, proxy_owner, user)
     end
@@ -106,7 +106,7 @@ class User < ActiveRecord::Base
 
   def name
 
-    if self.nickname and !self.nickname.empty? 
+    if self.nickname and !self.nickname.empty?
       self.nickname + ' ' + self.last_name
     else
       self.first_name + ' ' + self.last_name
@@ -115,7 +115,7 @@ class User < ActiveRecord::Base
 
   def given_name
 
-    unless self.nickname.blank? 
+    unless self.nickname.blank?
       self.nickname
     else
       self.first_name
@@ -170,8 +170,8 @@ class User < ActiveRecord::Base
     # a staff member can view
     if user.staff?
 
-      p[:browse] = 
-      p[:view] = 
+      p[:browse] =
+      p[:view] =
       p[:create_note] =
       p[:view_note] = true
 
@@ -182,10 +182,10 @@ class User < ActiveRecord::Base
     # privileges to grant if this is the logged on user
     if user.id == id and status = STATUS_ACTIVE
 
-      p[:browse] = 
-      p[:view] = 
+      p[:browse] =
+      p[:view] =
       p[:create_note] =
-      p[:view_note] = 
+      p[:view_note] =
       p[:change_settings] = true
 
       return p
@@ -250,7 +250,7 @@ class User < ActiveRecord::Base
 
   # returns whether this user is a coordinator
 
-  def coor? 
+  def coor?
     coordinatees.length > 0
   end
 
@@ -263,7 +263,7 @@ class User < ActiveRecord::Base
     SELECT users.*, coordinatees.count FROM users
     LEFT JOIN (SELECT coordinatees.coordinator_id, COALESCE(COUNT(coordinatees.id),0) AS count FROM users AS coordinatees GROUP BY coordinatees.coordinator_id) AS coordinatees ON coordinatees.coordinator_id = users.id
     WHERE coordinatees.count IS NOT NULL
-    ORDER BY users.last_name, users.first_name    
+    ORDER BY users.last_name, users.first_name
 END
     User.find_by_sql(q)
 
@@ -306,15 +306,15 @@ END
     q << "WHERE enrollments.participant_id = #{self.id}"
     case options[:fulfilled]
     when true
-      q << "AND enrollments.completion_status = #{Enrollment::COMPLETION_FULFILLED}" 
+      q << "AND enrollments.completion_status = #{Enrollment::COMPLETION_FULFILLED}"
     when false
-      q << "AND enrollments.completion_status != #{Enrollment::COMPLETION_FULFILLED}" 
+      q << "AND enrollments.completion_status != #{Enrollment::COMPLETION_FULFILLED}"
     end
     case options[:canceled]
     when true
-      q << "AND enrollments.completion_status = #{Enrollment::COMPLETION_CANCELED}" 
+      q << "AND enrollments.completion_status = #{Enrollment::COMPLETION_CANCELED}"
     when false
-      q << "AND enrollments.completion_status != #{Enrollment::COMPLETION_CANCELED}" 
+      q << "AND enrollments.completion_status != #{Enrollment::COMPLETION_CANCELED}"
     end
     q << "GROUP BY enrollments.id"
     q << "ORDER BY enrollments.completion_status, term_credit_date DESC, term_name, contract_name"
@@ -333,7 +333,7 @@ END
     enrollments.find(:all, :conditions => "finalized_on is null and (completion_status != #{Enrollment::COMPLETION_CANCELED})", :include => [{:contract => [:category, :facilitator, :term]}, {:credit_assignments => :credit}, {:statuses => :notes} ], :order => 'contracts.name')
   end
 
-  # returns a User object for the phantom unassigned staff member.  
+  # returns a User object for the phantom unassigned staff member.
 
   def User.unassigned
     un = find_by_last_name("Unassigned")
@@ -364,7 +364,7 @@ END
   # active staff members
 
   def User.staff_users
-    User.find(:all, 
+    User.find(:all,
       :conditions => ["privilege >= ? and status = ?", PRIVILEGE_STAFF, STATUS_ACTIVE],
       :order => "last_name,first_name")
   end
@@ -395,9 +395,9 @@ END
     conditions << "(enrollments.participant_id = ?)"
     parameters << self.id
 
-    Enrollment.find(:all, 
-        :conditions => [conditions.join(' and ')] + parameters, 
-        :include => [{:contract => :category}], 
+    Enrollment.find(:all,
+        :conditions => [conditions.join(' and ')] + parameters,
+        :include => [{:contract => :category}],
         :order => "contracts.name")
   end
 
@@ -461,7 +461,7 @@ END
 
   def finalized_credits
     credit_assignments.find(:all, :conditions => "credit_assignments.credit_transmittal_batch_id is not null", :include => [:credit, :child_credit_assignments, :contract_term], :order => 'credits.course_name')
-  end  
+  end
 
   #####################################################################################
   # Password and Login validations and constants
@@ -498,7 +498,7 @@ END
   LOGIN_NAMES = {
     LOGIN_NONE => "No",
     LOGIN_REQUESTED => "Requested",
-    LOGIN_ALLOWED => "Yes"    
+    LOGIN_ALLOWED => "Yes"
   }
 
   #########################################################
@@ -570,10 +570,10 @@ END
   # matching user (or NIL)
   def self.authenticate(login, password)
     user = User.find_by_login(login)
-    return nil if user.blank? or 
-      user.login_status != LOGIN_ALLOWED or 
+    return nil if user.blank? or
+      user.login_status != LOGIN_ALLOWED or
       user.status != STATUS_ACTIVE or
-      user.privilege == PRIVILEGE_NONE or 
+      user.privilege == PRIVILEGE_NONE or
       Digest::SHA256.hexdigest(password+user.password_salt) != user.password_hash
     user
   end
@@ -603,7 +603,7 @@ END
     if user_params[:coordinator_id] == "0"
       self.coordinator = nil
     else
-      self.coordinator = User.find(user_params[:coordinator_id]) 
+      self.coordinator = User.find(user_params[:coordinator_id])
     end if user_params[:coordinator_id]
 
     # clean out these items we just set manually

@@ -3,7 +3,7 @@ class Admin::LearningPlansController < AdminBaseController
   before_filter :get_goal, :only => [:edit, :update, :destroy]
   before_filter :set_meta
 
-protected  
+protected
   def get_goal
     @learning_plan_goal = LearningPlanGoal.find(params[:id])
   end

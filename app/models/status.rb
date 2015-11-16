@@ -16,8 +16,8 @@ class Status < ActiveRecord::Base
 
   def self.make(month, statusable, user)
     raise ArgumentError, "Invalid date value for status report" unless month.day == 1
-    ActiveRecord::Base.connection.execute("INSERT INTO statuses(month, creator_id, created_at, updated_at, statusable_id, statusable_type, met_fte_requirements) 
-        VALUES ('#{month.strftime('%Y-%m-%d')}', #{user.id}, NOW(), NOW(), #{statusable.id}, '#{statusable.class.to_s}', #{statusable.is_a?(Enrollment)?1:'NULL'}) 
+    ActiveRecord::Base.connection.execute("INSERT INTO statuses(month, creator_id, created_at, updated_at, statusable_id, statusable_type, met_fte_requirements)
+        VALUES ('#{month.strftime('%Y-%m-%d')}', #{user.id}, NOW(), NOW(), #{statusable.id}, '#{statusable.class.to_s}', #{statusable.is_a?(Enrollment)?1:'NULL'})
         ON DUPLICATE KEY UPDATE updated_at = NOW()")
   end
 
@@ -26,9 +26,9 @@ class Status < ActiveRecord::Base
   end
 
   def unacceptable?
-    (self.academic_status==Status::STATUS_UNACCEPTABLE) || 
-    (self.attendance_status&&self.attendance_status != STATUS_ACCEPTABLE) || 
-    (self.statusable_type=='User'&&self.held_periodic_checkins==false) || 
+    (self.academic_status==Status::STATUS_UNACCEPTABLE) ||
+    (self.attendance_status&&self.attendance_status != STATUS_ACCEPTABLE) ||
+    (self.statusable_type=='User'&&self.held_periodic_checkins==false) ||
     (self.statusable_type=='Enrollment'&&self.met_fte_requirements==false)
   end
 
@@ -60,7 +60,7 @@ class Status < ActiveRecord::Base
     q = []
     params = []
     q << "SELECT month, statusable_id, statusees.coordinator_id, CONCAT(coordinators.last_name, ', ', coordinators.first_name) AS coor_name, statusees.date_inactive, statusees.date_active FROM statuses"
-    q << "INNER JOIN users AS statusees ON (statuses.statusable_id = statusees.id AND statuses.statusable_type = 'User' AND (statusees.date_inactive IS NULL OR statusees.date_inactive > ?))" 
+    q << "INNER JOIN users AS statusees ON (statuses.statusable_id = statusees.id AND statuses.statusable_type = 'User' AND (statusees.date_inactive IS NULL OR statusees.date_inactive > ?))"
     q << "INNER JOIN users AS coordinators ON statusees.coordinator_id = coordinators.id"
     if options[:coordinator_id]
       q << "AND coordinators.id = ?"
@@ -91,7 +91,7 @@ class Status < ActiveRecord::Base
 
   end
 
-  # creates a report listing contract status reports missing for a range of 
+  # creates a report listing contract status reports missing for a range of
   # students
   def self.contracts_months_missing(options = {})
     # construct a query to get the list of status reports for the range
@@ -123,7 +123,7 @@ class Status < ActiveRecord::Base
       parameters << Contract::STATUS_ACTIVE
     end
 
-    # grab the set of contracts with the term objects needed to generate the 
+    # grab the set of contracts with the term objects needed to generate the
     # statusable months list
     unless conditions.empty?
       cond = [conditions.join(' and ')]+parameters
@@ -155,7 +155,7 @@ class Status < ActiveRecord::Base
 
     enrollments = Enrollment.find_by_sql([q.join(' ')]+parameters )
 
-    # create a hash of status months for each enrollment 
+    # create a hash of status months for each enrollment
     status_hash = statuses.group_by{|s| s.statusable_id}
     status_hash.keys.each do |i|
       status_hash[i] = status_hash[i].collect{|s| s.month}
@@ -181,7 +181,7 @@ class Status < ActiveRecord::Base
 
       missing.each do |m|
         report[k][:missing][m] += 1
-      end 
+      end
     end
 
     report[:months_range] = contracts.collect{|c| c.term.months}.flatten.uniq.sort

@@ -1,15 +1,15 @@
 module TinyTabs
-  # The tab setup consists of two pieces. One describes the privileges, the other 
+  # The tab setup consists of two pieces. One describes the privileges, the other
   # Create a hash that indicates which toolbar items to render
   # Returned hash has keys set to TRUE if that main item exists
   # If the main item is current its value is an array indicating
   # subtab items that are active
-  
+
   def setup_tabs
-  
+
     tab_data = {
       :order => [:school, :status, :contracts, :students, :my, :admin, :settings],
-      
+
       :school => {
         :path => '/',
         :title => AppConfig.app_organization_shortname,
@@ -20,7 +20,7 @@ module TinyTabs
           },
         :order => [:index, :catalog, :login]
       },
-      
+
       :status => {
         :privilege => User::PRIVILEGE_STAFF,
         :tabs => {
@@ -31,7 +31,7 @@ module TinyTabs
           },
         :order => [:index, :contract, :coor, :account]
       },
-      
+
       :my => {
         :title => 'My Stuff',
         :path => '/my',
@@ -62,7 +62,7 @@ module TinyTabs
         },
         :order => [:index, :new, :show, :enrollments, :assignments, :attendance, :participant]
       },
-      
+
       :students => {
         :privilege => User::PRIVILEGE_STAFF,
         :title => 'Students',
@@ -75,7 +75,7 @@ module TinyTabs
         },
         :order => [:index, :status, :learning, :credits, :graduation]
       },
-        
+
       :admin => {
           :privilege => User::PRIVILEGE_ADMIN,
           :path => '/admin/accounts',
@@ -87,7 +87,7 @@ module TinyTabs
           },
           :order => [:accounts, :enrollments, :credit_batches, :reports]
         },
-        
+
       :settings => {
           :privilege => User::PRIVILEGE_ADMIN,
           :path => '/admin/settings',
@@ -104,30 +104,30 @@ module TinyTabs
           :order => [:index, :terms, :periods, :credits, :plans, :learning_plans, :categories, :ealrs]
         },
     }
-  
+
     # Tab settings normally are the controller/action pair symbolized. This can
     # be overridden on a specific action that might hide under another action's tab.
-    
+
     @cur_tab ||= {}
     @cur_tab[:tab1] ||= controller.controller_name.to_sym
     @cur_tab[:tab2] ||= controller.action_name.to_sym
 
     @tabs = []
     @subtabs = []
-    
+
     tab_data[:order].each do |k|
 
       tab = tab_data[k]
-      
+
       # reject the top-level tab if user is not privileged
       next unless privileged_for? tab
 
       tab[:path] ||= "/#{k.to_s}"
       tab[:title] ||= k.to_s.humanize
-      
+
       # Add the tab to the list
       @tabs << tab
-      
+
       # If current tab, scan the subtabs and add
       if @cur_tab[:tab1]==k
         @tab1 = tab
@@ -135,7 +135,7 @@ module TinyTabs
         tab[:order].each do |l|
 
           subtab = tab[:tabs][l]
-          
+
           raise ArgumentError, "Subtab #{l} not found" unless subtab
 
           next unless privileged_for? subtab
@@ -148,21 +148,21 @@ module TinyTabs
         end
       end
     end
-    
+
     raise ArgumentError, "Tab 1 not found from #{@cur_tab.inspect}" unless @tab1
     raise ArgumentError, "Tab 2 not found from #{@cur_tab.inspect}" unless @tab2
-    
+
   end
-  
+
   # returns true if the logged in user should see this tab
 
   def privileged_for? tab
     return false if tab[:privilege] && (@user.nil? || tab[:privilege] > @user.privilege)
-    
+
     return true unless tab[:if]
-    
+
     tab[:if] = [tab[:if]] unless tab[:if].is_a? Array
-    
+
     privileged = true
     tab[:if].each do |i|
       case i
@@ -175,20 +175,20 @@ module TinyTabs
         return false unless self.send(i)
       end
     end
-    return true    
+    return true
 
   end
-  
+
   # Provides a title for a tab based on tab symbol name or the title
   def tab_title tab
     tab[:title]||tab[:tab].to_s.humanize
   end
-  
+
   # Translates the tab url, passing in the contract/student ID as necessary
   def tab_url tab
     tab[:path].gsub(/%(\w)/) {|s|tab_url_translate(s, $1)}
   end
-  
+
   def tab_url_translate(s, code)
     case code
     when 'c'
@@ -201,35 +201,35 @@ module TinyTabs
       raise ArgumentError, "Unknown tab URL substition code #{s}"
     end
   end
-  
+
   def student_user?
     @user && @user.privilege==User::PRIVILEGE_STUDENT
   end
-  
+
   def logged_out?
     @user.nil?
   end
-  
+
   def new_contract?
     @contract && @contract.new_record?
   end
-  
+
   def enrolled_user?
     @contract && @user && @user.enrolled_in?(@contract)
   end
-  
+
   def editable?
     @privs[:edit]
   end
-  
+
   def viewable?
     @privs[:view]
   end
-  
+
   def viewable_not_editable?
     @privs[:view] && !@privs[:edit]
   end
-  
-  
+
+
 
 end

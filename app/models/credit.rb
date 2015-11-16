@@ -22,7 +22,7 @@ class Credit < ActiveRecord::Base
 
       # credit assignments that are attached to an unfinalized enrollment
       LEFT OUTER JOIN (
-        SELECT credit_id, COALESCE(COUNT(id), 0) AS count FROM credit_assignments ca 
+        SELECT credit_id, COALESCE(COUNT(id), 0) AS count FROM credit_assignments ca
           WHERE ca.user_id IS NULL AND ca.enrollment_id IS NOT NULL
           AND ca.enrollment_finalized_on IS NULL
           GROUP BY credit_id) AS ca_enrolled ON ca_enrolled.credit_id = credits.id
@@ -36,22 +36,22 @@ class Credit < ActiveRecord::Base
 
       # credit assignments that are approved by the facilitator for transmittal
       LEFT OUTER JOIN (
-        SELECT credit_id, COALESCE(COUNT(id), 0) AS count FROM credit_assignments ca 
+        SELECT credit_id, COALESCE(COUNT(id), 0) AS count FROM credit_assignments ca
           WHERE ca.user_id IS NOT NULL AND ca.district_finalize_approved_on IS NOT NULL AND ca.parent_credit_assignment_id IS NULL
           GROUP BY credit_id) AS ca_approved ON ca_approved.credit_id = credits.id
 
       GROUP BY credits.id
 
-      ORDER BY course_type, course_name 
+      ORDER BY course_type, course_name
     }
   end
 
   # returns a list of users enrolled in a credit
   def active_enrolled_users_report
 
-    User.find :all, 
+    User.find :all,
       :joins => %Q{
-        INNER JOIN enrollments e ON e.participant_id = users.id 
+        INNER JOIN enrollments e ON e.participant_id = users.id
         INNER JOIN credit_assignments ca ON ca.enrollment_id = e.id
         INNER JOIN users co ON co.id = users.coordinator_id
         INNER JOIN contracts c ON c.id = e.contract_id
@@ -70,9 +70,9 @@ class Credit < ActiveRecord::Base
   # returns a list of users with a finalized but unapproved credit
   def unapproved_credited_users_report
 
-    User.find :all, 
+    User.find :all,
       :joins => %Q{
-        INNER JOIN enrollments e ON e.participant_id = users.id 
+        INNER JOIN enrollments e ON e.participant_id = users.id
         INNER JOIN credit_assignments ca ON ca.enrollment_id = e.id
         INNER JOIN users co ON co.id = users.coordinator_id
       },

@@ -18,7 +18,7 @@ class Enrollment < ActiveRecord::Base
     end
   end
 
-  has_many :turnins, :dependent => :destroy, :order => 'assignments.due_date', :include => :assignment do 
+  has_many :turnins, :dependent => :destroy, :order => 'assignments.due_date', :include => :assignment do
 
     def weight_total
       inject(0){|sum, turnin| sum + (turnin.complete? ? turnin.assignment.weighting : 0)}
@@ -46,10 +46,10 @@ class Enrollment < ActiveRecord::Base
       current_points_completed = due_assignments.inject(0){|sum,assignment| sum + assignment.present.to_i}
 
       {
-        :points_possible => points_possible, 
-        :current_points_possible => current_points_possible, 
-        :points_completed => points_completed, 
-        :current_points_completed => current_points_completed, 
+        :points_possible => points_possible,
+        :current_points_possible => current_points_possible,
+        :points_completed => points_completed,
+        :current_points_completed => current_points_completed,
         :percent_complete => points_possible==0 ? 0 : ((points_completed.to_f / points_possible) * 100),
         :current_percent_complete => current_points_possible==0 ? 0 : ((current_points_completed.to_f / current_points_possible) * 100),
       }
@@ -64,7 +64,7 @@ class Enrollment < ActiveRecord::Base
 
   end
 
-  has_many :meeting_participants, :dependent => :destroy do 
+  has_many :meeting_participants, :dependent => :destroy do
 
     def stats
       stats_results = Meeting.connection.select_all(%{
@@ -102,7 +102,7 @@ public
   ROLE_NAMES = { ROLE_STUDENT => "Student",
     ROLE_INSTRUCTOR => "Instructor" }
 
-  # Note, these are in ascending order of accessibility. 
+  # Note, these are in ascending order of accessibility.
   # Any enrollment_status >= STATUS_ENROLLED indicates accessibility.
   # enrollment requested
   STATUS_PROPOSED = 0
@@ -120,7 +120,7 @@ public
   STATUS_NAMES = { STATUS_PROPOSED => "Pending",
     STATUS_ENROLLED => "Enrolled",
     STATUS_CLOSED => "Closed",
-    STATUS_FINALIZED => "Finalized" }    
+    STATUS_FINALIZED => "Finalized" }
 
   # enrollment not complete yet
   COMPLETION_UNKNOWN = 0
@@ -171,7 +171,7 @@ public
     else
       STATUS_NAMES[self.enrollment_status]
     end
-  end    
+  end
 
   # activates enrollment
 
@@ -181,9 +181,9 @@ public
     # fulfilled.
 
     privs = privileges(user)
-    unless privs[:edit] && 
+    unless privs[:edit] &&
       (
-        [STATUS_PROPOSED, STATUS_CLOSED].include?(self.enrollment_status) || 
+        [STATUS_PROPOSED, STATUS_CLOSED].include?(self.enrollment_status) ||
         (self.enrollment_status==STATUS_FINALIZED && self.completion_status==COMPLETION_CANCELED)
       )
       raise TinyException, TinyException::MESSAGES[TinyException::NOPRIVILEGES]
@@ -192,7 +192,7 @@ public
     if finalized? # assume it was canceled and is being reinstated. set credits back to unfinalized state.
       credit_assignments.each do |ca|
         ca.enrollment_unfinalize
-      end 
+      end
     end
 
     self.completion_date = nil
@@ -204,15 +204,15 @@ public
     true
   end
 
-  # destroys the enrollment. 
+  # destroys the enrollment.
   # You must have edit privileges, or be a staff member, or be the
-  # student who enrolled himself. 
+  # student who enrolled himself.
 
   def set_dropped(user)
     privs = privileges(user)
 
     # check privileges
-    unless (self.enrollment_status == STATUS_PROPOSED and (privs[:edit] or user.id == participant.id)) or 
+    unless (self.enrollment_status == STATUS_PROPOSED and (privs[:edit] or user.id == participant.id)) or
       (self.enrollment_status == STATUS_CLOSED and privs[:edit])
       raise TinyException, TinyException::MESSAGES[TinyException::NOPRIVILEGES]
     end
@@ -265,12 +265,12 @@ public
     # fixup the credits
     credit_assignments.each do |ca|
       ca.enrollment_finalize(self.completion_status, participant, contract, date)
-    end 
+    end
 
     return true
   end
 
-  # performs a student enrollment, setting the enrollment_status 
+  # performs a student enrollment, setting the enrollment_status
   # appropriately depending on the enrolling user's privileges.
 
   def Enrollment.enroll_student(contract, student, user, privs=nil)
@@ -282,10 +282,10 @@ public
 
     # Bail out if the user is already enrolled
     if (nil != student.enrollments.find(:first, :conditions => "contract_id = #{contract.id}"))
-      TinyException.raise_exception(TinyException::ENROLL_DUPLICATE, user) 
+      TinyException.raise_exception(TinyException::ENROLL_DUPLICATE, user)
     end
 
-    # get the privs 
+    # get the privs
     privs ||= contract.privileges(user)
 
     # Bail out if the class isn't enrolling and user doesn't have privileges to edit
@@ -322,7 +322,7 @@ protected
 
     contract.enrollments << e
 
-    contract.activate if contract.closed? 
+    contract.activate if contract.closed?
 
     return e
   end
@@ -347,7 +347,7 @@ public
   # returns an array of friendly credit strings
 
   def credit_strings
-    if credit_assignments.empty? 
+    if credit_assignments.empty?
       ["No credits assigned."]
     else
       credit_assignments.collect{|c| c.credit_string}
@@ -395,10 +395,10 @@ public
 
       # staff members can view and do notes
       # non-staff, non-enrolled user has no privileges
-      p[:browse] = 
-      p[:view] = 
-      p[:create_note] = 
-      p[:view_students] = 
+      p[:browse] =
+      p[:view] =
+      p[:create_note] =
+      p[:view_students] =
       p[:view_note] = (user.privilege == User::PRIVILEGE_STAFF)
 
       return p
@@ -412,8 +412,8 @@ public
 
     # FOR VIEW, NOTE PRIVILEGES,
     # user must be an instructor or a supervisor or the enrolled student
-    p[:view] = 
-    p[:create_note] = 
+    p[:view] =
+    p[:create_note] =
     p[:view_note] =
     p[:browse] = ((user_role >= Enrollment::ROLE_INSTRUCTOR) or
                   (user.id == participant.id))
@@ -435,10 +435,10 @@ public
       conditions << "contract_id in (#{contract_ids.join(',')})"
     else
       conditions << "contract_id = ?"
-      parameters << contract_ids      
+      parameters << contract_ids
     end
 
-    Enrollment.find(:all, :order => "users.last_name, users.nickname, users.first_name", 
+    Enrollment.find(:all, :order => "users.last_name, users.nickname, users.first_name",
       :conditions => [conditions.join(' and ')]+parameters,
       :include =>  includes)
   end

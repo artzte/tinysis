@@ -10,7 +10,7 @@ class Category < ActiveRecord::Base
   STATUSABLE_NAMES = {
     STATUSABLE_NONE => "None",
     STATUSABLE_MONTHLY => "Monthly",
-    STATUSABLE_END => "End of term"    
+    STATUSABLE_END => "End of term"
   }
 
   def self.statusable

@@ -1,5 +1,5 @@
 module Statusable
-  
+
   # gets the specified month's status record for this object, and creates
   # it if it's not already made
   def get_status(month, user)
@@ -10,7 +10,7 @@ module Statusable
       status = Status.create(:month => month, :author => user)
       statuses << status
     end
-    
+
     status
 
   end

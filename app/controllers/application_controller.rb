@@ -30,12 +30,12 @@ class ApplicationController < ActionController::Base
   before_filter :init_globals
 
   # prepend_before_filter :localize
-  # 
+  #
   # def localize
   #   # determine locale and set other relevant stuff
   #   ActiveRecord::Base.date_format = "%Y-%m-%d"
   # end
-  # 
+  #
 protected
 
   def init_globals(action_tabs = nil)
@@ -53,7 +53,7 @@ protected
     @__coor_term
   end
 
-public  
+public
   # :tab1 => :maintab, :sub_tab => :subtab, :title => [], :javascripts => []
   def set_meta options = {}
     @cur_tab ||= {}
@@ -69,7 +69,7 @@ public
 
     if options.has_key? :javascripts
       @head[:javascripts] ||= []
-      @head[:javascripts] << options[:javascripts] 
+      @head[:javascripts] << options[:javascripts]
       @head[:javascripts] = @head[:javascripts].flatten.uniq
     end
   end
@@ -129,7 +129,7 @@ protected
     @student.nil? == false
   end
 
-  # This method sets up the contract editing tabs; it is called with an ID 
+  # This method sets up the contract editing tabs; it is called with an ID
   # and provides a tabbed editing interface for the contract object
 
   def redir_home(msg = nil)

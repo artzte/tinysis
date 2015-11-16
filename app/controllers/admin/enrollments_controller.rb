@@ -7,7 +7,7 @@ protected
     super :tab1 => :admin, :tab2 => :enrollments, :title => "Admin - Finalize Enrollments"
   end
 
-public  
+public
   def index
     @terms = Term.enrollments_report
   end

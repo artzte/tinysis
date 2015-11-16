@@ -33,9 +33,9 @@ public
 
   def create
     # must have staff privileges to be here
-    if @user.privilege < User::PRIVILEGE_STAFF 
+    if @user.privilege < User::PRIVILEGE_STAFF
       redir_error(TinyException::NOPRIVILEGES, @user)
-      return    
+      return
     end
 
     count = 0
@@ -46,7 +46,7 @@ public
       # get the student
       student = User.find(key.to_i)
 
-      # enroll the student    
+      # enroll the student
       Enrollment.enroll_student(@contract, student, @user, @privs)
 
       count += 1

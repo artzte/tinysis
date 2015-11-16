@@ -89,7 +89,7 @@ class CreditAssignment < ActiveRecord::Base
     return true
   end
 
-  # facilitator has approved the credit for transmittal to the district. 
+  # facilitator has approved the credit for transmittal to the district.
   # move the credit course names over and record who approved the credit for transmittal to district
   def district_approve(user, date)
     raise "Can't approve this, as it has already been approved for recording at the district" if self.credit_transmittal_batch_id
@@ -179,7 +179,7 @@ class CreditAssignment < ActiveRecord::Base
 
   # credit_course_name
   # credit_course_id
-  # 
+  #
   def credit_string
     "#{credit_course_name} (#{credit_course_id}) / #{credit_hours_string}"
   end
@@ -242,7 +242,7 @@ class CreditAssignment < ActiveRecord::Base
   end
 
   def primary_parent
-    if user? 
+    if user?
       return self.user
     elsif self.contract_id?
       return self.contract

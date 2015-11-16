@@ -8,7 +8,7 @@ class GraduationPlanMapping < ActiveRecord::Base
 
   has_many :notes, :as => :notable, :dependent => :destroy
 
-  def before_save 
+  def before_save
     if credit_assignment
       self.date_completed = credit_assignment.enrollment_finalized_on
     end

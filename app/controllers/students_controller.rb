@@ -28,7 +28,7 @@ class StudentsController < ApplicationController
 
     # construct filter and options for year dropdown
     @year_options = @term_years.collect{|t| ["#{t.school_year} status",t.school_year]}
-    @year_filter = params[:year] && params[:year]!='current' ? params[:year].to_i : @this_year 
+    @year_filter = params[:year] && params[:year]!='current' ? params[:year].to_i : @this_year
 
     setup_coor_report :school_year => @year_filter, :editable => false
 

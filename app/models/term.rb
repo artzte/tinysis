@@ -23,7 +23,7 @@ class Term < ActiveRecord::Base
   end
 
   def self.month_name(base_month, i)
-    Date::MONTHNAMES[(base_month+i) > 12 ? (base_month+i)%12 : base_month+i]  
+    Date::MONTHNAMES[(base_month+i) > 12 ? (base_month+i)%12 : base_month+i]
   end
 
   # sets months from an array of strings or integers indicating
@@ -50,7 +50,7 @@ class Term < ActiveRecord::Base
 
   def reporting_months_options
     month_array = self.months.sort
-    month_array.collect{|m| [m.strftime("%b %Y"), m.to_i]}  
+    month_array.collect{|m| [m.strftime("%b %Y"), m.to_i]}
   end
 
   def months_bool
@@ -59,7 +59,7 @@ class Term < ActiveRecord::Base
     get_reporting_months
 
     for i in 0..11
-      month = self.base_month + i 
+      month = self.base_month + i
       if month > 12
         year = self.school_year + 1
         month = month % 12
@@ -89,20 +89,20 @@ class Term < ActiveRecord::Base
 
   def self.enrollments_report
     q = <<END
-      SELECT 
-        terms.*, 
-        COALESCE(all_enrollments.count,0) AS count, 
-        COALESCE(finalized_enrollments.count,0) AS finalized_count, 
-        (COALESCE(all_enrollments.count,0)-COALESCE(finalized_enrollments.count,0)) AS open_count 
+      SELECT
+        terms.*,
+        COALESCE(all_enrollments.count,0) AS count,
+        COALESCE(finalized_enrollments.count,0) AS finalized_count,
+        (COALESCE(all_enrollments.count,0)-COALESCE(finalized_enrollments.count,0)) AS open_count
       FROM terms
       LEFT OUTER JOIN (
-        SELECT contracts.term_id, COUNT(enrollments.id) AS count FROM enrollments 
-        INNER JOIN contracts ON enrollments.contract_id = contracts.id 
-        WHERE enrollments.enrollment_status = 3 
+        SELECT contracts.term_id, COUNT(enrollments.id) AS count FROM enrollments
+        INNER JOIN contracts ON enrollments.contract_id = contracts.id
+        WHERE enrollments.enrollment_status = 3
         GROUP BY contracts.term_id) AS finalized_enrollments ON finalized_enrollments.term_id = terms.id
       LEFT OUTER JOIN (
-        SELECT contracts.term_id, COUNT(enrollments.id) AS count FROM enrollments 
-        INNER JOIN contracts ON enrollments.contract_id = contracts.id 
+        SELECT contracts.term_id, COUNT(enrollments.id) AS count FROM enrollments
+        INNER JOIN contracts ON enrollments.contract_id = contracts.id
         GROUP BY contracts.term_id) AS all_enrollments ON all_enrollments.term_id = terms.id
 END
     Term.find_by_sql(q)
@@ -111,7 +111,7 @@ END
   def long_name
     name = "#{self.school_year}: #{self.name}"
     name << " (inactive)" unless self.active
-    name 
+    name
   end
 
   def self.coor(year = nil)

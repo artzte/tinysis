@@ -75,7 +75,7 @@ public
     u = User.authorized_email(email)
     if u.nil?
       flash[:notice] = "Could not find an active account with that email address."
-      return        
+      return
     end
 
     password = u.reset_password
@@ -94,7 +94,7 @@ public
   end
 
   before_filter :set_no_admin, :only => [:edit, :update]
-  def set_no_admin 
+  def set_no_admin
     @noadmin = true
   end
   hide_action :set_no_admin
@@ -104,7 +104,7 @@ public
       set_meta :tab1 => :my, :tab2 => :account, :title => "#{@user.full_name} Settings"
     else
       set_meta :tab1 => :status, :tab2 => :account, :title => "#{@user.full_name} Settings"
-    end 
+    end
     @account = User.find_by_id @user.id
   end
 

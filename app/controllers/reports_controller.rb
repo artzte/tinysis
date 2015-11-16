@@ -29,7 +29,7 @@ public
                 User::STATUS_NAMES[student.status][0..0],
                 d(student.date_active),
                 student.date_inactive ? d(student.date_inactive) : '',
-              ] +
+              ]
               @months.collect{|m| csv_month(student, statuses, m, @this_month)}.flatten
             csv << columns
           end
@@ -95,8 +95,8 @@ protected
     elsif status.nil?
       ['?','?']
     else
-      [status.fte_hours, Status::STATUS_NAMES[status.academic_status][0..0]] 
-    end 
+      [status.fte_hours, Status::STATUS_NAMES[status.academic_status][0..0]]
+    end
   end
 
 end

@@ -3,7 +3,7 @@ class Admin::CreditsController < AdminBaseController
   before_filter :get_credit, :only => [:edit, :update, :destroy]
   before_filter :set_meta
 
-protected  
+protected
   def get_credit
     @credit = Credit.find(params[:id])
   end

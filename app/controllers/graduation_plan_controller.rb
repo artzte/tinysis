@@ -10,7 +10,7 @@ class GraduationPlanController < ApplicationController
   def index
     @unassigned_credits = my_unassigned
 
-    @requirements = GraduationPlanRequirement.requirements_hash 
+    @requirements = GraduationPlanRequirement.requirements_hash
 
     @credit_requirements = @requirements[:credit]||[]
     @general_requirements = @requirements[:general]||[]

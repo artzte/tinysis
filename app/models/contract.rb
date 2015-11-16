@@ -17,17 +17,17 @@ class Contract < ActiveRecord::Base
 
   has_many :enrollments, :include => :participant, :dependent => :destroy do
 
-    # returns a list of all non-facilitator participants ever 
-    # with active enrollments in this class  
+    # returns a list of all non-facilitator participants ever
+    # with active enrollments in this class
     def all
-      find(:all, :order => "enrollments.finalized_on, enrollments.enrollment_status, enrollments.completion_status DESC, enrollments.role DESC, users.last_name, users.first_name", 
+      find(:all, :order => "enrollments.finalized_on, enrollments.enrollment_status, enrollments.completion_status DESC, enrollments.role DESC, users.last_name, users.first_name",
         :include => [:participant, {:credit_assignments=>:credit}] )
     end
 
     # returns a list of statusable enrollments
     def statusable(shallow = false)
       Enrollment.statusable(proxy_owner.id, shallow)
-    end  
+    end
   end
 
   has_many :notes, :as => :notable
@@ -65,7 +65,7 @@ class Contract < ActiveRecord::Base
   end
 
   def homeroom?
-    category.homeroom? 
+    category.homeroom?
   end
 
   def before_save
@@ -102,8 +102,8 @@ class Contract < ActiveRecord::Base
     return p if user.nil?
 
     # allow create/view privileges if it's at least a student
-    p[:create] = 
-    p[:view] = 
+    p[:create] =
+    p[:view] =
     p[:browse] = (user.privilege >= User::PRIVILEGE_STUDENT)
 
     # edit privileges connote full privs to assign facilitator, set status, etc.
@@ -144,10 +144,10 @@ class Contract < ActiveRecord::Base
       # staff members can view and do notes
       case user.privilege
       when User::PRIVILEGE_STAFF
-        p[:view] = 
-        p[:browse] = 
-        p[:create_note] = 
-        p[:view_students] = 
+        p[:view] =
+        p[:browse] =
+        p[:create_note] =
+        p[:view_students] =
         p[:view_note] = true
 
         # any staff member can edit an unsupervised contract
@@ -160,10 +160,10 @@ class Contract < ActiveRecord::Base
 
         if unsupervised and (user.id == creator.id)
 
-          p[:browse] = 
-          p[:view] = 
-          p[:edit] = 
-          p[:create_note] = 
+          p[:browse] =
+          p[:view] =
+          p[:edit] =
+          p[:create_note] =
           p[:view_note] = true
 
         else
@@ -186,14 +186,14 @@ class Contract < ActiveRecord::Base
 
     # FOR VIEW/BROWSE/NOTE PRIVILEGES,
     # user must be enrolled. we have already ascertained that.
-    p[:view] = 
-    p[:browse] = 
-    p[:create_note] = 
+    p[:view] =
+    p[:browse] =
+    p[:create_note] =
     p[:view_note] = true
 
     # an instructor or supervisor can edit a note / view student info
 
-    p[:view_students] =  
+    p[:view_students] =
     p[:edit_note] =  (user_role >= Enrollment::ROLE_INSTRUCTOR)
 
     return p
@@ -206,7 +206,7 @@ class Contract < ActiveRecord::Base
 
     return category.sequence <=> contract.category.sequence if category.sequence != contract.category.sequence
     return name <=> contract.name
-  end  
+  end
 
   def copy(params)
 
@@ -237,13 +237,13 @@ class Contract < ActiveRecord::Base
   end
 
   ##########################################################################
-  # Functions for getting lists of different types of contracts 
+  # Functions for getting lists of different types of contracts
 
   def Contract.catalog(options = {})
 
     q = []
-    q << "SELECT" 
-    q << "contracts.*," 
+    q << "SELECT"
+    q << "contracts.*,"
     q << "CONCAT(users.first_name, ' ', users.last_name) AS facilitator_name,"
     q << "categories.name AS category_name, terms.name AS term_name,"
     q << "COALESCE(GROUP_CONCAT(CONCAT(credits.course_name,' / ',credit_assignments.credit_hours) ORDER BY credits.course_name SEPARATOR '; '),'None assigned') AS credit_string"
@@ -284,9 +284,9 @@ class Contract < ActiveRecord::Base
   # in this contract
 
   def users_open_for_enrollment
-    User.find_by_sql "select u.* from users u 
-      where u.status = #{User::STATUS_ACTIVE} and 
-            u.id not in 
+    User.find_by_sql "select u.* from users u
+      where u.status = #{User::STATUS_ACTIVE} and
+            u.id not in
               (select e.participant_id from enrollments e where contract_id = #{id})
       order by last_name, first_name;"
   end
@@ -294,8 +294,8 @@ class Contract < ActiveRecord::Base
   # returns the enrollment record for a user, or nil if the user
   # is not actively enrolled
   def participant_enrollment(user)
-    enrollments.find(:first, 
-      :conditions => ["enrollment_status >= ? and participant_id = ?", 
+    enrollments.find(:first,
+      :conditions => ["enrollment_status >= ? and participant_id = ?",
                         Enrollment::STATUS_ENROLLED, user.id])
   end
 
@@ -342,7 +342,7 @@ class Contract < ActiveRecord::Base
     end
 
     # second pass through the list to adjust all the absence counts
-    results.values.each do |stats| 
+    results.values.each do |stats|
 
       total = stats.values.sum
       stats[MeetingParticipant::ABSENT] ||= 0

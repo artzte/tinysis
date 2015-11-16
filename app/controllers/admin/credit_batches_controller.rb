@@ -16,7 +16,7 @@ public
 
     @batches = CreditTransmittalBatch.batches_with_counts
 
-    setup_page_variables @batches, 20    
+    setup_page_variables @batches, 20
 
   end
 

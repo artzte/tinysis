@@ -42,7 +42,7 @@ public
       @note.destroy
       render :nothing => true
       return
-    end 
+    end
 
     @note.note = params['note']
     @note.author = @user

@@ -72,7 +72,7 @@ class CreditController < ApplicationController
       credit.notes << Note.new(:note => params[:notes].strip, :author => @user)
     end
 
-    render :partial => 'credit/credits', :object => @parent      
+    render :partial => 'credit/credits', :object => @parent
   end
 
   def update
@@ -133,7 +133,7 @@ class CreditController < ApplicationController
 
     CreditAssignment.combine(@student, params[:course], params[:term], params[:credits_override], @credit_assignments, @user)
 
-    redirect_to credit_assignments_path(@student)    
+    redirect_to credit_assignments_path(@student)
   end
 
   # removes a credit from the parent
@@ -165,7 +165,7 @@ class CreditController < ApplicationController
 
     flash[:notice] = "The credits were deleted."
 
-    redirect_to credit_assignments_path(@student) 
+    redirect_to credit_assignments_path(@student)
   end
 
   def split
@@ -180,7 +180,7 @@ class CreditController < ApplicationController
 
     @credit_assignments = @student.unfinalized_credits
 
-    redirect_to credit_assignments_path(@student)    
+    redirect_to credit_assignments_path(@student)
   end
 
   def approve

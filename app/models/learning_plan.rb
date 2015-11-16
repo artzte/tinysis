@@ -33,9 +33,9 @@ class LearningPlan < ActiveRecord::Base
 
     if u == user or u.privilege >= User::PRIVILEGE_STAFF
 
-      p[:view] = 
-      p[:browse] = 
-      p[:create_note] = 
+      p[:view] =
+      p[:browse] =
+      p[:create_note] =
       p[:view_note] = true
 
     end

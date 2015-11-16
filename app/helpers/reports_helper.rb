@@ -10,7 +10,7 @@ module ReportsHelper
     elsif status.nil?
       ['?','?']
     else
-      [status.fte_hours, Status::STATUS_NAMES[status.academic_status][0..0]] 
-    end 
+      [status.fte_hours, Status::STATUS_NAMES[status.academic_status][0..0]]
+    end
   end
 end

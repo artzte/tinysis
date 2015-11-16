@@ -16,7 +16,7 @@ class AssignmentController < ApplicationController
 
   verify :xhr => true, :only => AJAX_METHODS
 
-protected  
+protected
   def get_assignment
     @assignment = @contract.assignments.find(params[:id])
   end
@@ -53,7 +53,7 @@ public
     @turnin_missing = Turnin.new
 
     q = <<END
-      SELECT turnins.*, notes.id IS NOT NULL AS has_note, UCASE(LEFT(turnins.status,1)) AS scode FROM turnins 
+      SELECT turnins.*, notes.id IS NOT NULL AS has_note, UCASE(LEFT(turnins.status,1)) AS scode FROM turnins
       INNER JOIN assignments ON turnins.assignment_id = assignments.id
       INNER JOIN enrollments ON turnins.enrollment_id = enrollments.id
       LEFT OUTER JOIN (SELECT notes.id, notable_id FROM notes WHERE notable_type = 'Turnin' GROUP BY notable_id) AS notes ON notes.notable_id = turnins.id
@@ -147,7 +147,7 @@ END
 
   def feedback_edit
     @turnin = find_or_create_turnin(params)
-    @enrollment = Enrollment.find_by_id(@turnin.enrollment_id, :include => :participant) 
+    @enrollment = Enrollment.find_by_id(@turnin.enrollment_id, :include => :participant)
     @notes = @turnin.notes
     render :layout => 'modalbox'
   end
@@ -283,11 +283,11 @@ public
       font = File.join(RAILS_ROOT,'assets','fonts','LucidaGrande.ttf')
 
       if print
-        mark = Magick::Image.new(@o[:width], @o[:height]) do 
+        mark = Magick::Image.new(@o[:width], @o[:height]) do
           self.background_color = '#ffffff'
         end
       else
-        mark = Magick::Image.new(@o[:width], @o[:height]) do 
+        mark = Magick::Image.new(@o[:width], @o[:height]) do
           self.background_color = '#ffffcc'
         end
       end

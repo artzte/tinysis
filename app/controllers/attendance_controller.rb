@@ -13,13 +13,13 @@ class AttendanceController < ApplicationController
     @meetings = @contract.meetings.find(:all, :order=>'meeting_date DESC')
 
     if params[:meeting_id] && params[:pg].nil?
-      @meeting = @contract.meetings.find(params[:meeting_id]) 
+      @meeting = @contract.meetings.find(params[:meeting_id])
       params[:i] = @meetings.index(@meeting)
     end
 
     setup_page_variables @meetings, 12
 
-    @enrollments = @contract.enrollments.uncanceled.find :all, 
+    @enrollments = @contract.enrollments.uncanceled.find :all,
       :select => "enrollments.*, CONCAT(u.last_name, ', ', u.first_name) AS name",
       :joins => "INNER JOIN users u ON u.id = enrollments.participant_id",
       :order => "u.last_name, u.first_name"

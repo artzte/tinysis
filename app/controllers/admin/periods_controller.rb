@@ -3,7 +3,7 @@ class Admin::PeriodsController < AdminBaseController
   before_filter :get_periods, :except => :update
   before_filter :set_meta
 
-protected  
+protected
   def set_meta
     super :tab1 => :settings, :tab2 => :periods, :title => 'Settings - Class Periods'
   end
@@ -12,7 +12,7 @@ protected
     @periods = Setting.periods
   end
 
-public  
+public
   def show
     @periods = Setting.periods
   end

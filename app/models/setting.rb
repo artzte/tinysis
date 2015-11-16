@@ -3,13 +3,13 @@ class Setting < ActiveRecord::Base
   def Setting.periods=(p)
 
     setting = Setting.find_by_name("periods")
-    if setting.nil? 
+    if setting.nil?
       setting = Setting.create(:name => "periods")
     end
 
     setting.update_attribute(:value, Marshal.dump(p))
 
-    p    
+    p
 
   end
 
@@ -26,7 +26,7 @@ class Setting < ActiveRecord::Base
   def Setting.set_integer(name, value)
 
     setting = Setting.find_by_name(name)
-    if setting.nil? 
+    if setting.nil?
       setting = Setting.create(:name => name, :value => value.to_i)
     else
       setting.update_attribute(:value, value.to_i)
@@ -49,7 +49,7 @@ class Setting < ActiveRecord::Base
   def Setting.current_year
 
     setting = Setting.find_by_name("current_year")
-    return nil if setting.nil? 
+    return nil if setting.nil?
 
     setting.value.to_i
 
@@ -81,7 +81,7 @@ class Setting < ActiveRecord::Base
 
   def Setting.new_contract_term_default=(term_id)
     term = Term.find(term_id.to_i)
-    raise ArgumentError, "Bad term id" unless 
+    raise ArgumentError, "Bad term id" unless
     set_integer("new_contract_term_default", term_id.to_i)
     term
   end

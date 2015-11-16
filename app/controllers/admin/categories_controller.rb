@@ -5,7 +5,7 @@ class Admin::CategoriesController < AdminBaseController
 
   layout 'tiny', :only => :index
 
-protected  
+protected
   def get_category
     @category = Category.find(params[:id])
   end

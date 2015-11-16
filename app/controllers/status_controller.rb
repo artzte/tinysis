@@ -15,7 +15,7 @@ class StatusController < ApplicationController
 protected
 
   # tab setup for this controller
-  TAB_BAR =   
+  TAB_BAR =
     [
       { :title => "Home", :action => "index", :privilege => User::PRIVILEGE_STUDENT },
       { :title => "Contract Status", :action => ["contract", "contract_detail", "contract_report"], :privilege => User::PRIVILEGE_STAFF},
@@ -26,7 +26,7 @@ protected
 
     @tabtitle = @contract.name unless @contract.nil?
 
-    @contract 
+    @contract
   end
 
   # this is called by the contracts_index function
@@ -187,7 +187,7 @@ public
     @turnins = @enrollment.turnins
 
     render :layout => false
-  end  
+  end
 
   def update_status
 

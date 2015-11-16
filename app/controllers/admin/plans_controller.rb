@@ -4,7 +4,7 @@ class Admin::PlansController < AdminBaseController
   before_filter :set_meta
   helper :note
 
-protected  
+protected
   def get_requirement
     @requirement = GraduationPlanRequirement.find params[:id]
     unless @requirement
@@ -17,7 +17,7 @@ protected
     super :tab1 => :settings, :tab2 => :plans, :title => 'Settings - Graduation Plans'
   end
 
-public  
+public
   def index
     @requirements = GraduationPlanRequirement.requirements_hash :hide_children => true
 
@@ -43,12 +43,12 @@ public
     @parent_requirement = GraduationPlanRequirement.find(params[:parent_id]) if params[:parent_id]
     if @requirement.save
       if @parent_requirement
-        @parent_requirement.child_requirements << @requirement 
+        @parent_requirement.child_requirements << @requirement
         flash[:notice] = "Thank you for adding the sub-requirement."
         redirect_to edit_plan_requirement_path(@parent_requirement)
       else
         flash[:notice] = "Thank you for adding the requirement. You can now add sub-requirements and/or notes"
-        redirect_to plan_requirements_path  
+        redirect_to plan_requirements_path
       end
     else
       render :action => 'new'

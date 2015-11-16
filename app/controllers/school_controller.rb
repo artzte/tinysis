@@ -32,7 +32,7 @@ public
     render :template => "shared/404", :layout => false, :status => 404
   end
 
-  def boom 
+  def boom
     render :text => 1/0
   end
 

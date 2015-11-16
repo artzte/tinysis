@@ -69,7 +69,7 @@ public
   end
 
   # Adds a new contract and redirects to the contract editor - this happens
-  # via get / post 
+  # via get / post
 
   def new
 
@@ -100,7 +100,7 @@ public
     # record author
     @contract.creator = @user
 
-    if update_contract(@contract) 
+    if update_contract(@contract)
       flash[:notice] = "Thanks for creating the new contract."
       session[:contract_id] = @contract.id
       redirect_to contract_path @contract
@@ -197,7 +197,7 @@ public
     end
   end
 
-  # open the form  
+  # open the form
 
   def open_timeslot_form
     render :update do |page|
@@ -242,8 +242,8 @@ public
 protected
 
   # Saves a contract record. The order of update is significant...
-  # pay attention to this when adding new values to save with the 
-  # contract 
+  # pay attention to this when adding new values to save with the
+  # contract
 
   def update_contract(contract)
 
@@ -278,7 +278,7 @@ protected
   def require_contract
     unless @contract
       flash[:notice] = "Can't find that contract."
-      redirect_to contracts_path and return 
+      redirect_to contracts_path and return
     end
   end
 

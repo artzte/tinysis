@@ -8,7 +8,7 @@ class TinyPrivileges
         :change_settings => false, #user can change settings (User object only)
         :view => false,      # user can view it
         :browse => false,    # user can minimally browse it
-        :view_students => false, # user can view cross-student listings 
+        :view_students => false, # user can view cross-student listings
         :create_note => false,  # user can add a note to it
         :edit_note => false,    # user can edit any note
         :view_note => false }    # user can view any note
@@ -18,16 +18,16 @@ class TinyPrivileges
   def grant_all
     @privs.each {|key, value| @privs[key] = true }
   end
-  
-  
+
+
   def[](priv)
     @privs[priv]
   end
-  
-  
+
+
   def[]=(priv, value)
     raise "Unknown privilege type" if !@privs.has_key?(priv)
-    @privs[priv] = value  
+    @privs[priv] = value
   end
 
   # Return a hash describing privileges of the specified user
@@ -46,12 +46,12 @@ class TinyPrivileges
     return p.grant_all if user.admin?
 
     # a facilitator has full privileges
-    
+
     return p.grant_all if theContract.facilitator == user
-    
+
     ##########################################
     # see if the user has an active enrollment role on the contract here
-    
+
     enrollment = theContract.participant_enrollment(user)
     user_role = enrollment ? enrollment.role : nil
 
@@ -61,10 +61,10 @@ class TinyPrivileges
     if user_role.nil?
 
       # staff members can view and do notes
-      p[:browse] = 
-      p[:view] = 
-      p[:view_students] = 
-      p[:create_note] = 
+      p[:browse] =
+      p[:view] =
+      p[:view_students] =
+      p[:create_note] =
       p[:view_note] = (user.privilege == User::PRIVILEGE_STAFF)
 
       return p
@@ -74,13 +74,13 @@ class TinyPrivileges
     # USER IS ENROLLED
     # FOR EDIT PRIVILEGES,
     # user must be the facilitator or instructor
-    p[:create] = 
-    p[:edit] = 
+    p[:create] =
+    p[:edit] =
     p[:view_students] = (user_role >= Enrollment::ROLE_INSTRUCTOR)
-    
+
     # FOR VIEW/BROWSE PRIVILEGES,
     # user must be an instructor or a supervisor or the enrolled student
-    p[:browse] = 
+    p[:browse] =
     p[:view] = (  (user_role >= Enrollment::ROLE_INSTRUCTOR) or
                   (user.id == enrollment.participant.id) )
 

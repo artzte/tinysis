@@ -5,7 +5,7 @@ module NoteHelper
   end
 
   def note_container(note)
-    "note_#{note.id}"  
+    "note_#{note.id}"
   end
 
   def note_title(note)

@@ -4,7 +4,7 @@ class Meeting < ActiveRecord::Base
   belongs_to :contract
   has_many :notes, :as => :notable, :dependent => :destroy
 
-  named_scope :reverse_chrono, :order => 'meeting_date DESC' 
+  named_scope :reverse_chrono, :order => 'meeting_date DESC'
 
   # Return a hash describing privileges of the specified user
   # on this meeting
@@ -18,13 +18,13 @@ class Meeting < ActiveRecord::Base
   def update_participant(enrollment_id, status)
 
     participant = meeting_participants.find(:first, :conditions => ["enrollment_id = ?", enrollment_id])
-    if participant 
+    if participant
       participant.update_attribute(:status => status)
     else
       meeting_participants << MeetingParticipant.new(:status => status)
     end
 
-  end  
+  end
 
   def create_participants
     q = []
@@ -46,7 +46,7 @@ class Meeting < ActiveRecord::Base
       INNER JOIN enrollments ON meeting_participants.enrollment_id = enrollments.id AND enrollments.completion_status != #{Enrollment::COMPLETION_CANCELED}
       INNER JOIN users ON enrollments.participant_id = users.id
       WHERE meeting_participants.meeting_id = #{self.id}
-      ORDER BY participant_name") 
+      ORDER BY participant_name")
 
   end
 

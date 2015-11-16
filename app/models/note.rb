@@ -29,7 +29,7 @@ class Note < ActiveRecord::Base
     end
     if self.creator_id.nil? && user.privilege >= User::PRIVILEGE_STAFF
       return PRIVILEGE_EDIT
-    end 
+    end
     if self.creator_id == user.id
       return PRIVILEGE_EDIT
     end
