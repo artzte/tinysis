@@ -1,5 +1,5 @@
 TinySIS::Application.routes.draw do
- 	root to: "school#index"
+ 	root to: "school#index", as: 'home'
 
  	# credit routes
 
@@ -51,6 +51,7 @@ TinySIS::Application.routes.draw do
 
   # status
   scope module: 'status' do
+    get '/status', action: 'index'
     get '/status/contract', action: 'contract', as: 'contract_status_summary'
     get '/status/contract_detail/:id', action: 'contract_detail', as: 'contract_status_detail'
     get '/status/contract_report/:id', action: 'contract_report', as: 'contract_report'
@@ -58,14 +59,15 @@ TinySIS::Application.routes.draw do
     get '/status/coor_detail/:id', action: 'coor_detail', as: 'coor_status_detail'
     get '/status/coor_report/:id', action: 'coor_report', as: 'coor_report'
   end
-  #map.connect '/status/:action/:id', :controller => 'status'
 
-  get '/my/account', to: 'account#edit', as: 'my_account'
-  post '/my/account', to: 'account#update', as: 'update_my_account'
-  get '/logout', to: 'account#logout', as: 'logout'
-  get '/login', to: 'account#login', as: 'login'
-  post '/login', to: 'account#login', as: 'login'
-  get '/reset', to: 'account#reset', as: 'reset_login'
+  scope module: 'account' do
+    get '/my/account', action: 'edit', as: 'my_account'
+    post '/my/account', action: 'update', as: 'update_my_account'
+    get '/logout', action: 'logout', as: 'logout'
+    get '/login', action: 'login', as: 'login'
+    post '/login', action: 'login', as: 'login'
+    get '/reset', action: 'reset', as: 'reset_login'
+  end
 
   resources :reports do
     get '/reports/:action.:format'
