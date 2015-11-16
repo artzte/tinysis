@@ -2,7 +2,7 @@
   %h1
     Edit
     = @assignment.name
-  - tiny_form_for :assignment, @assignment, :html => {:class=>'tiny shaded'} do |form|
+  = tiny_form_for @assignment, :html => {:class=>'tiny shaded'} do |form|
     .right
       = link_to '<span>Delete Assignment</span>', destroy_assignment_path(@contract, @assignment), :method => :post, :confirm => "Are you sure you want to delete this assignment? You will lose all commentary on student work related to this assignment.", :class=>'btn', :style=>'margin-right: 3em'
       = submit_button 'Update'

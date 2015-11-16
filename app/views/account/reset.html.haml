@@ -3,7 +3,7 @@
   password will be sent to your email. If you can't recall your email address, please
   contact the office and they can reset your password for you.
 
-- tiny_form_for :user, @user, :url => reset_login_path, :html => {:class=>'tiny'} do |form|
+= tiny_form_for @user, :url => reset_login_path, :html => {:class=>'tiny'} do |form|
   = form.text_field :email
   %p= submit_button 'Submit'
 

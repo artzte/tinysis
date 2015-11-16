@@ -8,7 +8,7 @@
     = @parent_requirement.name
     \:
     = @requirement.name
-- tiny_form_for :requirement, @requirement, :url => update_plan_requirement_path(@requirement, :parent_id => @parent_requirement), :html => {:class=>'tiny shaded'} do |form|
+= tiny_form_for @requirement, :url => update_plan_requirement_path(@requirement, :parent_id => @parent_requirement), :html => {:class=>'tiny shaded'} do |form|
   %p
     = submit_button "Update"
     - unless @requirement.parent_requirement

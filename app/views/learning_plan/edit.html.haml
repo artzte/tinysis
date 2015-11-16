@@ -1,7 +1,7 @@
 %h1
   Edit Learning Plan for 
   = @student.full_name
-- tiny_form_for :plan, @plan, :url => edit_learning_path(@student, :plan_id => @plan), :html => {:class=>'tiny shaded'} do |form|
+= tiny_form_for @plan, :url => edit_learning_path(@student, :plan_id => @plan), :html => {:class=>'tiny shaded'} do |form|
   = form.hidden_field :year, :label => false
   .left
     %h2

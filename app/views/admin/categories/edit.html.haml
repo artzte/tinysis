@@ -1,6 +1,6 @@
 - update_fn = "ContractCategory.edit(#{@category.id})"
 %h1 Edit Category
-- tiny_form_for :category, @category, :url => update_category_path(@category), :html => {:class=>'tiny shaded', :onsubmit => update_fn} do |form|
+= tiny_form_for @category, :url => update_category_path(@category), :html => {:class=>'tiny shaded', :onsubmit => update_fn} do |form|
   .right
     = submit_button 'Update'
     = url_button 'Cancel', categories_path

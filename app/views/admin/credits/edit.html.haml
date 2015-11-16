@@ -1,6 +1,6 @@
 %h1 Edit Credit
 
-- tiny_form_for :credit, @credit, :url => update_credit_path(@credit), :html => {:class=>'tiny shaded'} do |form|
+= tiny_form_for @credit, :url => update_credit_path(@credit), :html => {:class=>'tiny shaded'} do |form|
   %p
     = submit_button 'Update'
     = url_button 'Cancel', credits_path

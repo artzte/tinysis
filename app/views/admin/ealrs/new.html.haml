@@ -1,5 +1,5 @@
 %h1 Add EALR
-- tiny_form_for :ealr, @ealr, :url => create_ealr_path, :html => {:class=>'tiny shaded'} do |form|
+= tiny_form_for @ealr, :url => create_ealr_path, :html => {:class=>'tiny shaded'} do |form|
   %p
     = submit_button 'Add'
     = url_button 'Cancel', ealrs_path

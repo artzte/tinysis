@@ -1,7 +1,7 @@
 %h1
   Edit Term: 
   = @term.name
-- tiny_form_for :term, @term, :url => update_term_path(@term), :html => { :id=>"term_form", :class=>'tiny shaded'} do |term|
+= tiny_form_for @term, :url => update_term_path(@term), :html => { :id=>"term_form", :class=>'tiny shaded'} do |term|
   .right
     = submit_button 'Save'
     = url_button 'Cancel', terms_path
