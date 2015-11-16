@@ -25,7 +25,7 @@
           = "... it's #{D(Time.now.gmtime, true)} ..." 
           = link_to("log off", logout_path, :style=> "color: white")
           = "..."
-          = mail_to "bugs@baddabigboom.com", "report bug", :subject => "tinySIS bug report", :body => "I found a bug here: http://#{request.host_with_port}#{request.request_uri}\n\nI am trying to:  \n\nInstead, tinySIS is:  \n\nThis makes me feel:  \n\nMy browser is:  #{request.headers['HTTP_USER_AGENT']}\n\nMy phone number is:  \n\n", :style=> "color: white"
+          = mail_to "bugs@baddabigboom.com", "report bug", :subject => "tinySIS bug report", :body => "I found a bug here: #{request.original_url}\n\nI am trying to:  \n\nInstead, tinySIS is:  \n\nThis makes me feel:  \n\nMy browser is:  #{request.headers['HTTP_USER_AGENT']}\n\nMy phone number is:  \n\n", :style=> "color: white"
         - else
           = image_tag 'tiny_up.gif'
       #title= AppConfig.app_organization
