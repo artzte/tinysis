@@ -136,8 +136,8 @@ public
     COMPLETION_CANCELED => "Canceled",
     COMPLETION_FULFILLED => "Fulfilled" }
 
-  named_scope :uncanceled, :conditions => "completion_status != #{COMPLETION_CANCELED}"
-  named_scope :unfinalized, :conditions => "enrollment_status != #{STATUS_FINALIZED}"
+  scope :uncanceled, :conditions => "completion_status != #{COMPLETION_CANCELED}"
+  scope :unfinalized, :conditions => "enrollment_status != #{STATUS_FINALIZED}"
 
   # status methods
 

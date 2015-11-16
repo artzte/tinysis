@@ -19,10 +19,10 @@ class CreditAssignment < ActiveRecord::Base
 
   has_one :graduation_plan_mapping, :dependent => :destroy
 
-  named_scope :user, :conditions => "user_id IS NOT NULL"
-  named_scope :nonzero, :conditions => "credit_hours > 0"
-  named_scope :uncombined, :conditions => "parent_credit_assignment_id IS NULL"
-  named_scope :district_finalize_approved, :conditions => "district_finalize_approved_on IS NOT NULL"
+  scope :user, :conditions => "user_id IS NOT NULL"
+  scope :nonzero, :conditions => "credit_hours > 0"
+  scope :uncombined, :conditions => "parent_credit_assignment_id IS NULL"
+  scope :district_finalize_approved, :conditions => "district_finalize_approved_on IS NOT NULL"
 
   def privileges(user)
     primary_parent.privileges(user)
