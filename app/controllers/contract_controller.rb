@@ -222,11 +222,10 @@ public
     end
 
     @contract = Contract.find(params[:id])
-    case request.method
-    when :get
+    if request.get?
       render :template => 'contract/copy', :layout => false
       return
-    when :post
+    elsif request.post?
       copy = @contract.copy(params[:contract])
 
       if copy and copy.valid?

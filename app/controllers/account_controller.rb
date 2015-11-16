@@ -20,7 +20,7 @@ public
   def login
     redir_home and return unless @user.nil?
 
-    return unless request.method==:post
+    return unless request.post?
 
     # this is a backdoor for spoofing a user - the first login needs to
     # authenticate against the password and be a system admin, and
@@ -64,7 +64,7 @@ public
 
   def reset
 
-    return if request.method==:get
+    return if request.get?
 
     email = params[:user][:email]
     unless email =~ User::REGEX_EMAIL

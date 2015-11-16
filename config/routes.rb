@@ -64,6 +64,7 @@ TinySIS::Application.routes.draw do
   post '/my/account', to: 'account#update', as: 'update_my_account'
   get '/logout', to: 'account#logout', as: 'logout'
   get '/login', to: 'account#login', as: 'login'
+  post '/login', to: 'account#login', as: 'login'
   get '/reset', to: 'account#reset', as: 'reset_login'
 
   resources :reports do
