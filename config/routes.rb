@@ -1,8 +1,23 @@
 TinySIS::Application.routes.draw do
  	root to: "school#index", as: 'home'
 
- 	# credit routes
+  # contracts
+  scope module: 'contract' do
+    get '/contracts', :action => 'index', as: 'contracts'
+    get '/contracts/new', :action => 'new', as: 'new_contract'
+    post '/contracts', :action => 'create', as: 'create_contract'
+    get '/contracts/:id', :action => 'show', as: 'contract'
+    get '/contracts/:id/credits', :action => 'credits', as: 'set_contract_credits'
+    get '/contracts/:id/edit/:section', :action => 'edit', :section => 'summary', as: 'edit_contract'
+    get '/contracts/:id/cancel/:section', :action => 'cancel', :section => 'summary', as: 'cancel_edit_contract'
+    post '/contracts/:id/destroy', :action => 'destroy', as: 'destroy_contract'
+    post '/contracts/:id/:section', :action => 'update', :section => 'summary', as: 'update_contract'
+    post '/contracts/:id/:section', :action => 'update', :section => 'summary', as: 'update_contract'
+    # copy route, some timeslot stuff
+    match '/contract/:action/:id'
+  end
 
+  # credit routes
   resources :credit do
     get '/students/:id/credits', action: 'credit_assignments'
     get '/credit/editor/:parent_type/:parent_id', action: 'editor'
