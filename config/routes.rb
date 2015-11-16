@@ -50,7 +50,7 @@ TinySIS::Application.routes.draw do
   end
 
   # status
-  resources :status do
+  scope module: 'status' do
     get '/status/contract', action: 'contract', as: 'contract_status_summary'
     get '/status/contract_detail/:id', action: 'contract_detail', as: 'contract_status_detail'
     get '/status/contract_report/:id', action: 'contract_report', as: 'contract_report'
