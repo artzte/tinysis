@@ -29,11 +29,9 @@ TinySIS::Application.routes.draw do
   end
 
   # school controller
-  resources :school do
-    get '/catalog', action: 'catalog', as: 'catalog'
-    get '/about', action: 'about', as: 'about'
-    get '/boom', action: 'boom', as: 'boom'
-  end
+  get '/catalog', to: 'school#catalog'
+  get '/about', to: 'school#about'
+  get '/boom', to: 'school#boom'
 
   # attendance
   resources :attendance do
@@ -62,13 +60,11 @@ TinySIS::Application.routes.draw do
   end
   #map.connect '/status/:action/:id', :controller => 'status'
 
-  resources :account do
-    get '/my/account', action: 'edit', as: 'my_account'
-    post '/my/account', action: 'update', as: 'update_my_account'
-    get '/logout', action: 'logout', as: 'logout'
-    get '/login', action: 'login', as: 'login'
-    get '/reset', action: 'reset', as: 'reset_login'
-  end
+  get '/my/account', to: 'account#edit', as: 'my_account'
+  post '/my/account', to: 'account#update', as: 'update_my_account'
+  get '/logout', to: 'account#logout', as: 'logout'
+  get '/login', to: 'account#login', as: 'login'
+  get '/reset', to: 'account#reset', as: 'reset_login'
 
   resources :reports do
     get '/reports/:action.:format'

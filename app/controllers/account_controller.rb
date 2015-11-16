@@ -5,8 +5,6 @@ class AccountController < ApplicationController
   before_filter :login_required, :except => [:login, :reset]
   before_filter :login_meta, :only => [:login, :reset]
 
-  filter_parameter_logging :password
-
 protected
   def login_meta
     set_meta :tab1=> :school, :tab2 => :login, :title => 'Log In'
