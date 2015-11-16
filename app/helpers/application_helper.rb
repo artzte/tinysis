@@ -25,7 +25,7 @@ module ApplicationHelper
   # Override textilize feature
   def textilize(text) # overriding Rails method to remove hardbreaks
     return "" if text.blank?
-    RedCloth.new(text).to_html
+    RedCloth.new(text).to_html.html_safe
   end
 
   def textile_example
