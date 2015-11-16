@@ -55,6 +55,7 @@ GEM
     config_spartan (1.0.1)
       hashie
     cssmin (1.0.3)
+    dynamic_form (1.1.4)
     enum_column3 (0.1.4)
     erubis (2.7.0)
     exception_notification (4.1.1)
@@ -164,6 +165,7 @@ DEPENDENCIES
   compass-blueprint
   compass-rails
   config_spartan
+  dynamic_form
   enum_column3
   exception_notification
   fastercsv

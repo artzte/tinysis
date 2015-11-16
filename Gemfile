@@ -7,6 +7,7 @@ gem "compass-rails"
 gem "compass-blueprint"
 gem 'haml', '~> 4.0.5'
 gem "haml-rails", "~> 0.4.0"
+gem 'dynamic_form'
 gem "fastercsv"
 gem "mysql"
 gem "RedCloth"
