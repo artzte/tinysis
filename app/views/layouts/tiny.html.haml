@@ -41,8 +41,7 @@
         .app_a{:id=>"a_#{controller.action_name}"}
           = yield
     #scripts
-      = include_javascripts :system
-      = include_javascripts :tinysis
+      = javascript_include_tag :app
 
     - if @head[:javascripts]
       = javascript_include_tag *@head[:javascripts].collect{|j|j.to_s}

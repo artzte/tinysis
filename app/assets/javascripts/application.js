@@ -119,7 +119,7 @@ jQuery('.behavior.attendance_update').live('click change', function(event) {
 var ContractCategory = {
   show_add : function() {
     Modalbox.show('/admin/categories/new',{title:"Add contract category",width:500,method:'get'}); 
-    return false;    
+    return false;
   },
   show_edit : function(id) {
     Modalbox.show('/admin/categories/'+id,{title:"Edit contract category",width:500,method:'get'});
@@ -135,7 +135,7 @@ var ContractCategory = {
     event.stop();
     if(!confirm("Are you sure you want to delete this category?"))
       return false;
-      
+
     Util.post_through_form(event.findElement('div'), event.element().href);
   },
   assign_to_group: function(item,group) {
@@ -174,7 +174,7 @@ var ContractCategory = {
     var glen = groups.length;
     var group, g;
     var clen, c, category, categories;
-    
+
     for(g = 0; g < glen; g++) {
       group = groups[g];
       Droppables.add(group,{onDrop:ContractCategory.assign_to_group,scroll:window});
@@ -285,7 +285,7 @@ var Period = {
         m1 = parseInt(match[3]);
         h2 = parseInt(match[4]);
         m2 = parseInt(match[5]);
-        
+
         if(h1>23||h2>23||m1>59||m2>59) {
           errors.push(Period.msg.evaluate({line:i+1,error:"Invalid time specified?"}));
         }
