@@ -127,9 +127,7 @@ public
   def select_pages
 
     a = pages_array()
-    [
-      select_tag('pg', options_for_select(a, @page), :disabled => @page_count == 0)
-    ].to_s
+    select_tag('pg', options_for_select(a, @page), :disabled => @page_count == 0)
 
   end
 
@@ -140,7 +138,7 @@ public
       content_tag 'span', link, :class => 'smaller'
     else
       fp = @fp.merge({:pg => @page-1})
-      link_to "<span>#{link}</span>", { :action => controller.action_name }.update(fp), :class=>'btn smaller'
+      link_to content_tag('span', link), { :action => controller.action_name }.update(fp), :class=>'btn smaller'
     end
 
   end
@@ -152,7 +150,7 @@ public
       content_tag 'span', link, :class => 'smaller'
     else
       fp = @fp.merge({:pg => @page+1})
-      link_to "<span>#{link}</span>", { :action => controller.action_name }.update(fp), :class=>'btn smaller'
+      link_to content_tag('span', link), { :action => controller.action_name }.update(fp), :class=>'btn smaller'
     end
   end
 

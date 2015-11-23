@@ -11,7 +11,7 @@
 -  filter_url += "/#{filter_action}" unless filter_action=="index"
 
 .filter.resubmit
-  = form_tag({:controller => filter_controller, :action => filter_action}, :method=>:get, :id=>'filter') do 
+  = form_tag({:controller => filter_controller, :action => filter_action}, :method=>:get, :id=>'filter') do
     %table
       %thead
         %tr
@@ -21,7 +21,7 @@
           %td= select_tag('g', options_for_select(@category_options, @category))
           %td.check_box
             = check_box_tag('c', 1, @closed==1)
-            = label_for('c', 'Include closed')
+            = label_for('c', 'Closed')
           - if @page_items
             %td
               %div.pager
