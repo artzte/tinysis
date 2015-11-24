@@ -37,7 +37,7 @@ var InlineEditor = Class.create({
 	  if(this.post_ajax==true) {
 	    var form = this.edit_container.select('form').first();
 	    form.observe('submit',this.update.bindAsEventListener(this));
-	    
+
 	    var cancel_link = form.select('a').first();
 	    cancel_link.observe('click', this.cancel.bindAsEventListener(this));
     }
@@ -45,12 +45,12 @@ var InlineEditor = Class.create({
 	},
 	update : function(event) {
 	  event.stop();
-	  
+
 	  if(this.validate && !this.validate(event.element()))
 	    return;
-	    
+
 	  UI.show_progress();
-	  
+
 	  new Ajax.Request(event.element().action, {
 	    parameters:event.element().serialize(),
 	    onComplete:UI.hide_progress,
@@ -63,7 +63,7 @@ var InlineEditor = Class.create({
 	  this.bind_edit.bind(this).defer(this.edit_container);
 	  if(this.post_show)
 	    this.post_show.bind(this).defer();
-	    
+
 	  UI.hide_progress();
 	},
 	cancel : function(event) {
@@ -98,7 +98,7 @@ var Term = {
     event.stop();
     if(!confirm("Are you sure you want to delete this term?"))
       return false;
-      
+
     Util.post_through_form(event.findElement('td'), event.element().href);
   }
 };
@@ -414,11 +414,18 @@ var LearningPlanGoal = {
 var Account = {
   observe_inactive : function() {
     var el = $('account_status');
+    if(!el) {
+      return;
+    }
     $('account_date_inactive').disabled = (el.getValue()=="1");
     $('account_status').observe('click', Account.toggle_inactive_date);
   },
   toggle_inactive_date: function(event) {
-    $('account_date_inactive').disabled = (event.element().getValue=='1');
+    var el = $('account_date_inactive');
+    if(!el) {
+      return;
+    }
+    el.disabled = (event.element().getValue=='1');
   }
 };
 
