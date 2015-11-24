@@ -33,7 +33,7 @@
       - elsif active
         - raise ArgumentError, "Course status record for active month is missing."
       - elsif @this_month >= m
-        - ale = att = aca = notes = '&ndash;'
+        - ale = att = aca = notes = '&ndash;'.html_safe
       - else
         - ale = att = aca = notes = '?'
       %tr{:class=>klass, :id => id}
@@ -71,5 +71,16 @@
         %tr{:class=>cycle_stripes}
           %td.assignment= a.name
           %td.due= d(a.due_date)
-          %td.status= t ? t.status.to_s.titleize : a.due_date>today ? 'Missing' : '&ndash;'
-          %td.notes= t ? notes_for(t, :notes_hash => turnins_notes_hash, :editable => false) : '&nbsp;'
+          %td.status
+            - if t
+              t.status.to_s.titleize
+            - else
+              - if a.due_date>today
+                Missing
+              - else
+                &ndash;
+          %td.notes
+            - if t
+              = notes_for(t, :notes_hash => turnins_notes_hash, :editable => false)
+            - else
+              &nbsp;

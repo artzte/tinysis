@@ -34,5 +34,5 @@
               - text << 'M'
             - else
               - text << '<span class="strike">M</span>'
-            - text = link_to text.join(' '), contract_report_path(:id => enrollment, :m => m.to_s)
-          %td{:class=>klass}= text
+            - text = link_to text.join(' ').html_safe, contract_report_path(:id => enrollment, :m => m.to_s)
+          %td{:class=>klass}= text.html_safe

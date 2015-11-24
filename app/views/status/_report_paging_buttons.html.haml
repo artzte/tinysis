@@ -1,11 +1,27 @@
 - if @index
   .right
     - if @index == 0
-      = "<span class='btn'><span>&lt;&lt;&nbsp;Previous</span></span>"
+      %span.btn
+        %span
+          &lt;&lt;
+          &nbsp;
+          Previous
     - else
-      = link_to("<span>&lt;&lt;&nbsp;Previous</span>", {:action => controller.action_name, :id => @collection[@index-1], :m => @month.to_s}, :class=>'btn')
+      = link_to({:action => controller.action_name, :id => @collection[@index-1], :m => @month.to_s}, :class=>'btn') do
+        %span
+          &lt;&lt;&nbsp;Previous
     = "(#{@index+1} of #{@collection.length})"
     - if @index >= @collection.length-1
-      = "<span class='btn'><span>Next&nbsp;&gt;&gt;&nbsp;</span></span>"
+      %span.btn
+        %span
+          Next
+          &nbsp;
+          &gt;&gt;
+          &nbsp;
     - else
-      = link_to("<span>Next&nbsp;&gt;&gt;</span>", {:action => controller.action_name, :id => @collection[@index+1], :m => @month.to_s}, :class=>'btn')
+      = link_to({:action => controller.action_name, :id => @collection[@index+1], :m => @month.to_s}, :class=>'btn') do
+        %span
+          Next
+          &nbsp;
+          &gt;&gt;
+          &nbsp;
