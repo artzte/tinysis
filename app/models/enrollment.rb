@@ -14,7 +14,7 @@ class Enrollment < ActiveRecord::Base
   has_many :notes, :as => :notable, :dependent => :destroy
   has_many :statuses, :as => :statusable, :dependent => :destroy do
     def make(month, user)
-      Status.make(month, proxy_owner, user)
+      Status.make(month, proxy_association.owner, user)
     end
   end
 
@@ -31,8 +31,8 @@ class Enrollment < ActiveRecord::Base
     def stats
       assignments = Assignment.find_by_sql(%{
         SELECT assignments.due_date, assignments.weighting, IF(turnins.status, assignments.weighting, 0) AS present FROM assignments
-        LEFT JOIN turnins ON turnins.assignment_id = assignments.id AND turnins.enrollment_id = #{proxy_owner.id} AND status IN ('complete','late','exceptional')
-        WHERE assignments.contract_id = #{proxy_owner.contract_id} AND assignments.active
+        LEFT JOIN turnins ON turnins.assignment_id = assignments.id AND turnins.enrollment_id = #{proxy_association.owner.id} AND status IN ('complete','late','exceptional')
+        WHERE assignments.contract_id = #{proxy_association.owner.contract_id} AND assignments.active
         ORDER BY due_date
       })
       return {} if assignments.empty?
@@ -56,8 +56,8 @@ class Enrollment < ActiveRecord::Base
     end
 
     def make(assignments = nil)
-      assignments ||= proxy_owner.contract.assignments
-      values = assignments.collect{|a| "(#{proxy_owner.id}, #{a.id}, NOW(), NOW())"}
+      assignments ||= proxy_association.owner.contract.assignments
+      values = assignments.collect{|a| "(#{proxy_association.owner.id}, #{a.id}, NOW(), NOW())"}
       sql = "INSERT IGNORE INTO turnins(enrollment_id, assignment_id, created_at, updated_at) VALUES #{values.join(',')}"
       ActiveRecord::Base.connection.execute(sql)
     end
@@ -70,12 +70,12 @@ class Enrollment < ActiveRecord::Base
       stats_results = Meeting.connection.select_all(%{
         SELECT participation, COUNT(mp.id) AS count
         FROM meetings
-        LEFT OUTER JOIN meeting_participants mp ON mp.meeting_id = meetings.id AND mp.enrollment_id = #{proxy_owner.id}
-        WHERE meetings.contract_id = #{proxy_owner.contract_id}
+        LEFT OUTER JOIN meeting_participants mp ON mp.meeting_id = meetings.id AND mp.enrollment_id = #{proxy_association.owner.id}
+        WHERE meetings.contract_id = #{proxy_association.owner.contract_id}
         GROUP BY participation
         ORDER BY participation
       })
-      meetings_count = Meeting.count(:conditions => "contract_id = #{proxy_owner.contract_id}")
+      meetings_count = Meeting.count(:conditions => "contract_id = #{proxy_association.owner.contract_id}")
       stats_hash = Hash[ *stats_results.collect{|v| v["participation"] ? [ v["participation"].to_i, v["count"].to_i] : nil }.reject(&:nil?).flatten ]
 
       stats_hash[ MeetingParticipant::ABSENT ] ||= 0
@@ -83,7 +83,7 @@ class Enrollment < ActiveRecord::Base
       stats_hash[ :total_meetings ] = meetings_count
       stats_hash[ :total_attended ] = meetings_count - stats_hash[ MeetingParticipant::ABSENT ]
       stats_hash
-   end
+    end
 
   end
 

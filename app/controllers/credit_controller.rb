@@ -1,4 +1,3 @@
-require 'helpers/credit_helper'
 class CreditController < ApplicationController
 
   include CreditHelper

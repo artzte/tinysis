@@ -17,16 +17,9 @@ class Contract < ActiveRecord::Base
 
   has_many :enrollments, :include => :participant, :dependent => :destroy do
 
-    # returns a list of all non-facilitator participants ever
-    # with active enrollments in this class
-    def all
-      find(:all, :order => "enrollments.finalized_on, enrollments.enrollment_status, enrollments.completion_status DESC, enrollments.role DESC, users.last_name, users.first_name",
-        :include => [:participant, {:credit_assignments=>:credit}] )
-    end
-
     # returns a list of statusable enrollments
     def statusable(shallow = false)
-      Enrollment.statusable(proxy_owner.id, shallow)
+      Enrollment.statusable(proxy_association.owner.id, shallow)
     end
   end
 

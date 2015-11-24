@@ -75,7 +75,6 @@ public
   end
   hide_action :set_meta
 
-protected
   # gets a contract either from an ID passed with the URL, or the contract
   # stored with the session. returns true if a contract was found, false
   # otherwise.

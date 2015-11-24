@@ -1,5 +1,7 @@
 class CreditAssignment < ActiveRecord::Base
 
+  attr_accessible :credit, :credit_hours
+
   belongs_to :credit
   belongs_to :legacy_creditable, :polymorphic => true
 

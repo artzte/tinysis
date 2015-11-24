@@ -8,7 +8,6 @@
       = "- #{@head[:title]}"
   = stylesheet_link_tag "screen", :media => 'all'
   = stylesheet_link_tag "print", :media => 'print'
-  = stylesheet_link_tag "addins/modalbox", :media => 'screen'
   /[if IE]
     = stylesheet_link_tag 'ie', :media => "all"
   <script type="text/javascript" src="http://use.typekit.com/keo6rba.js"></script>
@@ -20,7 +19,7 @@
         = image_tag "ajax-loader.gif"
       #login
         - if @user
-          Hello, 
+          Hello,
           %strong= @user.given_name
           = "... it's #{D(Time.now.gmtime, true)} ..." 
           = link_to("log off", logout_path, :style=> "color: white")

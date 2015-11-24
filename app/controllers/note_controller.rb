@@ -24,7 +24,8 @@ public
     privs = parent_element.privileges(@user)
     render :text => "You don't have privileges to do this.", :status => 500 and return unless privs[:create_note]
 
-    @note = parent_element.notes.create(:author => @user)
+    @note = parent_element.notes.create
+    @note.author = @user
 
     @new = true
 

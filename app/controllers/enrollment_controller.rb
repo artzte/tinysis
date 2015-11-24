@@ -5,14 +5,14 @@ class EnrollmentController < ApplicationController
   before_filter :login_required
   before_filter :get_contract, :only => [:index, :create, :new, :reset]
 
-protected
-
-public
   def index
     set_meta :tab1 => :contracts, :tab2 => :enrollments, :title => "#{@contract.name} Enrollments"
 
     @credit_options = Credit.options
-    @enrollments = @contract.enrollments.all
+    @enrollments = @contract.enrollments.find :all,
+      :order => "enrollments.finalized_on, enrollments.enrollment_status, enrollments.completion_status DESC, enrollments.role DESC, users.last_name, users.first_name",
+      :include => [:participant, {:credit_assignments=>:credit}]
+
     @enrollment_notes = Note.notes_hash(@enrollments)
     @credit_notes = Note.notes_hash(@enrollments.collect{|c| c.credit_assignments}.flatten)
     if @privs.nil? or !@privs[:view]
@@ -100,7 +100,7 @@ public
 
     redir_error(TinyException::SECURITYHACK, @user) and return unless @contract && @privs[:edit]
 
-    @enrollments = @contract.enrollments.all
+    @enrollments = @contract.enrollments.find(:all)
     count = 0
     @enrollments.each do |e|
       next unless e.enrollment_status < Enrollment::STATUS_CLOSED

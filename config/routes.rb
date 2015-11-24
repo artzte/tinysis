@@ -17,8 +17,17 @@ TinySIS::Application.routes.draw do
     match '/contract/:action/:id'
   end
 
+  # enrollments
+  scope module: 'enrollment' do |e|
+    get '/contracts/:id/enrollments', :action => 'index', as: 'enrollments'
+    post '/contracts/:id/enrollments/reset', :action => 'reset', as: 'reset_credits'
+    post '/enrollments/:id/:command', :action => 'update', as: 'update_enrollment_status', :conditions => {:id => /\d+/}
+    get '/contracts/:id/enrollments/new', :action => 'new', as: 'new_enrollments'
+    post '/contracts/:id/enrollments/create', :action => 'create', as: 'create_enrollments'
+  end
+
   # credit routes
-  resources :credit do
+  scope module: 'credit' do
     get '/students/:id/credits', action: 'credit_assignments'
     get '/credit/editor/:parent_type/:parent_id', action: 'editor'
     get '/credit/editor/:id', action: 'editor'
@@ -34,7 +43,7 @@ TinySIS::Application.routes.draw do
   end
 
   # notes
-  resources :note do
+  scope module: 'note' do
     post '/note/new/:notable_class/:notable_id', action: 'create'
     get '/note/:id/edit', action: 'edit', as: 'edit_note'
     post '/note/:id', action: 'update', as: 'update_note'
@@ -115,7 +124,7 @@ TinySIS::Application.routes.draw do
     get '/students/:id/graduation/report', action: 'report', as: 'graduation_report'
   end
 
-  resources :assignment do
+  scope module: 'assignment' do
     get '/contracts/:contract_id/student/:id', action: 'student', as: 'student_assignments'
     get '/contracts/:contract_id/assignments', action: 'index', as: 'assignments'
     get '/contracts/:contract_id/assignments/report', action: 'report', as: 'assignment_report'
