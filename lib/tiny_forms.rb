@@ -11,11 +11,11 @@ module TinyForms
       content = []
       ua = options[:ua] ? "<span class='ua'>\#{options[:ua]}</span>" : ''
       unless options[:label] == false || options[:label_position]==:after
-        content << @template.content_tag("label", "\#{options[:label] || field.to_s.humanize}\#{ua}", :for => "\#{@object_name}_\#{field}")
+        content << @template.content_tag("label", "\#{options[:label] || field.to_s.humanize}\#{ua}".html_safe, :for => "\#{@object_name}_\#{field}")
       end
       content << super
       unless options[:label] == false || options[:label_position].nil?
-        content << @template.content_tag("label", "\#{options[:label] || field.to_s.humanize}\#{ua}", :for => "\#{@object_name}_\#{field}")
+        content << @template.content_tag("label", "\#{options[:label] || field.to_s.humanize}\#{ua}".html_safe, :for => "\#{@object_name}_\#{field}")
       end
       content << error_message_on(field)
       content

@@ -2,4 +2,4 @@
 = form.date_select :due_date
 = form.text_field :weighting, :size => 5, :ua => "Relative importance - enter a number from 1-255 (default is 10)."
 = form.check_box :active, :ua => "Show the assignment on status reports."
-= form.text_area :description, :ua => textile_example
+= form.text_area :description, :ua => textile_example.html_safe

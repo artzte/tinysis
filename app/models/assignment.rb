@@ -1,6 +1,8 @@
 class Assignment < ActiveRecord::Base
   include StripTagsValidator
 
+  attr_accessible :creator, :contract
+
   belongs_to :contract
   has_many :notes, :as => :notable, :dependent => :destroy
 
