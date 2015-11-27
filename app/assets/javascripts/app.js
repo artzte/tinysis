@@ -8,9 +8,8 @@
 //= require underscore-min.js
 //= require modalbox.js
 //= require application.js
-//= require tiny.js
+//= require assignments.js
 //= require credits.js
 //= require behaviors.js
 //= require_tree ./behaviors
-//= require assignments.js
-
+//= require tiny.js

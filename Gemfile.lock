@@ -53,7 +53,6 @@ GEM
       sprockets (< 2.13)
     config_spartan (1.0.1)
       hashie
-    cssmin (1.0.3)
     debugger (1.6.8)
       columnize (>= 0.3.1)
       debugger-linecache (~> 1.2.0)
@@ -79,11 +78,7 @@ GEM
     hike (1.2.3)
     i18n (0.7.0)
     iconv (1.0.4)
-    jammit (0.7.0)
-      cssmin (~> 1.0)
-      jsmin (~> 1.0)
     journey (1.0.4)
-    jsmin (1.0.1)
     json (1.8.3)
     mail (2.5.4)
       mime-types (~> 1.16)
@@ -166,7 +161,6 @@ DEPENDENCIES
   haml (~> 4.0.5)
   haml-rails (~> 0.4.0)
   iconv
-  jammit
   mysql
   passenger
   rails (~> 3.2)

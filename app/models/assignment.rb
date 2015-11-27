@@ -37,7 +37,7 @@ class Assignment < ActiveRecord::Base
   def path_to_header_graphic(print=false)
     fn = "ah_#{self.id}"
     fn << 'p' if print
-    File.join(RAILS_ROOT,'public','assets','gradesheet',"#{fn}.gif")
+    File.join(Rails.root,'assets','gradesheet',"#{fn}.gif")
   end
 
 end

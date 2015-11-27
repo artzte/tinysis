@@ -13,7 +13,6 @@ gem "mysql"
 gem "RedCloth"
 gem "rmagick"
 gem 'config_spartan'
-gem 'jammit'
 gem 'iconv'
 gem 'enum_column3'
 gem 'exception_notification'

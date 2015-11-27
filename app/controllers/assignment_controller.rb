@@ -9,12 +9,12 @@ class AssignmentController < ApplicationController
   before_filter :get_assignment, :only=>[:edit, :update, :destroy, :feedback_edit]
   before_filter :validate_editable, :only=>[:update, :destroy, :feedback_edit]
   before_filter :validate_viewable, :only=>[:edit]
-  before_filter Proc.new{|controller| controller.set_meta :tab1 => :contracts, :tab2 => :assignments, :javascripts => :assignments}, :only => [:index, :new, :edit, :update, :create, :student, :report]
+  before_filter Proc.new{|controller| controller.set_meta :tab1 => :contracts, :tab2 => :assignments}, :only => [:index, :new, :edit, :update, :create, :student, :report]
   before_filter :fix_due_date, :only => [:create, :update]
 
-  AJAX_METHODS = [:expand, :expand_all]
-
-  verify :xhr => true, :only => AJAX_METHODS
+  before_filter :only => [:expand, :expand_all] do
+    redirect_to home_path unless request.xhr?
+  end
 
 protected
   def get_assignment
@@ -280,7 +280,7 @@ public
       render :nothing => true, :status => 404 unless @assignment
 
       path = @assignment.path_to_header_graphic($2=='p')
-      font = File.join(RAILS_ROOT,'assets','fonts','LucidaGrande.ttf')
+      font = File.join(Rails.root,'assets','fonts','LucidaGrande.ttf')
 
       if print
         mark = Magick::Image.new(@o[:width], @o[:height]) do

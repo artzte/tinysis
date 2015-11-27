@@ -137,6 +137,7 @@ TinySIS::Application.routes.draw do
     get '/contracts/:contract_id/participant/:id', action: 'participant', as: 'contract_participant'
     post '/contracts/:contract_id/assignments/:id/record/:enrollment_id', action: 'record', as: 'record_assignment'
     post '/contracts/:contract_id/assignments/:id/feedback/:enrollment_id', action: 'feedback_edit', as: 'assignment_feedback'
+    get '/assets/gradesheet/:filename', :filename => /ah_\d+p?\.gif/, :conditions => {:method => :get}, :action => 'header'
   end
 
 end

@@ -32,3 +32,4 @@ config/environments/test.yml
 *.mysql
 latest
 junk/*
+db/sql

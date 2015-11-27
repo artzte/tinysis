@@ -64,7 +64,7 @@ module TinyForms
   # Form helpers
 
   def label_for(theField, theLabel, theHelpstring = nil)
-    content_tag 'label', theLabel, for: theField, title: theHelpstring
+    content_tag 'label', theLabel.html_safe, for: theField, title: theHelpstring
   end
 
 

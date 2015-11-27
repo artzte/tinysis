@@ -34,19 +34,25 @@
         %thead
           // put a spacer row with fixed size columns (sized by the enclosing div)
           %tr
-            - @assignments.length.times do 
-              <th><div>&nbsp;</div></th>
+            - @assignments.length.times do
+              %th
+                %div &nbsp;
         %tbody
           - if @enrollments.empty?
-            = "<tr><td style='width: 20em' colspan='#{@assignments.length}'>No students are enrolled.</td></tr>"
+            %tr
+              %td{style: 'width: 20em', colspan: @assignments.length}
+                No students are enrolled.
           - else
             - @enrollments.each do |enrollment|
               - turnins = @turnins[enrollment.id]||[]
               - turnins = turnins.collect{|t|[t.assignment_id, t]}.inject({}) { |m, e| m[e[0]] = e[1]; m }
-              %tr{'data-enrollment-id'=>enrollment.id}
+              %tr{data: {enrollment: {id: enrollment.id}}}
                 - @assignments.each do |a|
                   - t = turnins[a.id] || @turnin_missing
                   - klass = 'a'
                   - klass << ' note' if t.has_note?
-                  - val = (t.scode=='M')?'&nbsp;':t.scode
-                  = "<td data-turnin-id='#{t.id}' class='#{klass}'>#{val}</td>"
+                  %td{class: klass, data: {turnin: {id: t.id}}}
+                    - if t.scode == 'M'
+                      &nbsp;
+                    - else
+                      t.scode
