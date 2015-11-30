@@ -95,8 +95,9 @@ TinySIS::Application.routes.draw do
     get '/reset', action: 'reset', as: 'reset_login'
   end
 
-  resources :reports do
-    get '/reports/:action.:format'
+  scope module: 'reports' do
+    get '/reports/ale:format', action: 'ale', as: 'ale_report'
+    get '/reports/credits:format', action: 'credits', as: 'credits_report'
   end
 
   resources :students do

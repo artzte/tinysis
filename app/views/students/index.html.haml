@@ -6,8 +6,8 @@
     = link_to "Download Reports (CSV)"
   .menu
     %ul
-      %li= link_to "ALE Report", report_path(@fp.merge(:action => "ale"))
-      %li= link_to "Credits Report", report_path(@fp.merge(:action => "credits"))
+      %li= link_to "ALE Report", ale_report_path(@fp)
+      %li= link_to "Credits Report", credits_report_path(@fp)
 %table.tiny.clear{:width=>'100%'}
   %thead
     %tr
