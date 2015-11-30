@@ -1,29 +1,11 @@
-<%
-  include TinyFixtures
-  CLANS.keys.each do |clan|
-    CLANS[clan][:classes].each do |c|
-      CLAN_TERMS.each do |t|
-%>
-<%= clan %>_<%= c %>_<%= t %>:
-  name: <%= clan.to_s.capitalize %> <%= c.capitalize %>
-  timeslots: |+
-    --- 
-    - {}
-    
-  term: <%= t.to_s %>
-  creator: admin
-  facilitator: <%= clan.to_s %>
-  learning_objectives: 
-  category: <%= c %>
-  credits: 
-  evaluation_methods: 
-  contract_status: 1
-  creator: <%= clan.to_s %>
-  competencies: 
-  location: 
-  instructional_materials: 
-<%
-      end
-    end
-  end 
-%>
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+# This model initially had no columns defined.  If you add columns to the
+# model remove the '{}' from the fixture names and add the columns immediately
+# below each fixture, per the syntax in the comments below
+#
+one: {}
+# column: value
+#
+two: {}
+#  column: value

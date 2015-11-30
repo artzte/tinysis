@@ -1,7 +1,0 @@
-%h1 Add a Credit Type
-
-- tiny_form_for :credit, @credit, :url => create_credit_path, :html => {:class=>'tiny shaded'} do |form|
-  %p
-    = submit_button 'Add'
-    = url_button 'Cancel', credits_path
-  = render :partial => 'form', :object => form

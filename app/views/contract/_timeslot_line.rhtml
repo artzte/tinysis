@@ -1,6 +1,0 @@
-<% dom_id = "saved_timeslot[#{timeslot_line.object_id}]" -%>
-<%= content_tag 'li', [
-								hidden_field_tag (dom_id, hash_to_string(timeslot_line.timeslot_hash)),
-								content_tag('div', link_to_function ('delete', "Element.remove('li_#{dom_id}')", :style => 'font-size: 95%'), :class => 'right'),
-								timeslot_line.timeslot_string
-							], :id => "li_#{dom_id}"  %>

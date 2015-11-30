@@ -1,6 +1,0 @@
-%h1 New Term
-- tiny_form_for :term, @term, :url => create_term_path, :html => { :id=>"term_form", :class=>'tiny shaded'} do |term|
-  .right
-    = submit_button 'Save'
-    = url_button 'Cancel', terms_path
-  = render :partial => 'form', :object => term

@@ -1,6 +1,0 @@
-%h1 Add Category
-- tiny_form_for :category, @category, :url => create_category_path, :html => {:class=>'tiny shaded'} do |form|
-  .right
-    = submit_button 'Add'
-    = url_button 'Cancel', categories_path
-  = render :partial => 'form', :object => form

@@ -1,40 +1,11 @@
-homeroom:
-  sequence: 100
-  name: Homeroom
-  public: 0
-  statusable: 1
-independent:
-  sequence: 300
-  name: Independent
-  public: 0
-  statusable: 1
-government: 
-  sequence: 300
-  name: Government
-  public: 1
-  statusable: 1
-social_studies: 
-  sequence: 300
-  name: Social Studies
-  public: 1
-  statusable: 1
-language_arts: 
-  sequence: 300
-  name: Language Arts
-  public: 1
-  statusable: 1
-math: 
-  sequence: 300
-  name: Math
-  public: 1
-  statusable: 1
-science: 
-  sequence: 300
-  name: Science
-  public: 1
-  statusable: 1
-seminar: 
-  sequence: 200
-  name: Seminar
-  public: 0
-  statusable: 2
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+# This model initially had no columns defined.  If you add columns to the
+# model remove the '{}' from the fixture names and add the columns immediately
+# below each fixture, per the syntax in the comments below
+#
+one: {}
+# column: value
+#
+two: {}
+#  column: value

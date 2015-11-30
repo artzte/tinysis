@@ -1,9 +1,0 @@
-- mapping = service_mapping
-.mapping{:id => "cm_#{mapping.id}"}
-  .year= link_to_if @privs[:edit], d(mapping.date_completed), edit_graduation_mapping_path(@student, mapping.id), :class=>'edit'
-  - if @privs[:edit]
-    .delete= link_to 'X', destroy_graduation_mapping_path(@student, mapping.id), :class=>'delete'
-  .name= mapping.name
-  .quantity
-    .hours= mapping.quantity
-    hours

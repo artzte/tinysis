@@ -1,8 +1,0 @@
-%h1= "#{@coor.name} COOR Report"
-= url_button "Return to summary page", coor_status_detail_path(:id => @coor), :small => true
-%h2
-  = render :partial => 'report_paging_buttons'
-  = @student.last_name_first
-
-= render :partial => 'student_report'
-            

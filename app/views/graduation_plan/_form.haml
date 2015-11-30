@@ -1,8 +1,0 @@
-= form.hidden_field :graduation_plan_requirement_id, :label => false
-- if @requirement.requirement_type==:general
-  = form.date_select :date_completed
-  = form.text_field :name, :label => 'Note', :maxlength => 255
-- if @requirement.requirement_type==:service
-  = form.date_select :date_completed
-  = form.text_field :name, :label => 'Activity', :maxlength => 255
-  = form.text_field :quantity, :label => 'Hours / quantity'

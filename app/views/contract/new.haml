@@ -1,7 +1,0 @@
-%h1 New Contract
-%p Fill out the information about the contract below, and click Add.
-- tiny_form_for :contract, @contract, :url => create_contract_path, :html => {:id => "form_contract", :class=>'tiny shaded'} do |contract|
-  .right
-    = link_to_function('<span>Add Contract</span>', '$("form_contract").submit()', :class=>'btn')
-  = render :partial => "form_summary", :object => contract
-  = render :partial => "form_details", :object => contract

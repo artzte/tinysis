@@ -1,25 +1,11 @@
-<%
-  include TinyFixtures
-  [:hogg,:myer].each do |clan|
-    CLANS[clan][:classes].each do |c|
-      CLANS[clan][:offspring].each do |u|
-        CLAN_TERMS.each do |t|
-          t.months.each do |m|
-%>
-status_<%= u %>_<%= clan %>_<%= c %>_<%= t %>_<%= m.to_s.gsub(/\W/,'_') %>: 
-  held_periodic_checkins: true
-  fte_hours: 25
-  month: <%= m.to_s %>
-  statusable_type: 
-  creator: <%= clan %>
-  statusable_id: 
-  attendance_status: 0
-  met_fte_requirements: true
-  created_at: 
-  academic_status: 0
-<%
-        end
-      end
-    end
-  end
-%>
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+# This model initially had no columns defined.  If you add columns to the
+# model remove the '{}' from the fixture names and add the columns immediately
+# below each fixture, per the syntax in the comments below
+#
+one: {}
+# column: value
+#
+two: {}
+#  column: value

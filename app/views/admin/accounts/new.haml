@@ -1,9 +1,0 @@
-%h1 New Account
-= debug @account.errors.full_messages
-- tiny_form_for :account, @account, :url => create_account_path(@fp), :html => {:class=>'tiny shaded'} do |form|
-  .right
-    = submit_button 'Add'
-    = cancel_button accounts_path(@fp)
-  = render :partial => 'form', :object => form
-
-

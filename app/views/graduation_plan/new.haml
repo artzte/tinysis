@@ -1,6 +1,0 @@
-.mapping.new
-  - tiny_form_for :mapping, @mapping, :url => create_graduation_mapping_path(@student), :html => {:class=>'tiny shaded'} do |form|
-    .right
-      = submit_button('Add')
-      = cancel_button show_graduation_mapping_path(@student, @mapping)
-    = render :partial => 'form', :object => form

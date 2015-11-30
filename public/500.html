@@ -1,32 +1,66 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
-	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<!DOCTYPE html>
+<html>
 <head>
-	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <title>We're sorry, but something went wrong (500)</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <style>
+  body {
+    background-color: #EFEFEF;
+    color: #2E2F30;
+    text-align: center;
+    font-family: arial, sans-serif;
+    margin: 0;
+  }
 
-	<title>tinySIS</title>
-	
-	<style type="text/css" media="screen">
-	 body {
-	   font-family: "ff-meta-web-pro-1","ff-meta-web-pro-2";
-	   font-size: 16px;
-	   line-height: 1.4em;
-	 }
-	 div {
-	   margin: 0px auto;
-	   width: 800px;
-	 }
-	</style>
-  <script type="text/javascript" src="http://use.typekit.com/keo6rba.js"></script>
-  <script type="text/javascript">try{Typekit.load();}catch(e){}</script>
-	
+  div.dialog {
+    width: 95%;
+    max-width: 33em;
+    margin: 4em auto 0;
+  }
+
+  div.dialog > div {
+    border: 1px solid #CCC;
+    border-right-color: #999;
+    border-left-color: #999;
+    border-bottom-color: #BBB;
+    border-top: #B00100 solid 4px;
+    border-top-left-radius: 9px;
+    border-top-right-radius: 9px;
+    background-color: white;
+    padding: 7px 12% 0;
+    box-shadow: 0 3px 8px rgba(50, 50, 50, 0.17);
+  }
+
+  h1 {
+    font-size: 100%;
+    color: #730E15;
+    line-height: 1.5em;
+  }
+
+  div.dialog > p {
+    margin: 0 0 1em;
+    padding: 1em;
+    background-color: #F7F7F7;
+    border: 1px solid #CCC;
+    border-right-color: #999;
+    border-left-color: #999;
+    border-bottom-color: #999;
+    border-bottom-left-radius: 4px;
+    border-bottom-right-radius: 4px;
+    border-top-color: #DADADA;
+    color: #666;
+    box-shadow: 0 3px 8px rgba(50, 50, 50, 0.17);
+  }
+  </style>
 </head>
 
 <body>
-  <div>
-    <h1>Sorry!</h1>
-    <p>tinySIS seems to have had a problem. The volunteer staff member who administers this website has received an automated email with detailed information regarding this crash. Although it is possible that data was lost, it is unlikely. We will sort it out as soon as possible. If you would like to send additional feedback about this crash, please <a href="mailto:bugs@baddabigboom.com?body=I%20was%20trying%20to%3A%20%20%0A%0AInstead%2C%20tinySIS%20is%3A%20%20%0A%0AThis%20makes%20me%20feel%3A%20%20%0A%0AMy%20browser%20is%3A%20%20Mozilla%2F5.0%20%28Macintosh%3B%20U%3B%20Intel%20Mac%20OS%20X%2010.6%3B%20en-US%3B%20rv%3A1.9.2.15%29%20Gecko%2F20110303%20Firefox%2F3.6.15%0A%0AMy%20phone%20number%20is%3A%20%20%0A%0A&amp;subject=tinySIS%20bug%20report">send email</a>. Thanks for your patience.</p>
+  <!-- This file lives in public/500.html -->
+  <div class="dialog">
+    <div>
+      <h1>We're sorry, but something went wrong.</h1>
+    </div>
+    <p>If you are the application owner check the logs for more information.</p>
   </div>
 </body>
 </html>

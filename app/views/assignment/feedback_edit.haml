@@ -1,8 +1,0 @@
-.turnin_form{'data-assignment-id' => @assignment.id, 'data-enrollment-id' => @enrollment.id}
-  %h3= @assignment.name
-  %ul.status_updater
-    - Turnin::STATUS_TYPES.each do |s|
-      - value = s.to_s[0,1]
-      %li= link_to s.to_s.humanize, record_assignment_path(:contract_id => @contract.id, :id => @assignment.id, :enrollment_id => @enrollment.id, :value => value), :class => @turnin.status==s ? 'current' : nil, 'data-value' => s.to_s[0,1]
-  %br.clear
-  = notes_for(@turnin)

@@ -1,9 +1,0 @@
-base_month: 
-  value: 9
-  name: reporting_base_month
-end_month: 
-  value: 6
-  name: reporting_end_month
-current_year: 
-  value: 2006
-  name: current_year

@@ -1,9 +1,0 @@
-<% 
-	c = contract_item 
--%>
-<%= content_tag('tr', [
-      content_tag('td', link_to_detail_action(truncate(c[:name]), 'contract_detail', @contracts, c)),
-			content_tag('td', c[:term_name]),
-			content_tag('td', c[:facilitator_name]),
-			# render(:partial => 'contract_item_month', :collection=> @months, :locals => { :c => c } )
-  ], :class=>cycle_stripes ) %>
